@@ -70,6 +70,10 @@ config OT_GPIO_DJ
 config OT_GPIO_EG
     bool
 
+config OT_GPIO_QP
+    bool
+    default y if OT_GPIO_EG
+
 config OT_HMAC
     bool
 
@@ -215,6 +219,10 @@ config OT_TIMER
 
 config OT_UART
     bool
+
+config OT_UART_QP
+    bool
+    default y if OT_UART
 
 config OT_USBDEV
     bool

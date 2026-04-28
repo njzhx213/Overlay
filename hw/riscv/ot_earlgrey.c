@@ -50,6 +50,7 @@
 #include "hw/opentitan/ot_entropy_src.h"
 #include "hw/opentitan/ot_flash.h"
 #include "hw/opentitan/ot_gpio_eg.h"
+#include "hw/opentitan/ot_gpio_qp.h"
 #include "hw/opentitan/ot_hmac.h"
 #include "hw/opentitan/ot_i2c.h"
 #include "hw/opentitan/ot_ibex_wrapper.h"
@@ -71,6 +72,7 @@
 #include "hw/opentitan/ot_sram_ctrl.h"
 #include "hw/opentitan/ot_timer.h"
 #include "hw/opentitan/ot_uart.h"
+#include "hw/opentitan/ot_uart_qp.h"
 #include "hw/opentitan/ot_unimp.h"
 #include "hw/opentitan/ot_usbdev.h"
 #include "hw/opentitan/ot_vmapper.h"
@@ -450,7 +452,10 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_UART0] = {
-        .type = TYPE_OT_UART,
+        /* qemu-passes drop-in: UART0 routes through the auto-generated
+         * frontend wrapped by ot_uart_qp.c.  UART1/2/3 below stay on
+         * TYPE_OT_UART so a regression here is isolated to UART0. */
+        .type = TYPE_OT_UART_QP,
         .cfg = &ot_eg_soc_uart_configure,
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
         .memmap = MEMMAPENTRIES(
@@ -558,7 +563,10 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_GPIO] = {
-        .type = TYPE_OT_GPIO_EG,
+        /* qemu-passes drop-in: route GPIO through ot_gpio_qp.c, which
+         * wraps the auto-generated model in qemu_passes/gpio.c.  Switch
+         * back to TYPE_OT_GPIO_EG to fall back to the upstream model. */
+        .type = TYPE_OT_GPIO_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40040000u }
         ),
