@@ -2983,7 +2983,7 @@ uint64_t uart_read(void *opaque, hwaddr addr, unsigned size)
      * is a no-op, so register state is preserved.  ACCUMULATE
      * counters go through ptimer (not tick), also unaffected.
      */
-    for (int _qp_settle = 0; _qp_settle < 8; ++_qp_settle) {
+    for (int _qp_settle = 0; _qp_settle < 16; ++_qp_settle) {
         update_state(s);
         tick(s);
     }
@@ -3013,8 +3013,8 @@ void uart_write(void *opaque, hwaddr addr,
     /* Inject QEMU write data into the internal wdata signal */
     s->tl_i_a_data = (uint32_t)value;
 
-    /* Set write mask (full mask for the access size) */
-    s->tl_i_a_mask = (1ULL << (size * 8)) - 1;
+    /* Set write mask (byte-enable bits for the access size) */
+    s->tl_i_a_mask = (1ULL << size) - 1;
 
     /* Assert the bus enable (write cycle) */
     s->reg_we = 1;
@@ -3051,7 +3051,7 @@ void uart_write(void *opaque, hwaddr addr,
      * counter advances by ~4 ticks per MMIO (was 1).  Our model
      * is functional, not cycle-accurate, so this is OK.
      */
-    for (int _qp_settle = 0; _qp_settle < 8; ++_qp_settle) {
+    for (int _qp_settle = 0; _qp_settle < 16; ++_qp_settle) {
         update_state(s);
         tick(s);
     }
