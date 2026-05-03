@@ -88,7 +88,8 @@ static void uart_tick_uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_rptr_wr
 static void update_state(uart_state *s)
 {
     s->alerts = s->u_reg_intg_err_o;
-    s->unnamed = s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o;
+    s->alert_tx_o_0__alert_p = s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p;
+    s->alert_tx_o_0__alert_n = s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n;
     s->u_reg_clk_i = s->clk_i;
     s->u_reg_rst_ni = s->rst_ni;
     s->u_reg_tl_i_a_valid = s->tl_i_a_valid;
@@ -293,7 +294,8 @@ static void update_state(uart_state *s)
     s->u_reg_ovrd_we = ((((s->u_reg_racl_addr_hit_write) >> 10) & 0x1)) & (s->u_reg_reg_we) & ((((((s->u_reg_u_reg_if_re_o) | (s->u_reg_reg_we)) & (((((s->u_reg_addr_hit) != (0))) ^ 1))) | (s->u_reg_wr_err) | (s->u_reg_intg_err)) ^ 1));
     s->u_reg_timeout_ctrl_we = ((((s->u_reg_racl_addr_hit_write) >> 12) & 0x1)) & (s->u_reg_reg_we) & ((((((s->u_reg_u_reg_if_re_o) | (s->u_reg_reg_we)) & (((((s->u_reg_addr_hit) != (0))) ^ 1))) | (s->u_reg_wr_err) | (s->u_reg_intg_err)) ^ 1));
     s->u_reg_rst_ni = s->u_reg_rst_ni;
-    s->u_reg_racl_policies_i = s->u_reg_racl_policies_i;
+    s->u_reg_racl_policies_i_0__write_perm = s->u_reg_racl_policies_i_0__write_perm;
+    s->u_reg_racl_policies_i_0__read_perm = s->u_reg_racl_policies_i_0__read_perm;
     s->u_reg_u_chk_tl_i_a_valid = s->u_reg_tl_i_a_valid;
     s->u_reg_u_chk_tl_i_a_opcode = s->u_reg_tl_i_a_opcode;
     s->u_reg_u_chk_tl_i_a_param = s->u_reg_tl_i_a_param;
@@ -2209,6 +2211,10 @@ static void update_state(uart_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_rst_ni = s->rst_ni;
     s->gen_alert_tx_0_u_prim_alert_sender_alert_test_i = ((s->u_reg_reg2hw_alert_test_q) & (s->u_reg_reg2hw_alert_test_qe));
     s->gen_alert_tx_0_u_prim_alert_sender_alert_req_i = s->alerts;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_p = s->alert_rx_i_0__ping_p;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_n = s->alert_rx_i_0__ping_n;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_p = s->alert_rx_i_0__ack_p;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_n = s->alert_rx_i_0__ack_n;
     s->gen_alert_tx_0_u_prim_alert_sender_ack_level = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_level_o;
     s->gen_alert_tx_0_u_prim_alert_sender_sigint_detected = (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o) | (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p = ((s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_q_o) & 1);
@@ -2220,6 +2226,7 @@ static void update_state(uart_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger = (s->gen_alert_tx_0_u_prim_alert_sender_ping_set_q) | (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_event_o);
     s->gen_alert_tx_0_u_prim_alert_sender_ping_set_d = (((s->gen_alert_tx_0_u_prim_alert_sender_ping_clr) ^ 1)) & (s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger);
     s->gen_alert_tx_0_u_prim_alert_sender_rst_ni = s->gen_alert_tx_0_u_prim_alert_sender_rst_ni;
+    s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_in_i = ((((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_p)) << 0) | (((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_n)) << 1));
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_in_i = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_out_o;
@@ -2273,6 +2280,7 @@ static void update_state(uart_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_fall_o = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_fall_o;
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_event_o = ((s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o) | (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_fall_o));
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;
+    s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i = ((((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_p)) << 0) | (((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_n)) << 1));
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_out_o;
@@ -3166,6 +3174,38 @@ type_init(uart_register_types)
  * events (chardev RX, qemu_irq pin changes, alert handler
  * responses, ...) into the simulated device state.
  */
+void uart_set_alert_rx_i_0__ping_p(uart_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ping_p = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void uart_set_alert_rx_i_0__ping_n(uart_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ping_n = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void uart_set_alert_rx_i_0__ack_p(uart_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ack_p = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void uart_set_alert_rx_i_0__ack_n(uart_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ack_n = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
 void uart_set_cio_rx_i(uart_state *s, uint8_t value)
 {
     s->cio_rx_i = value;

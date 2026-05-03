@@ -88,7 +88,8 @@ static void update_state(gpio_state *s)
     s->hw2reg_masked_oe_lower_mask_d = 0;
     s->hw2reg_intr_state_de = s->intr_hw_hw2reg_intr_state_de_o;
     s->hw2reg_intr_state_d = s->intr_hw_hw2reg_intr_state_d_o;
-    s->unnamed = s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o;
+    s->alert_tx_o_0__alert_p = s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p;
+    s->alert_tx_o_0__alert_n = s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n;
     s->reg2hw_intr_state_q = s->u_reg_reg2hw_intr_state_q;
     s->reg2hw_intr_enable_q = s->u_reg_reg2hw_intr_enable_q;
     s->reg2hw_intr_test_q = s->u_reg_reg2hw_intr_test_q;
@@ -1030,11 +1031,17 @@ static void update_state(gpio_state *s)
     s->intr_hw_status = s->intr_hw_reg2hw_intr_state_q_i;
     s->intr_hw_rst_ni = s->intr_hw_rst_ni;
     s->intr_hw_reg2hw_intr_enable_q_i = s->intr_hw_reg2hw_intr_enable_q_i;
+    s->intr_hw_hw2reg_intr_state_de_o = ((((((((0 - ((uint64_t)(s->intr_hw_reg2hw_intr_test_qe_i))) & 0xFFFFFFFF)) & (s->intr_hw_reg2hw_intr_test_q_i))) | (s->intr_hw_event_intr_i))) != (0));
+    s->intr_hw_hw2reg_intr_state_d_o = ((((((((0 - ((uint64_t)(s->intr_hw_reg2hw_intr_test_qe_i))) & 0xFFFFFFFF)) & (s->intr_hw_reg2hw_intr_test_q_i))) | (s->intr_hw_event_intr_i))) | (s->intr_hw_reg2hw_intr_state_q_i));
     s->intr_hw_intr_o = s->intr_hw_intr_o;
     s->gen_alert_tx_0_u_prim_alert_sender_clk_i = s->clk_i;
     s->gen_alert_tx_0_u_prim_alert_sender_rst_ni = s->rst_ni;
     s->gen_alert_tx_0_u_prim_alert_sender_alert_test_i = ((s->reg2hw_alert_test_q) & (s->reg2hw_alert_test_qe));
     s->gen_alert_tx_0_u_prim_alert_sender_alert_req_i = s->alerts;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_p = s->alert_rx_i_0__ping_p;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_n = s->alert_rx_i_0__ping_n;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_p = s->alert_rx_i_0__ack_p;
+    s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_n = s->alert_rx_i_0__ack_n;
     s->gen_alert_tx_0_u_prim_alert_sender_ack_level = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_level_o;
     s->gen_alert_tx_0_u_prim_alert_sender_sigint_detected = (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o) | (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p = ((s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_q_o) & 1);
@@ -1046,6 +1053,7 @@ static void update_state(gpio_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger = (s->gen_alert_tx_0_u_prim_alert_sender_ping_set_q) | (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_event_o);
     s->gen_alert_tx_0_u_prim_alert_sender_ping_set_d = (((s->gen_alert_tx_0_u_prim_alert_sender_ping_clr) ^ 1)) & (s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger);
     s->gen_alert_tx_0_u_prim_alert_sender_rst_ni = s->gen_alert_tx_0_u_prim_alert_sender_rst_ni;
+    s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_in_i = ((((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_p)) << 0) | (((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_n)) << 1));
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_in_i = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_out_o;
@@ -1099,6 +1107,7 @@ static void update_state(gpio_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_fall_o = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_fall_o;
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_event_o = ((s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o) | (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_fall_o));
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;
+    s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i = ((((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_p)) << 0) | (((uint64_t)(s->gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_n)) << 1));
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_out_o;
@@ -1296,7 +1305,8 @@ static void update_state(gpio_state *s)
     s->u_reg_intr_ctrl_en_lvllow_we = ((((s->u_reg_racl_addr_hit_write) >> 14) & 0x1)) & (s->u_reg_reg_we) & ((((((s->u_reg_u_reg_if_re_o) | (s->u_reg_reg_we)) & (((((s->u_reg_addr_hit) != (0))) ^ 1))) | (s->u_reg_wr_err) | (s->u_reg_intg_err)) ^ 1));
     s->u_reg_ctrl_en_input_filter_we = ((((s->u_reg_racl_addr_hit_write) >> 15) & 0x1)) & (s->u_reg_reg_we) & ((((((s->u_reg_u_reg_if_re_o) | (s->u_reg_reg_we)) & (((((s->u_reg_addr_hit) != (0))) ^ 1))) | (s->u_reg_wr_err) | (s->u_reg_intg_err)) ^ 1));
     s->u_reg_rst_ni = s->u_reg_rst_ni;
-    s->u_reg_racl_policies_i = s->u_reg_racl_policies_i;
+    s->u_reg_racl_policies_i_0__write_perm = s->u_reg_racl_policies_i_0__write_perm;
+    s->u_reg_racl_policies_i_0__read_perm = s->u_reg_racl_policies_i_0__read_perm;
     s->u_reg_u_chk_tl_i_a_valid = s->u_reg_tl_i_a_valid;
     s->u_reg_u_chk_tl_i_a_opcode = s->u_reg_tl_i_a_opcode;
     s->u_reg_u_chk_tl_i_a_param = s->u_reg_tl_i_a_param;
@@ -1705,6 +1715,7 @@ static void update_state(gpio_state *s)
     s->u_reg_u_intr_state_wr_en_data_arb_d = s->u_reg_u_intr_state_wr_en_data_arb_d;
     s->u_reg_u_intr_state_wr_en_data_arb_q = s->u_reg_u_intr_state_wr_en_data_arb_q;
     s->u_reg_u_intr_state_wr_en_data_arb_wr_en = ((s->u_reg_u_intr_state_wr_en_data_arb_we) | (s->u_reg_u_intr_state_wr_en_data_arb_de));
+    s->u_reg_u_intr_state_wr_en_data_arb_wr_data = ((((s->u_reg_u_intr_state_wr_en_data_arb_de) ? (s->u_reg_u_intr_state_wr_en_data_arb_d) : (s->u_reg_u_intr_state_wr_en_data_arb_q))) & (((((((0 - ((uint64_t)(s->u_reg_u_intr_state_wr_en_data_arb_we))) & 0xFFFFFFFF)) & (s->u_reg_u_intr_state_wr_en_data_arb_wd))) ^ (4294967295))));
     s->u_reg_u_intr_state_qe = s->u_reg_u_intr_state_we;
     s->u_reg_u_intr_state_q = s->u_reg_u_intr_state_q;
     s->u_reg_u_intr_state_ds = ((s->u_reg_u_intr_state_wr_en) ? (s->u_reg_u_intr_state_wr_data) : (s->u_reg_u_intr_state_qs));
@@ -2971,6 +2982,38 @@ type_init(gpio_register_types)
 void gpio_set_strap_en_i(gpio_state *s, uint8_t value)
 {
     s->strap_en_i = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void gpio_set_alert_rx_i_0__ping_p(gpio_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ping_p = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void gpio_set_alert_rx_i_0__ping_n(gpio_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ping_n = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void gpio_set_alert_rx_i_0__ack_p(gpio_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ack_p = value;
+    update_state(s);
+    tick(s);
+    update_state(s);
+}
+
+void gpio_set_alert_rx_i_0__ack_n(gpio_state *s, uint8_t value)
+{
+    s->alert_rx_i_0__ack_n = value;
     update_state(s);
     tick(s);
     update_state(s);

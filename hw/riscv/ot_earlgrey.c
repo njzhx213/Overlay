@@ -53,6 +53,7 @@
 #include "hw/opentitan/gpio_qp_shim.h"
 #include "hw/opentitan/ot_hmac.h"
 #include "hw/opentitan/ot_i2c.h"
+#include "hw/opentitan/i2c_qp_shim.h"
 #include "hw/opentitan/ot_ibex_wrapper.h"
 #include "hw/opentitan/ot_keymgr.h"
 #include "hw/opentitan/ot_kmac.h"
@@ -69,8 +70,10 @@
 #include "hw/opentitan/ot_sensor_eg.h"
 #include "hw/opentitan/ot_spi_device.h"
 #include "hw/opentitan/ot_spi_host.h"
+#include "hw/opentitan/spi_host_qp_shim.h"
 #include "hw/opentitan/ot_sram_ctrl.h"
 #include "hw/opentitan/ot_timer.h"
+#include "hw/opentitan/rv_timer_qp_shim.h"
 #include "hw/opentitan/ot_uart.h"
 #include "hw/opentitan/uart_qp_shim.h"
 #include "hw/opentitan/ot_unimp.h"
@@ -614,7 +617,11 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             { .base = 0x40050000u }
         ),
         .link = IBEXDEVICELINKDEFS(
-            OT_EG_SOC_DEVLINK("spi-host", SPI_HOST0)
+            /* qemu-passes drop-in: SPI_HOST0 now uses TYPE_OT_SPI_HOST_QP
+             * (auto-emitted shim, not derived from TYPE_OT_SPI_HOST), so
+             * this DEFINE_PROP_LINK type-check would fail.  Re-point at
+             * SPI_HOST1 which still uses upstream TYPE_OT_SPI_HOST. */
+            OT_EG_SOC_DEVLINK("spi-host", SPI_HOST1)
         ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 69),
@@ -625,15 +632,25 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(5, PLIC, 74),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(6, PLIC, 75),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(7, PLIC, 76),
-            OT_EG_SOC_GPIO_ALERT(0, 5),
-            OT_EG_SOC_SIGNAL(OT_SPI_DEVICE_PASSTHROUGH_EN, 0, SPI_HOST0,
-                OT_SPI_HOST_PASSTHROUGH_EN, 0),
-            OT_EG_SOC_SIGNAL(OT_SPI_DEVICE_PASSTHROUGH_CS, 0, SPI_HOST0,
-                OT_SPI_HOST_PASSTHROUGH_CS, 0)
+            OT_EG_SOC_GPIO_ALERT(0, 5)
+            /* qemu-passes drop-in: PASSTHROUGH_EN/CS connections to
+             * SPI_HOST0 dropped — SPI_HOST0 now uses TYPE_OT_SPI_HOST_QP
+             * (auto-emitted shim) which doesn't register the named GPIO
+             * inputs OT_SPI_HOST_PASSTHROUGH_EN/CS.  Frontend-only:
+             * passthrough mode never exercised so this dead wire is
+             * harmless. */
         ),
     },
     [OT_EG_SOC_DEV_I2C0] = {
-        .type = TYPE_OT_I2C,
+        /* qemu-passes drop-in: route I2C0 through i2c_qp_shim.c, which
+         * wraps the auto-generated model in qemu_passes/i2c.c.  I2C1/I2C2
+         * stay on TYPE_OT_I2C upstream so a regression here is isolated.
+         *
+         * IRQ 10..14 (TX_STRETCH / TX_THRESHOLD / ACQ_STRETCH / UNEXP_STOP /
+         * HOST_TIMEOUT) dropped: they don't exist in the LLHD IR (older OT
+         * version) and the auto-emitted shim has irqCount=10.  PLIC lines
+         * 87..91 stay unconnected. */
+        .type = TYPE_OT_I2C_QP,
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
         .memmap = MEMMAPENTRIES(
             { .base = 0x40080000u }
@@ -653,11 +670,6 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(7, PLIC, 84),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(8, PLIC, 85),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(9, PLIC, 86),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(10, PLIC, 87),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(11, PLIC, 88),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(12, PLIC, 89),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(13, PLIC, 90),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(14, PLIC, 91),
             OT_EG_SOC_GPIO_ALERT(0, 6)
         ),
         .link = IBEXDEVICELINKDEFS(
@@ -753,12 +765,21 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         )
     },
     [OT_EG_SOC_DEV_TIMER] = {
-        .type = TYPE_OT_TIMER,
+        /* qemu-passes drop-in: route rv_timer through rv_timer_qp_shim.c,
+         * which wraps the auto-generated model in qemu_passes/rv_timer.c.
+         * Switch back to TYPE_OT_TIMER to fall back to the upstream model.
+         *
+         * The HART/M_TIMER connection (`OT_EG_SOC_GPIO(0, HART, IRQ_M_TIMER)`)
+         * is intentionally dropped: it requires an unnamed gpio_out pin
+         * which the auto-emitted shim does not register (it only sets up
+         * sysbus IRQs + named alert).  Frontend-only doesn't fire IRQs
+         * anyway, so HART won't get a timer wakeup — fine for register
+         * round-trip testing.  Backend wiring milestone will revisit. */
+        .type = TYPE_OT_RV_TIMER_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40100000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
-            OT_EG_SOC_GPIO(0, HART, IRQ_M_TIMER),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 124),
             OT_EG_SOC_GPIO_ALERT(0, 10)
         ),
@@ -892,7 +913,11 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_SPI_HOST0] = {
-        .type = TYPE_OT_SPI_HOST,
+        /* qemu-passes drop-in: route SPI_HOST0 through spi_host_qp_shim.c,
+         * which wraps the auto-generated model in qemu_passes/spi_host.c.
+         * SPI_HOST1 stays on TYPE_OT_SPI_HOST upstream so a regression
+         * here is isolated to SPI_HOST0. */
+        .type = TYPE_OT_SPI_HOST_QP,
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
         .memmap = MEMMAPENTRIES(
             { .base = 0x40300000u }

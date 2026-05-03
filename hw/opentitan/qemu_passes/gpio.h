@@ -22,6 +22,12 @@ typedef struct {
     uint32_t u_reg_if_wdata_o;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
+    uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
+    uint8_t alert_rx_i_0__ack_p;  /* 1-bit */
+    uint8_t alert_rx_i_0__ping_n;  /* 1-bit */
+    uint8_t alert_rx_i_0__ping_p;  /* 1-bit */
+    uint8_t alert_tx_o_0__alert_n;  /* 1-bit */
+    uint8_t alert_tx_o_0__alert_p;  /* 1-bit */
     uint8_t alerts;  /* 1-bit */
     uint32_t cio_gpio_en_o;  /* 32-bit */
     uint32_t cio_gpio_en_q;  /* 32-bit */
@@ -38,6 +44,10 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_nd;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_pd;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_req_i;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_n;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_p;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_n;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_p;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_set_d;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_set_q;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_state_o;  /* 1-bit */
@@ -46,7 +56,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_test_set_q;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_test_trigger;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_trigger;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_tx_o;  /* 0-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_clk_i;  /* 1-bit */
@@ -172,7 +181,7 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_d_i;  /* 2-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_q_o;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_q_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_d_i;  /* 2-bit */
@@ -183,7 +192,7 @@ typedef struct {
     uint8_t gen_filter_0_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_0_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_0_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_0_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_0_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_0_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_0_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_0_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -208,7 +217,7 @@ typedef struct {
     uint8_t gen_filter_10_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_10_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_10_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_10_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_10_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_10_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_10_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_10_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -233,7 +242,7 @@ typedef struct {
     uint8_t gen_filter_11_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_11_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_11_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_11_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_11_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_11_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_11_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_11_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -258,7 +267,7 @@ typedef struct {
     uint8_t gen_filter_12_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_12_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_12_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_12_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_12_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_12_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_12_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_12_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -283,7 +292,7 @@ typedef struct {
     uint8_t gen_filter_13_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_13_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_13_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_13_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_13_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_13_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_13_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_13_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -308,7 +317,7 @@ typedef struct {
     uint8_t gen_filter_14_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_14_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_14_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_14_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_14_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_14_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_14_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_14_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -333,7 +342,7 @@ typedef struct {
     uint8_t gen_filter_15_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_15_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_15_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_15_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_15_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_15_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_15_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_15_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -358,7 +367,7 @@ typedef struct {
     uint8_t gen_filter_16_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_16_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_16_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_16_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_16_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_16_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_16_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_16_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -383,7 +392,7 @@ typedef struct {
     uint8_t gen_filter_17_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_17_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_17_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_17_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_17_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_17_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_17_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_17_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -408,7 +417,7 @@ typedef struct {
     uint8_t gen_filter_18_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_18_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_18_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_18_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_18_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_18_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_18_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_18_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -433,7 +442,7 @@ typedef struct {
     uint8_t gen_filter_19_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_19_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_19_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_19_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_19_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_19_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_19_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_19_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -458,7 +467,7 @@ typedef struct {
     uint8_t gen_filter_1_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_1_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_1_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_1_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_1_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_1_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_1_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_1_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -483,7 +492,7 @@ typedef struct {
     uint8_t gen_filter_20_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_20_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_20_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_20_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_20_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_20_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_20_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_20_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -508,7 +517,7 @@ typedef struct {
     uint8_t gen_filter_21_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_21_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_21_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_21_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_21_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_21_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_21_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_21_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -533,7 +542,7 @@ typedef struct {
     uint8_t gen_filter_22_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_22_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_22_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_22_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_22_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_22_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_22_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_22_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -558,7 +567,7 @@ typedef struct {
     uint8_t gen_filter_23_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_23_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_23_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_23_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_23_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_23_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_23_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_23_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -583,7 +592,7 @@ typedef struct {
     uint8_t gen_filter_24_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_24_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_24_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_24_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_24_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_24_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_24_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_24_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -608,7 +617,7 @@ typedef struct {
     uint8_t gen_filter_25_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_25_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_25_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_25_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_25_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_25_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_25_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_25_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -633,7 +642,7 @@ typedef struct {
     uint8_t gen_filter_26_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_26_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_26_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_26_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_26_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_26_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_26_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_26_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -658,7 +667,7 @@ typedef struct {
     uint8_t gen_filter_27_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_27_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_27_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_27_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_27_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_27_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_27_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_27_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -683,7 +692,7 @@ typedef struct {
     uint8_t gen_filter_28_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_28_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_28_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_28_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_28_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_28_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_28_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_28_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -708,7 +717,7 @@ typedef struct {
     uint8_t gen_filter_29_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_29_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_29_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_29_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_29_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_29_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_29_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_29_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -733,7 +742,7 @@ typedef struct {
     uint8_t gen_filter_2_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_2_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_2_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_2_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_2_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_2_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_2_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_2_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -758,7 +767,7 @@ typedef struct {
     uint8_t gen_filter_30_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_30_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_30_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_30_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_30_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_30_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_30_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_30_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -783,7 +792,7 @@ typedef struct {
     uint8_t gen_filter_31_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_31_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_31_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_31_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_31_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_31_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_31_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_31_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -808,7 +817,7 @@ typedef struct {
     uint8_t gen_filter_3_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_3_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_3_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_3_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_3_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_3_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_3_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_3_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -833,7 +842,7 @@ typedef struct {
     uint8_t gen_filter_4_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_4_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_4_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_4_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_4_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_4_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_4_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_4_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -858,7 +867,7 @@ typedef struct {
     uint8_t gen_filter_5_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_5_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_5_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_5_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_5_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_5_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_5_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_5_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -883,7 +892,7 @@ typedef struct {
     uint8_t gen_filter_6_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_6_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_6_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_6_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_6_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_6_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_6_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_6_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -908,7 +917,7 @@ typedef struct {
     uint8_t gen_filter_7_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_7_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_7_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_7_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_7_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_7_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_7_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_7_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -933,7 +942,7 @@ typedef struct {
     uint8_t gen_filter_8_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_8_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_8_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_8_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_8_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_8_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_8_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_8_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -958,7 +967,7 @@ typedef struct {
     uint8_t gen_filter_9_u_filter_diff_ctr_q;  /* 4-bit */
     uint8_t gen_filter_9_u_filter_enable_i;  /* 1-bit */
     uint8_t gen_filter_9_u_filter_filter_i;  /* 1-bit */
-    uint32_t gen_filter_9_u_filter_filter_o;  /* 32-bit */
+    uint8_t gen_filter_9_u_filter_filter_o;  /* 1-bit */
     uint8_t gen_filter_9_u_filter_filter_q;  /* 1-bit */
     uint8_t gen_filter_9_u_filter_filter_synced;  /* 1-bit */
     uint8_t gen_filter_9_u_filter_gen_async_prim_flop_2sync_clk_i;  /* 1-bit */
@@ -1132,7 +1141,8 @@ typedef struct {
     uint8_t u_reg_racl_error_o_read_access;  /* 1-bit */
     uint32_t u_reg_racl_error_o_request_address;  /* 32-bit */
     uint8_t u_reg_racl_error_o_valid;  /* 1-bit */
-    uint8_t u_reg_racl_policies_i;  /* 0-bit */
+    uint8_t u_reg_racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t u_reg_racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i__0__read_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_role_vec;  /* 2-bit */
@@ -1453,7 +1463,7 @@ typedef struct {
     uint16_t u_reg_u_masked_oe_lower_data_d;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_lower_data_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_lower_data_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_oe_lower_data_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_oe_lower_data_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_oe_lower_data_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_oe_lower_data_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_oe_lower_data_re;  /* 1-bit */
@@ -1462,7 +1472,7 @@ typedef struct {
     uint16_t u_reg_u_masked_oe_lower_mask_d;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_lower_mask_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_lower_mask_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_oe_lower_mask_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_oe_lower_mask_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_oe_lower_mask_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_oe_lower_mask_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_oe_lower_mask_re;  /* 1-bit */
@@ -1471,7 +1481,7 @@ typedef struct {
     uint16_t u_reg_u_masked_oe_upper_data_d;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_upper_data_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_upper_data_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_oe_upper_data_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_oe_upper_data_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_oe_upper_data_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_oe_upper_data_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_oe_upper_data_re;  /* 1-bit */
@@ -1480,7 +1490,7 @@ typedef struct {
     uint16_t u_reg_u_masked_oe_upper_mask_d;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_upper_mask_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_oe_upper_mask_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_oe_upper_mask_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_oe_upper_mask_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_oe_upper_mask_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_oe_upper_mask_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_oe_upper_mask_re;  /* 1-bit */
@@ -1489,7 +1499,7 @@ typedef struct {
     uint16_t u_reg_u_masked_out_lower_data_d;  /* 16-bit */
     uint16_t u_reg_u_masked_out_lower_data_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_out_lower_data_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_out_lower_data_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_out_lower_data_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_out_lower_data_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_out_lower_data_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_out_lower_data_re;  /* 1-bit */
@@ -1498,7 +1508,7 @@ typedef struct {
     uint16_t u_reg_u_masked_out_lower_mask_d;  /* 16-bit */
     uint16_t u_reg_u_masked_out_lower_mask_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_out_lower_mask_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_out_lower_mask_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_out_lower_mask_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_out_lower_mask_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_out_lower_mask_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_out_lower_mask_re;  /* 1-bit */
@@ -1507,7 +1517,7 @@ typedef struct {
     uint16_t u_reg_u_masked_out_upper_data_d;  /* 16-bit */
     uint16_t u_reg_u_masked_out_upper_data_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_out_upper_data_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_out_upper_data_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_out_upper_data_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_out_upper_data_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_out_upper_data_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_out_upper_data_re;  /* 1-bit */
@@ -1516,7 +1526,7 @@ typedef struct {
     uint16_t u_reg_u_masked_out_upper_mask_d;  /* 16-bit */
     uint16_t u_reg_u_masked_out_upper_mask_ds;  /* 16-bit */
     uint16_t u_reg_u_masked_out_upper_mask_q;  /* 16-bit */
-    uint8_t u_reg_u_masked_out_upper_mask_qe;  /* 2-bit */
+    uint8_t u_reg_u_masked_out_upper_mask_qe;  /* 1-bit */
     uint8_t u_reg_u_masked_out_upper_mask_qre;  /* 1-bit */
     uint16_t u_reg_u_masked_out_upper_mask_qs;  /* 16-bit */
     uint8_t u_reg_u_masked_out_upper_mask_re;  /* 1-bit */
@@ -1633,11 +1643,11 @@ typedef struct {
     uint8_t u_reg_u_reg_if_wr_req;  /* 1-bit */
     uint8_t u_reg_u_rsp_intg_gen_data_intg;  /* 7-bit */
     uint32_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_data_i;  /* 32-bit */
-    uint8_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_data_intg_o;  /* 7-bit */
+    uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_data_intg_o;  /* 39-bit */
     uint32_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_i;  /* 32-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
-    uint8_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 7-bit */
+    uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -1662,7 +1672,6 @@ typedef struct {
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_user_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_valid;  /* 1-bit */
     uint8_t u_reg_wr_err;  /* 1-bit */
-    uint8_t unnamed;  /* 0-bit */
 } gpio_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
@@ -1675,6 +1684,10 @@ void     gpio_write(void *opaque, hwaddr addr,
  * and runs update_state→tick→update_state to settle.
  */
 void gpio_set_strap_en_i(gpio_state *s, uint8_t value);
+void gpio_set_alert_rx_i_0__ping_p(gpio_state *s, uint8_t value);
+void gpio_set_alert_rx_i_0__ping_n(gpio_state *s, uint8_t value);
+void gpio_set_alert_rx_i_0__ack_p(gpio_state *s, uint8_t value);
+void gpio_set_alert_rx_i_0__ack_n(gpio_state *s, uint8_t value);
 void gpio_set_cio_gpio_i(gpio_state *s, uint32_t value);
 
 #endif /* GPIO_H */

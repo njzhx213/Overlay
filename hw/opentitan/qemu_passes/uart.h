@@ -23,6 +23,12 @@ typedef struct {
     uint32_t u_reg_if_wdata_o;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
+    uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
+    uint8_t alert_rx_i_0__ack_p;  /* 1-bit */
+    uint8_t alert_rx_i_0__ping_n;  /* 1-bit */
+    uint8_t alert_rx_i_0__ping_p;  /* 1-bit */
+    uint8_t alert_tx_o_0__alert_n;  /* 1-bit */
+    uint8_t alert_tx_o_0__alert_p;  /* 1-bit */
     uint8_t alerts;  /* 1-bit */
     uint8_t cio_rx_i;  /* 1-bit */
     uint8_t cio_tx_en_o;  /* 1-bit */
@@ -35,6 +41,10 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_nd;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_pd;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_req_i;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_n;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ack_p;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_n;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_rx_i_ping_p;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_set_d;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_set_q;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_state_o;  /* 1-bit */
@@ -43,7 +53,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_test_set_q;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_test_trigger;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_trigger;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_tx_o;  /* 0-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_clk_i;  /* 1-bit */
@@ -169,7 +178,7 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ping_u_secure_anchor_buf_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_d_i;  /* 2-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_q_o;  /* 1-bit */
+    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_q_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_d_i;  /* 2-bit */
@@ -289,7 +298,8 @@ typedef struct {
     uint8_t u_reg_racl_error_o_read_access;  /* 1-bit */
     uint32_t u_reg_racl_error_o_request_address;  /* 32-bit */
     uint8_t u_reg_racl_error_o_valid;  /* 1-bit */
-    uint8_t u_reg_racl_policies_i;  /* 0-bit */
+    uint8_t u_reg_racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t u_reg_racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i__0__read_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_role_vec;  /* 2-bit */
@@ -622,7 +632,7 @@ typedef struct {
     uint8_t u_reg_u_fifo_ctrl_rxilvl_de;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxilvl_ds;  /* 3-bit */
     uint8_t u_reg_u_fifo_ctrl_rxilvl_q;  /* 3-bit */
-    uint8_t u_reg_u_fifo_ctrl_rxilvl_qe;  /* 4-bit */
+    uint8_t u_reg_u_fifo_ctrl_rxilvl_qe;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxilvl_qs;  /* 3-bit */
     uint8_t u_reg_u_fifo_ctrl_rxilvl_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxilvl_wd;  /* 3-bit */
@@ -641,7 +651,7 @@ typedef struct {
     uint8_t u_reg_u_fifo_ctrl_rxrst_de;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxrst_ds;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxrst_q;  /* 1-bit */
-    uint8_t u_reg_u_fifo_ctrl_rxrst_qe;  /* 4-bit */
+    uint8_t u_reg_u_fifo_ctrl_rxrst_qe;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxrst_qs;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxrst_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_rxrst_wd;  /* 1-bit */
@@ -660,7 +670,7 @@ typedef struct {
     uint8_t u_reg_u_fifo_ctrl_txilvl_de;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txilvl_ds;  /* 3-bit */
     uint8_t u_reg_u_fifo_ctrl_txilvl_q;  /* 3-bit */
-    uint8_t u_reg_u_fifo_ctrl_txilvl_qe;  /* 4-bit */
+    uint8_t u_reg_u_fifo_ctrl_txilvl_qe;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txilvl_qs;  /* 3-bit */
     uint8_t u_reg_u_fifo_ctrl_txilvl_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txilvl_wd;  /* 3-bit */
@@ -679,7 +689,7 @@ typedef struct {
     uint8_t u_reg_u_fifo_ctrl_txrst_de;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txrst_ds;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txrst_q;  /* 1-bit */
-    uint8_t u_reg_u_fifo_ctrl_txrst_qe;  /* 4-bit */
+    uint8_t u_reg_u_fifo_ctrl_txrst_qe;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txrst_qs;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txrst_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_fifo_ctrl_txrst_wd;  /* 1-bit */
@@ -1056,7 +1066,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_rx_break_err_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_break_err_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_break_err_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_rx_break_err_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_rx_break_err_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_break_err_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_break_err_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_break_err_re;  /* 1-bit */
@@ -1065,7 +1075,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_rx_frame_err_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_frame_err_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_frame_err_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_rx_frame_err_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_rx_frame_err_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_frame_err_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_frame_err_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_frame_err_re;  /* 1-bit */
@@ -1074,7 +1084,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_rx_overflow_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_overflow_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_overflow_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_rx_overflow_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_rx_overflow_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_overflow_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_overflow_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_overflow_re;  /* 1-bit */
@@ -1083,7 +1093,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_rx_parity_err_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_parity_err_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_parity_err_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_rx_parity_err_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_rx_parity_err_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_parity_err_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_parity_err_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_parity_err_re;  /* 1-bit */
@@ -1092,7 +1102,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_rx_timeout_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_timeout_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_timeout_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_rx_timeout_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_rx_timeout_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_timeout_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_timeout_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_timeout_re;  /* 1-bit */
@@ -1101,7 +1111,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_rx_watermark_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_watermark_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_watermark_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_rx_watermark_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_rx_watermark_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_watermark_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_watermark_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_rx_watermark_re;  /* 1-bit */
@@ -1110,7 +1120,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_tx_done_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_done_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_done_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_tx_done_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_tx_done_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_done_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_done_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_done_re;  /* 1-bit */
@@ -1119,7 +1129,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_tx_empty_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_empty_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_empty_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_tx_empty_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_tx_empty_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_empty_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_empty_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_empty_re;  /* 1-bit */
@@ -1128,7 +1138,7 @@ typedef struct {
     uint8_t u_reg_u_intr_test_tx_watermark_d;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_watermark_ds;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_watermark_q;  /* 1-bit */
-    uint16_t u_reg_u_intr_test_tx_watermark_qe;  /* 9-bit */
+    uint8_t u_reg_u_intr_test_tx_watermark_qe;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_watermark_qre;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_watermark_qs;  /* 1-bit */
     uint8_t u_reg_u_intr_test_tx_watermark_re;  /* 1-bit */
@@ -1292,11 +1302,11 @@ typedef struct {
     uint8_t u_reg_u_reg_if_wr_req;  /* 1-bit */
     uint8_t u_reg_u_rsp_intg_gen_data_intg;  /* 7-bit */
     uint32_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_data_i;  /* 32-bit */
-    uint8_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_data_intg_o;  /* 7-bit */
+    uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_data_intg_o;  /* 39-bit */
     uint32_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_i;  /* 32-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
-    uint8_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 7-bit */
+    uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -1808,10 +1818,10 @@ typedef struct {
     uint8_t uart_core_uart_rx_parity_odd;  /* 1-bit */
     uint8_t uart_core_uart_rx_rst_ni;  /* 1-bit */
     uint8_t uart_core_uart_rx_rx;  /* 1-bit */
-    uint8_t uart_core_uart_rx_rx_data;  /* 1-bit */
+    uint8_t uart_core_uart_rx_rx_data;  /* 8-bit */
     uint8_t uart_core_uart_rx_rx_enable;  /* 1-bit */
     uint8_t uart_core_uart_rx_rx_parity_err;  /* 1-bit */
-    uint8_t uart_core_uart_rx_rx_valid;  /* 5-bit */
+    uint8_t uart_core_uart_rx_rx_valid;  /* 1-bit */
     uint8_t uart_core_uart_rx_rx_valid_q;  /* 1-bit */
     uint16_t uart_core_uart_rx_sreg_d;  /* 11-bit */
     uint16_t uart_core_uart_rx_sreg_q;  /* 11-bit */
@@ -1837,7 +1847,6 @@ typedef struct {
     uint8_t uart_core_uart_tx_wr;  /* 1-bit */
     uint8_t uart_core_uart_tx_wr_data;  /* 8-bit */
     uint8_t uart_core_uart_tx_wr_parity;  /* 1-bit */
-    uint8_t unnamed;  /* 0-bit */
 
     /* ---- ACCUMULATE counters (ptimer-backed) ---- */
     /* One ptimer + IRQ line per counter recognised by
@@ -1861,6 +1870,10 @@ void     uart_write(void *opaque, hwaddr addr,
  * the simulated device.  Each writes one input-port leaf field
  * and runs update_state→tick→update_state to settle.
  */
+void uart_set_alert_rx_i_0__ping_p(uart_state *s, uint8_t value);
+void uart_set_alert_rx_i_0__ping_n(uart_state *s, uint8_t value);
+void uart_set_alert_rx_i_0__ack_p(uart_state *s, uint8_t value);
+void uart_set_alert_rx_i_0__ack_n(uart_state *s, uint8_t value);
 void uart_set_cio_rx_i(uart_state *s, uint8_t value);
 
 #endif /* UART_H */
