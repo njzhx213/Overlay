@@ -137,8 +137,8 @@ static void update_state(uart_state *s)
     s->u_reg_hw2reg_fifo_status_rxlvl_d = s->uart_core_hw2reg_fifo_status_rxlvl_d;
     s->u_reg_hw2reg_fifo_status_txlvl_d = s->uart_core_hw2reg_fifo_status_txlvl_d;
     s->u_reg_hw2reg_val_d = s->uart_core_hw2reg_val_d;
-    s->u_reg_racl_policies_i__0__write_perm = s->racl_policies_i__0__write_perm;
-    s->u_reg_racl_policies_i__0__read_perm = s->racl_policies_i__0__read_perm;
+    s->u_reg_racl_policies_i_0__write_perm = s->racl_policies_i__0__write_perm;
+    s->u_reg_racl_policies_i_0__read_perm = s->racl_policies_i__0__read_perm;
     s->u_reg_intg_err = 0;
     s->u_reg_reg_we_err = s->u_reg_u_prim_reg_we_check_err_o;
     s->u_reg_reg_we = s->u_reg_u_reg_if_we_o;

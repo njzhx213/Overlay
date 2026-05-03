@@ -492,8 +492,8 @@ static void update_state(i2c_state *s)
     s->u_reg_hw2reg_target_events_bus_timeout_de = s->i2c_core_hw2reg_target_events_bus_timeout_de;
     s->u_reg_hw2reg_target_events_tx_pending_d = s->i2c_core_hw2reg_target_events_tx_pending_d;
     s->u_reg_hw2reg_target_events_tx_pending_de = s->i2c_core_hw2reg_target_events_tx_pending_de;
-    s->u_reg_racl_policies_i__0__write_perm = s->racl_policies_i__0__write_perm;
-    s->u_reg_racl_policies_i__0__read_perm = s->racl_policies_i__0__read_perm;
+    s->u_reg_racl_policies_i_0__write_perm = s->racl_policies_i__0__write_perm;
+    s->u_reg_racl_policies_i_0__read_perm = s->racl_policies_i__0__read_perm;
     s->u_reg_intg_err = 0;
     s->u_reg_reg_we_err = s->u_reg_u_prim_reg_we_check_err_o;
     s->u_reg_reg_we = s->u_reg_u_reg_if_we_o;
@@ -4807,10 +4807,10 @@ static void update_state(i2c_state *s)
     s->i2c_core_u_fifos_u_ram_arbiter_rst_ni = s->i2c_core_u_fifos_rst_ni;
     s->i2c_core_u_fifos_u_ram_arbiter_req_chk_i = 1;
     s->i2c_core_u_fifos_u_ram_arbiter_req_i = s->i2c_core_u_fifos_ram_arb_req;
-    s->i2c_core_u_fifos_u_ram_arbiter_data_i__0_ = s->i2c_core_u_fifos_ram_arb_inp_data_0_;
-    s->i2c_core_u_fifos_u_ram_arbiter_data_i__1_ = s->i2c_core_u_fifos_ram_arb_inp_data_1_;
-    s->i2c_core_u_fifos_u_ram_arbiter_data_i__2_ = s->i2c_core_u_fifos_ram_arb_inp_data_2_;
-    s->i2c_core_u_fifos_u_ram_arbiter_data_i__3_ = s->i2c_core_u_fifos_ram_arb_inp_data_3_;
+    s->i2c_core_u_fifos_u_ram_arbiter_data_i_0_ = s->i2c_core_u_fifos_ram_arb_inp_data_0_;
+    s->i2c_core_u_fifos_u_ram_arbiter_data_i_1_ = s->i2c_core_u_fifos_ram_arb_inp_data_1_;
+    s->i2c_core_u_fifos_u_ram_arbiter_data_i_2_ = s->i2c_core_u_fifos_ram_arb_inp_data_2_;
+    s->i2c_core_u_fifos_u_ram_arbiter_data_i_3_ = s->i2c_core_u_fifos_ram_arb_inp_data_3_;
     s->i2c_core_u_fifos_u_ram_arbiter_ready_i = 1;
     s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_req_tree = (s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_req_tree & ~0x1ULL) | (((((((s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_req_tree) >> 1) & 0x1)) | ((((s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_req_tree) >> 2) & 0x1))) & 0x1ULL) << 0);
     s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_prio_tree = (s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_prio_tree & ~0x1ULL) | (((((((s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_prio_tree) >> 2) & 0x1)) | ((((s->i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_prio_tree) >> 1) & 0x1))) & 0x1ULL) << 0);

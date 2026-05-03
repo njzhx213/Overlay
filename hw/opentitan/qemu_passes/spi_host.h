@@ -20,8 +20,8 @@ typedef struct {
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint32_t tl_i_a_data;  /* BIP, 32-bit */
     uint32_t unnamed_addr_0;  /* BIP, 32-bit */
-    __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t _unknown_arg0;  /* 1-bit */
@@ -394,7 +394,6 @@ typedef struct {
     uint8_t sw_error_status;  /* 6-bit */
     uint8_t test_dir_inval;  /* 1-bit */
     uint8_t test_speed_inval;  /* 1-bit */
-    uint32_t tl_i_a_data;  /* 32-bit */
     uint8_t tl_i_a_mask;  /* 4-bit */
     uint8_t tl_i_a_opcode;  /* 3-bit */
     uint8_t tl_i_a_param;  /* 3-bit */
@@ -686,8 +685,6 @@ typedef struct {
     uint8_t u_reg_racl_error_o_valid;  /* 1-bit */
     uint8_t u_reg_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_reg_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_reg_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_role_vec;  /* 2-bit */
     uint8_t u_reg_reg2hw_alert_test_q;  /* 1-bit */
     uint8_t u_reg_reg2hw_alert_test_qe;  /* 1-bit */
@@ -3065,6 +3062,8 @@ typedef struct {
     uint8_t u_window_racl_error_tx_o_read_access;  /* 1-bit */
     uint32_t u_window_racl_error_tx_o_request_address;  /* 32-bit */
     uint8_t u_window_racl_error_tx_o_valid;  /* 1-bit */
+    uint8_t u_window_racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t u_window_racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t u_window_racl_policies_i__0__read_perm;  /* 2-bit */
     uint8_t u_window_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_window_rst_ni;  /* 1-bit */
@@ -3134,8 +3133,8 @@ typedef struct {
     uint8_t u_window_u_adapter_rx_racl_error_o_read_access;  /* 1-bit */
     uint32_t u_window_u_adapter_rx_racl_error_o_request_address;  /* 32-bit */
     uint8_t u_window_u_adapter_rx_racl_error_o_valid;  /* 1-bit */
-    uint8_t u_window_u_adapter_rx_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_window_u_adapter_rx_racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t u_window_u_adapter_rx_racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t u_window_u_adapter_rx_racl_policies_i_0__write_perm;  /* 2-bit */
     uint32_t u_window_u_adapter_rx_rdata_i;  /* 32-bit */
     uint8_t u_window_u_adapter_rx_re_o;  /* 1-bit */
     uint8_t u_window_u_adapter_rx_rst_ni;  /* 1-bit */
@@ -3270,6 +3269,8 @@ typedef struct {
     uint8_t u_window_u_adapter_tx_racl_error_o_read_access;  /* 1-bit */
     uint32_t u_window_u_adapter_tx_racl_error_o_request_address;  /* 32-bit */
     uint8_t u_window_u_adapter_tx_racl_error_o_valid;  /* 1-bit */
+    uint8_t u_window_u_adapter_tx_racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t u_window_u_adapter_tx_racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t u_window_u_adapter_tx_racl_policies_i__0__read_perm;  /* 2-bit */
     uint8_t u_window_u_adapter_tx_racl_policies_i__0__write_perm;  /* 2-bit */
     uint32_t u_window_u_adapter_tx_racl_policy_sel_ranges_i__0__base;  /* 32-bit */
@@ -3315,12 +3316,12 @@ typedef struct {
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_error_o_read_access;  /* 1-bit */
     uint32_t u_window_u_adapter_tx_tlul_adapter_racl_racl_error_o_request_address;  /* 32-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_error_o_valid;  /* 1-bit */
-    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policies_i__0__write_perm;  /* 2-bit */
-    uint32_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i__0__base;  /* 32-bit */
-    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i__0__enable;  /* 1-bit */
-    uint32_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i__0__limit;  /* 32-bit */
-    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i__0__policy_sel;  /* 1-bit */
+    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policies_i_0__write_perm;  /* 2-bit */
+    uint32_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i_0__base;  /* 32-bit */
+    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i_0__enable;  /* 1-bit */
+    uint32_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i_0__limit;  /* 32-bit */
+    uint8_t u_window_u_adapter_tx_tlul_adapter_racl_racl_policy_sel_ranges_i_0__policy_sel;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_rst_ni;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_tl_d2h_o_a_ready;  /* 1-bit */
     uint32_t u_window_u_adapter_tx_tlul_adapter_racl_tl_d2h_o_d_data;  /* 32-bit */

@@ -300,8 +300,6 @@ typedef struct {
     uint8_t u_reg_racl_error_o_valid;  /* 1-bit */
     uint8_t u_reg_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_reg_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_reg_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_role_vec;  /* 2-bit */
     uint8_t u_reg_rdata_qs;  /* 8-bit */
     uint8_t u_reg_reg2hw_alert_test_q;  /* 1-bit */

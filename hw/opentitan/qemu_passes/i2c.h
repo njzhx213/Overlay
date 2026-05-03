@@ -932,10 +932,6 @@ typedef struct {
     uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i_1_;  /* 23-bit */
     uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i_2_;  /* 23-bit */
     uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i_3_;  /* 23-bit */
-    uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i__0_;  /* 23-bit */
-    uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i__1_;  /* 23-bit */
-    uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i__2_;  /* 23-bit */
-    uint32_t i2c_core_u_fifos_u_ram_arbiter_data_i__3_;  /* 23-bit */
     uint32_t i2c_core_u_fifos_u_ram_arbiter_data_o;  /* 23-bit */
     uint32_t i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_data_tree_0_;  /* 23-bit */
     uint32_t i2c_core_u_fifos_u_ram_arbiter_gen_normal_case_data_tree_1_;  /* 23-bit */
@@ -1649,8 +1645,6 @@ typedef struct {
     uint8_t u_reg_racl_error_o_valid;  /* 1-bit */
     uint8_t u_reg_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_reg_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_reg_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_reg_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_reg_racl_role_vec;  /* 2-bit */
     uint8_t u_reg_rdata_qs;  /* 8-bit */
     uint8_t u_reg_reg2hw_acqdata_abyte_q;  /* 8-bit */
