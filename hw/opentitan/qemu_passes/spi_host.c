@@ -4450,29 +4450,54 @@ static void tick(spi_host_state *s)
     s->u_reg_u_socket_num_req_outstanding = ((((!(((s->u_reg_u_socket_rst_ni) ^ 1))) && (s->u_reg_u_socket_accept_t_req)) && (((s->u_reg_u_socket_accept_t_rsp) ^ 1))) ? (s->u_reg_u_socket_num_req_outstanding + 1) : s->u_reg_u_socket_num_req_outstanding);
     s->u_reg_u_socket_dev_select_outstanding = (((((!(((s->u_reg_u_socket_rst_ni) ^ 1))) && (s->u_reg_u_socket_accept_t_req)) && (((s->u_reg_u_socket_accept_t_rsp) ^ 1))) || (((!(((s->u_reg_u_socket_rst_ni) ^ 1))) && (s->u_reg_u_socket_accept_t_req)) && (!(((s->u_reg_u_socket_accept_t_rsp) ^ 1))))) ? (s->u_reg_u_socket_dev_select_t) : s->u_reg_u_socket_dev_select_outstanding);
     s->u_reg_u_socket_hfifo_reqready = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__a_ready) : s->u_reg_u_socket_hfifo_reqready);
-    s->u_reg_u_socket_hfifo_reqready = (((((1) || (1)) && (!(((s->u_reg_u_socket__unknown_arg0) < (3))))) && (s->u_reg_u_socket_hold_all_requests)) ? (0) : s->u_reg_u_socket_hfifo_reqready);
-    /* MANUAL OVERRIDE — Bug E2 workaround: socket response port mux on
-     * dev_select_outstanding is not emitted (loop-based mux in IR is not
-     * unrolled by CombLogicExtract).  IR semantics:
-     *   dso == 0 → tl_u_i[3] (window 1) | == 1 → tl_u_i[2] (window 0)
-     *   == 2 → tl_u_i[1] (registers)    | else → tl_u_i[0] (err_resp). */
-#define TL_T_P_MUX(field) \
-    ((s->u_reg_u_socket_dev_select_outstanding == 0) ? s->u_reg_u_socket_tl_u_i_3__##field : \
-     (s->u_reg_u_socket_dev_select_outstanding == 1) ? s->u_reg_u_socket_tl_u_i_2__##field : \
-     (s->u_reg_u_socket_dev_select_outstanding == 2) ? s->u_reg_u_socket_tl_u_i_1__##field : \
-                                                       s->u_reg_u_socket_tl_u_i_0__##field)
-    s->u_reg_u_socket_tl_t_p_d_valid = TL_T_P_MUX(d_valid);
-    s->u_reg_u_socket_tl_t_p_d_opcode = TL_T_P_MUX(d_opcode);
-    s->u_reg_u_socket_tl_t_p_d_param = TL_T_P_MUX(d_param);
-    s->u_reg_u_socket_tl_t_p_d_size = TL_T_P_MUX(d_size);
-    s->u_reg_u_socket_tl_t_p_d_source = TL_T_P_MUX(d_source);
-    s->u_reg_u_socket_tl_t_p_d_sink = TL_T_P_MUX(d_sink);
-    s->u_reg_u_socket_tl_t_p_d_data = TL_T_P_MUX(d_data);
-    s->u_reg_u_socket_tl_t_p_d_user_rsp_intg = TL_T_P_MUX(d_user_rsp_intg);
-    s->u_reg_u_socket_tl_t_p_d_user_data_intg = TL_T_P_MUX(d_user_data_intg);
-    s->u_reg_u_socket_tl_t_p_d_error = TL_T_P_MUX(d_error);
-    s->u_reg_u_socket_tl_t_p_a_ready = TL_T_P_MUX(a_ready);
-#undef TL_T_P_MUX
+    s->u_reg_u_socket_hfifo_reqready = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__a_ready) : s->u_reg_u_socket_hfifo_reqready);
+    s->u_reg_u_socket_hfifo_reqready = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (((s->u_reg_u_socket_dev_select_t) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__a_ready) : s->u_reg_u_socket_hfifo_reqready);
+    s->u_reg_u_socket_hfifo_reqready = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (!(((s->u_reg_u_socket_dev_select_t) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (((s->u_reg_u_socket_dev_select_t) == (1))))) && (((s->u_reg_u_socket_dev_select_t) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__a_ready) : s->u_reg_u_socket_hfifo_reqready);
+    s->u_reg_u_socket_hfifo_reqready = ((((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (!(((s->u_reg_u_socket_dev_select_t) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (((s->u_reg_u_socket_dev_select_t) == (1))))) && (((s->u_reg_u_socket_dev_select_t) == (2)))) || (((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (!(((s->u_reg_u_socket_dev_select_t) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_t) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_t) == (0))))) && (((s->u_reg_u_socket_dev_select_t) == (1))))) && (!(((s->u_reg_u_socket_dev_select_t) == (2)))))) && (s->u_reg_u_socket_hold_all_requests)) ? (0) : s->u_reg_u_socket_hfifo_reqready);
+    s->u_reg_u_socket_tl_t_p_d_valid = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_valid) : s->u_reg_u_socket_tl_t_p_d_valid);
+    s->u_reg_u_socket_tl_t_p_d_opcode = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_opcode) : s->u_reg_u_socket_tl_t_p_d_opcode);
+    s->u_reg_u_socket_tl_t_p_d_param = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_param) : s->u_reg_u_socket_tl_t_p_d_param);
+    s->u_reg_u_socket_tl_t_p_d_size = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_size) : s->u_reg_u_socket_tl_t_p_d_size);
+    s->u_reg_u_socket_tl_t_p_d_source = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_source) : s->u_reg_u_socket_tl_t_p_d_source);
+    s->u_reg_u_socket_tl_t_p_d_sink = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_sink) : s->u_reg_u_socket_tl_t_p_d_sink);
+    s->u_reg_u_socket_tl_t_p_d_data = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_data) : s->u_reg_u_socket_tl_t_p_d_data);
+    s->u_reg_u_socket_tl_t_p_d_user_rsp_intg = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_user_rsp_intg) : s->u_reg_u_socket_tl_t_p_d_user_rsp_intg);
+    s->u_reg_u_socket_tl_t_p_d_user_data_intg = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_user_data_intg) : s->u_reg_u_socket_tl_t_p_d_user_data_intg);
+    s->u_reg_u_socket_tl_t_p_d_error = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__d_error) : s->u_reg_u_socket_tl_t_p_d_error);
+    s->u_reg_u_socket_tl_t_p_a_ready = (((1) || (1)) ? (s->u_reg_u_socket_tl_u_i_0__a_ready) : s->u_reg_u_socket_tl_t_p_a_ready);
+    s->u_reg_u_socket_tl_t_p_d_valid = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_valid) : s->u_reg_u_socket_tl_t_p_d_valid);
+    s->u_reg_u_socket_tl_t_p_d_opcode = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_opcode) : s->u_reg_u_socket_tl_t_p_d_opcode);
+    s->u_reg_u_socket_tl_t_p_d_param = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_param) : s->u_reg_u_socket_tl_t_p_d_param);
+    s->u_reg_u_socket_tl_t_p_d_size = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_size) : s->u_reg_u_socket_tl_t_p_d_size);
+    s->u_reg_u_socket_tl_t_p_d_source = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_source) : s->u_reg_u_socket_tl_t_p_d_source);
+    s->u_reg_u_socket_tl_t_p_d_sink = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_sink) : s->u_reg_u_socket_tl_t_p_d_sink);
+    s->u_reg_u_socket_tl_t_p_d_data = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_data) : s->u_reg_u_socket_tl_t_p_d_data);
+    s->u_reg_u_socket_tl_t_p_d_user_rsp_intg = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_user_rsp_intg) : s->u_reg_u_socket_tl_t_p_d_user_rsp_intg);
+    s->u_reg_u_socket_tl_t_p_d_user_data_intg = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_user_data_intg) : s->u_reg_u_socket_tl_t_p_d_user_data_intg);
+    s->u_reg_u_socket_tl_t_p_d_error = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__d_error) : s->u_reg_u_socket_tl_t_p_d_error);
+    s->u_reg_u_socket_tl_t_p_a_ready = ((((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0)))) ? (s->u_reg_u_socket_tl_u_i_3__a_ready) : s->u_reg_u_socket_tl_t_p_a_ready);
+    s->u_reg_u_socket_tl_t_p_d_valid = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_valid) : s->u_reg_u_socket_tl_t_p_d_valid);
+    s->u_reg_u_socket_tl_t_p_d_opcode = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_opcode) : s->u_reg_u_socket_tl_t_p_d_opcode);
+    s->u_reg_u_socket_tl_t_p_d_param = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_param) : s->u_reg_u_socket_tl_t_p_d_param);
+    s->u_reg_u_socket_tl_t_p_d_size = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_size) : s->u_reg_u_socket_tl_t_p_d_size);
+    s->u_reg_u_socket_tl_t_p_d_source = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_source) : s->u_reg_u_socket_tl_t_p_d_source);
+    s->u_reg_u_socket_tl_t_p_d_sink = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_sink) : s->u_reg_u_socket_tl_t_p_d_sink);
+    s->u_reg_u_socket_tl_t_p_d_data = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_data) : s->u_reg_u_socket_tl_t_p_d_data);
+    s->u_reg_u_socket_tl_t_p_d_user_rsp_intg = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_user_rsp_intg) : s->u_reg_u_socket_tl_t_p_d_user_rsp_intg);
+    s->u_reg_u_socket_tl_t_p_d_user_data_intg = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_user_data_intg) : s->u_reg_u_socket_tl_t_p_d_user_data_intg);
+    s->u_reg_u_socket_tl_t_p_d_error = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__d_error) : s->u_reg_u_socket_tl_t_p_d_error);
+    s->u_reg_u_socket_tl_t_p_a_ready = ((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1)))) ? (s->u_reg_u_socket_tl_u_i_2__a_ready) : s->u_reg_u_socket_tl_t_p_a_ready);
+    s->u_reg_u_socket_tl_t_p_d_valid = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_valid) : s->u_reg_u_socket_tl_t_p_d_valid);
+    s->u_reg_u_socket_tl_t_p_d_opcode = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_opcode) : s->u_reg_u_socket_tl_t_p_d_opcode);
+    s->u_reg_u_socket_tl_t_p_d_param = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_param) : s->u_reg_u_socket_tl_t_p_d_param);
+    s->u_reg_u_socket_tl_t_p_d_size = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_size) : s->u_reg_u_socket_tl_t_p_d_size);
+    s->u_reg_u_socket_tl_t_p_d_source = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_source) : s->u_reg_u_socket_tl_t_p_d_source);
+    s->u_reg_u_socket_tl_t_p_d_sink = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_sink) : s->u_reg_u_socket_tl_t_p_d_sink);
+    s->u_reg_u_socket_tl_t_p_d_data = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_data) : s->u_reg_u_socket_tl_t_p_d_data);
+    s->u_reg_u_socket_tl_t_p_d_user_rsp_intg = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_user_rsp_intg) : s->u_reg_u_socket_tl_t_p_d_user_rsp_intg);
+    s->u_reg_u_socket_tl_t_p_d_user_data_intg = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_user_data_intg) : s->u_reg_u_socket_tl_t_p_d_user_data_intg);
+    s->u_reg_u_socket_tl_t_p_d_error = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__d_error) : s->u_reg_u_socket_tl_t_p_d_error);
+    s->u_reg_u_socket_tl_t_p_a_ready = ((((((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (1))))) || (((((1) || (1)) && (!(((s->u_reg_u_socket_dev_select_outstanding) == (0))))) || (((1) || (1)) && (((s->u_reg_u_socket_dev_select_outstanding) == (0))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (1))))) && (((s->u_reg_u_socket_dev_select_outstanding) == (2)))) ? (s->u_reg_u_socket_tl_u_i_1__a_ready) : s->u_reg_u_socket_tl_t_p_a_ready);
     s->u_reg_u_socket_gen_err_resp_err_resp_err_rsp_pending = ((((s->u_reg_u_socket_gen_err_resp_err_resp_rst_ni) ^ 1)) ? (0) : s->u_reg_u_socket_gen_err_resp_err_resp_err_rsp_pending);
     s->u_reg_u_socket_gen_err_resp_err_resp_err_source = ((((s->u_reg_u_socket_gen_err_resp_err_resp_rst_ni) ^ 1)) ? (0) : s->u_reg_u_socket_gen_err_resp_err_resp_err_source);
     s->u_reg_u_socket_gen_err_resp_err_resp_err_opcode = ((((s->u_reg_u_socket_gen_err_resp_err_resp_rst_ni) ^ 1)) ? (-4) : s->u_reg_u_socket_gen_err_resp_err_resp_err_opcode);
@@ -5031,9 +5056,6 @@ uint64_t spi_host_read(void *opaque, hwaddr addr, unsigned size)
     /* Inject QEMU address into the internal address signal */
     s->tl_i_a_address = (uint32_t)addr;
 
-    /* De-assert write enable — this is a read operation */
-    s->reg_we = 0;
-
     /* TL-UL: assert request valid + Get opcode for one cycle */
     s->tl_i_a_valid = 1;
     s->tl_i_a_opcode = (uint8_t)4;  /* Get */
@@ -5109,9 +5131,6 @@ void spi_host_write(void *opaque, hwaddr addr,
     /* Set write mask (byte-enable bits for the access size) */
     s->tl_i_a_mask = (1ULL << size) - 1;
 
-    /* Assert the bus enable (write cycle) */
-    s->reg_we = 1;
-
     /* TL-UL: assert request valid + PutFullData opcode */
     s->tl_i_a_valid = 1;
     s->tl_i_a_opcode = (uint8_t)0;  /* PutFullData */
@@ -5152,9 +5171,6 @@ void spi_host_write(void *opaque, hwaddr addr,
         tick(s);
     }
     update_state(s);
-
-    /* De-assert enable after evaluation */
-    s->reg_we = 0;
 
     /* De-assert TL-UL valid after the bus cycle settled */
     s->tl_i_a_valid = 0;

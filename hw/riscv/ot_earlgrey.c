@@ -69,6 +69,7 @@
 #include "hw/opentitan/ot_rstmgr.h"
 #include "hw/opentitan/ot_sensor_eg.h"
 #include "hw/opentitan/ot_spi_device.h"
+#include "hw/opentitan/spi_device_qp_shim.h"
 #include "hw/opentitan/ot_spi_host.h"
 #include "hw/opentitan/spi_host_qp_shim.h"
 #include "hw/opentitan/ot_sram_ctrl.h"
@@ -109,8 +110,6 @@ static void ot_eg_soc_otp_ctrl_configure(
 static void ot_eg_soc_tap_ctrl_configure(
     DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent);
 static void ot_eg_soc_lc_ctrl_tap_ctrl_configure(
-    DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent);
-static void ot_eg_soc_spi_device_configure(
     DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent);
 static void ot_eg_soc_uart_configure(DeviceState *dev, const IbexDeviceDef *def,
                                      DeviceState *parent);
@@ -610,17 +609,17 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         )
     },
     [OT_EG_SOC_DEV_SPI_DEVICE] = {
-        .type = TYPE_OT_SPI_DEVICE,
-        .cfg = &ot_eg_soc_spi_device_configure,
+        /* qemu-passes drop-in: route through spi_device_qp_shim.c which
+         * wraps the auto-generated spi_device model.  shim drops the
+         * upstream `chardev` property (frontend-only) but keeps `ot_id`
+         * and `spi-host` link.  Link is typed TYPE_DEVICE so it accepts
+         * either the QP or upstream SPI_HOST flavour. */
+        .type = TYPE_OT_SPI_DEVICE_QP,
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
         .memmap = MEMMAPENTRIES(
             { .base = 0x40050000u }
         ),
         .link = IBEXDEVICELINKDEFS(
-            /* qemu-passes drop-in: SPI_HOST0 now uses TYPE_OT_SPI_HOST_QP
-             * (auto-emitted shim, not derived from TYPE_OT_SPI_HOST), so
-             * this DEFINE_PROP_LINK type-check would fail.  Re-point at
-             * SPI_HOST1 which still uses upstream TYPE_OT_SPI_HOST. */
             OT_EG_SOC_DEVLINK("spi-host", SPI_HOST1)
         ),
         .gpio = IBEXGPIOCONNDEFS(
@@ -1723,19 +1722,8 @@ static void ot_eg_soc_lc_ctrl_tap_ctrl_configure(
     }
 }
 
-static void ot_eg_soc_spi_device_configure(
-    DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent)
-{
-    (void)parent;
-    (void)def;
-
-    Chardev *chr;
-
-    chr = ibex_get_chardev_by_id("spidev");
-    if (chr) {
-        qdev_prop_set_chr(dev, "chardev", chr);
-    }
-}
+/* qemu-passes drop-in: ot_eg_soc_spi_device_configure removed — the QP
+ * shim doesn't expose the upstream chardev property (frontend-only). */
 
 static void ot_eg_soc_uart_configure(DeviceState *dev, const IbexDeviceDef *def,
                                      DeviceState *parent)

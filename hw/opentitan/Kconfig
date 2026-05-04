@@ -217,6 +217,10 @@ config OT_SPI_HOST_QP
     bool
     default y if OT_SPI_HOST
 
+config OT_SPI_DEVICE_QP
+    bool
+    default y if OT_SPI_DEVICE
+
 config OT_SRAM_CTRL
     select OT_PRESENT
     select OT_OTP_IF

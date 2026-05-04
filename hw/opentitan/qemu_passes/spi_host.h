@@ -18,10 +18,10 @@ typedef struct {
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
-    uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint32_t tl_i_a_data;  /* BIP, 32-bit */
     uint32_t unnamed_addr_0;  /* BIP, 32-bit */
+    uint8_t unnamed_enable_0_ugt_35_and_unnamed_enable_0_ult_40;  /* BIP, 1-bit */
+    __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t _unknown_arg0;  /* 1-bit */
@@ -394,6 +394,7 @@ typedef struct {
     uint8_t sw_error_status;  /* 6-bit */
     uint8_t test_dir_inval;  /* 1-bit */
     uint8_t test_speed_inval;  /* 1-bit */
+    uint32_t tl_i_a_data;  /* 32-bit */
     uint8_t tl_i_a_mask;  /* 4-bit */
     uint8_t tl_i_a_opcode;  /* 3-bit */
     uint8_t tl_i_a_param;  /* 3-bit */
@@ -1759,7 +1760,6 @@ typedef struct {
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_user_data_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_user_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_socket_accept_t_req;  /* 1-bit */
     uint8_t u_reg_u_socket_accept_t_rsp;  /* 1-bit */
     uint8_t u_reg_u_socket_blanked_auser_cmd_intg;  /* 7-bit */

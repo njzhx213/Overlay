@@ -1243,9 +1243,6 @@ uint64_t rv_timer_read(void *opaque, hwaddr addr, unsigned size)
     /* Inject QEMU address into the internal address signal */
     s->tl_i_a_address = (uint32_t)addr;
 
-    /* De-assert write enable — this is a read operation */
-    s->reg_we = 0;
-
     /* TL-UL: assert request valid + Get opcode for one cycle */
     s->tl_i_a_valid = 1;
     s->tl_i_a_opcode = (uint8_t)4;  /* Get */
@@ -1303,9 +1300,6 @@ void rv_timer_write(void *opaque, hwaddr addr,
     /* Set write mask (byte-enable bits for the access size) */
     s->tl_i_a_mask = (1ULL << size) - 1;
 
-    /* Assert the bus enable (write cycle) */
-    s->reg_we = 1;
-
     /* TL-UL: assert request valid + PutFullData opcode */
     s->tl_i_a_valid = 1;
     s->tl_i_a_opcode = (uint8_t)0;  /* PutFullData */
@@ -1340,9 +1334,6 @@ void rv_timer_write(void *opaque, hwaddr addr,
         tick(s);
     }
     update_state(s);
-
-    /* De-assert enable after evaluation */
-    s->reg_we = 0;
 
     /* De-assert TL-UL valid after the bus cycle settled */
     s->tl_i_a_valid = 0;

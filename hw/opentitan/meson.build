@@ -59,6 +59,7 @@ system_ss.add(when: 'CONFIG_OT_SOC_DBG_CTRL', if_true: files('ot_soc_dbg_ctrl.c'
 system_ss.add(when: 'CONFIG_OT_SPI_DEVICE', if_true: files('ot_spi_device.c'))
 system_ss.add(when: 'CONFIG_OT_SPI_HOST', if_true: files('ot_spi_host.c'))
 system_ss.add(when: 'CONFIG_OT_SPI_HOST_QP', if_true: files('qemu_passes/spi_host.c', 'spi_host_qp_shim.c'))
+system_ss.add(when: 'CONFIG_OT_SPI_DEVICE_QP', if_true: files('qemu_passes/spi_device.c', 'spi_device_qp_shim.c'))
 system_ss.add(when: 'CONFIG_OT_SRAM_CTRL', if_true: files('ot_sram_ctrl.c'))
 system_ss.add(when: 'CONFIG_OT_TIMER', if_true: files('ot_timer.c'))
 system_ss.add(when: 'CONFIG_OT_RV_TIMER_QP', if_true: files('qemu_passes/rv_timer.c', 'rv_timer_qp_shim.c'))
