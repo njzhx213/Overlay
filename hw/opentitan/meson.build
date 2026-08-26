@@ -72,6 +72,7 @@ system_ss.add(when: 'CONFIG_OT_ADC_CTRL_QP', if_true: files('qemu_passes/adc_ctr
 system_ss.add(when: 'CONFIG_OT_SYSRST_CTRL_QP', if_true: files('qemu_passes/sysrst_ctrl.c', 'sysrst_ctrl_qp_shim.c'))
 system_ss.add(when: 'CONFIG_OT_ALERT_HANDLER_QP', if_true: files('qemu_passes/alert_handler.c', 'alert_handler_qp_shim.c'))
 system_ss.add(when: 'CONFIG_OT_AES_QP', if_true: files('qemu_passes/aes.c', 'aes_qp_shim.c'))
+system_ss.add(when: 'CONFIG_OT_KMAC_QP', if_true: files('qemu_passes/kmac.c', 'kmac_qp_shim.c'))
 system_ss.add(when: 'CONFIG_OT_SRAM_CTRL', if_true: files('ot_sram_ctrl.c'))
 system_ss.add(when: 'CONFIG_OT_TIMER', if_true: files('ot_timer.c'))
 system_ss.add(when: 'CONFIG_OT_RV_TIMER_QP', if_true: files('qemu_passes/rv_timer.c', 'rv_timer_qp_shim.c'))

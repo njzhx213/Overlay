@@ -221,6 +221,54 @@ config OT_SPI_DEVICE_QP
     bool
     default y if OT_SPI_DEVICE
 
+config OT_AON_TIMER_QP
+    bool
+    default y if OT_AON_TIMER
+
+config OT_PWM_QP
+    bool
+    default y
+
+config OT_PATTGEN_QP
+    bool
+    default y
+
+config OT_PINMUX_QP
+    bool
+    default y
+
+config OT_DMA_QP
+    bool
+    default y
+
+config OT_RV_PLIC_QP
+    bool
+    default y
+
+config OT_HMAC_QP
+    bool
+    default y
+
+config OT_ADC_CTRL_QP
+    bool
+    default y
+
+config OT_SYSRST_CTRL_QP
+    bool
+    default y
+
+config OT_ALERT_HANDLER_QP
+    bool
+    default y
+
+config OT_AES_QP
+    bool
+    default y
+
+config OT_KMAC_QP
+    bool
+    default y
+
 config OT_SRAM_CTRL
     select OT_PRESENT
     select OT_OTP_IF

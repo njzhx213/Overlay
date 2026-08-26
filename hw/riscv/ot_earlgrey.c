@@ -69,6 +69,7 @@
 #include "hw/opentitan/ot_rstmgr.h"
 #include "hw/opentitan/ot_sensor_eg.h"
 #include "hw/opentitan/aes_qp_shim.h"
+#include "hw/opentitan/kmac_qp_shim.h"
 #include "hw/opentitan/aon_timer_qp_shim.h"
 #include "hw/opentitan/dma_qp_shim.h"
 #include "hw/opentitan/rv_plic_qp_shim.h"
@@ -197,6 +198,7 @@ enum OtEGSocDevice {
     OT_EG_SOC_DEV_UART3,
     OT_EG_SOC_DEV_USBDEV,
     OT_EG_SOC_DEV_VMAPPER,
+    OT_EG_SOC_DEV_KMAC_APP_SVC,
     /* IRQ splitters, i.e. 1-to-N signal dispatchers */
     OT_EG_SOC_SPLITTER_LC_HW_DEBUG,
     OT_EG_SOC_SPLITTER_LC_ESCALATE,
@@ -897,7 +899,7 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
         .link = IBEXDEVICELINKDEFS(
             OT_EG_SOC_DEVLINK("otp-ctrl", OTP_CTRL),
-            OT_EG_SOC_DEVLINK("kmac", KMAC)
+            OT_EG_SOC_DEVLINK("kmac", KMAC_APP_SVC)
         ),
         .prop = IBEXDEVICEPROPDEFS(
             IBEX_DEV_UINT_PROP("silicon_creator_id", 0x4001u),
@@ -1274,7 +1276,14 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_KMAC] = {
-        .type = TYPE_OT_KMAC,
+        /* qemu-passes drop-in: auto-generated KMAC/SHA-3 model
+         * (kmac_qp_shim.c), SHA3-256 NIST KAT-verified on the host
+         * harness.  Translated unmasked (-G EnMasking=0: digests are
+         * bit-identical; masking is a side-channel countermeasure the
+         * MMIO model cannot observe).  EDN and lc_escalate are tied in
+         * the shim; the keymgr/lc/rom app interfaces and clock/edn
+         * links are not modeled (software SHA-3 path only). */
+        .type = TYPE_OT_KMAC_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x41120000u }
         ),
@@ -1282,8 +1291,26 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 169),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(1, PLIC, 170),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(2, PLIC, 171),
-            OT_EG_SOC_GPIO_ALERT(0, 45),
-            OT_EG_SOC_GPIO_ALERT(1, 46)
+            /* single collapsed alert line (shim exposes one OT_DEVICE_ALERT;
+             * recov/fatal split is an alert-plane phase-2 item) */
+            OT_EG_SOC_GPIO_ALERT(0, 45)
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "kmac")
+        ),
+    },
+    [OT_EG_SOC_DEV_KMAC_APP_SVC] = {
+        /* TRANSITIONAL: unmapped native ot-kmac serving only the C-level
+         * hardware-app interface (rom_ctrl boot digest, keymgr KDF,
+         * lc_ctrl), which the generated model does not yet expose.  No
+         * MMIO mapping: software always reaches the generated
+         * TYPE_OT_KMAC_QP above.  Real app channel = integrity-group
+         * phase 2. */
+        .type = TYPE_OT_KMAC,
+        .memmap = MEMMAPENTRIES(
+            /* parked in the unused hole behind the real kmac window;
+             * firmware never addresses it */
+            { .base = 0x41128000u }
         ),
         .link = IBEXDEVICELINKDEFS(
             OT_EG_SOC_DEVLINK("clock-src", CLKMGR),
@@ -1333,11 +1360,11 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_DEVLINK("aes", AES),
             OT_EG_SOC_DEVLINK("edn", EDN0),
             OT_EG_SOC_DEVLINK("flash_ctrl", FLASH_CTRL),
-            OT_EG_SOC_DEVLINK("kmac", KMAC),
             OT_EG_SOC_DEVLINK("lc-ctrl", LC_CTRL),
             OT_EG_SOC_DEVLINK("otbn", OTBN),
             OT_EG_SOC_DEVLINK("otp-ctrl", OTP_CTRL),
-            OT_EG_SOC_DEVLINK("rom_ctrl", ROM_CTRL)
+            OT_EG_SOC_DEVLINK("rom_ctrl", ROM_CTRL),
+            OT_EG_SOC_DEVLINK("kmac", KMAC_APP_SVC)
         ),
         .prop = IBEXDEVICEPROPDEFS(
             IBEX_DEV_UINT_PROP("edn-ep", 0u),
@@ -1451,7 +1478,7 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_ALERT(0, 60)
         ),
         .link = IBEXDEVICELINKDEFS(
-            OT_EG_SOC_DEVLINK("kmac", KMAC)
+            OT_EG_SOC_DEVLINK("kmac", KMAC_APP_SVC)
         ),
         .prop = IBEXDEVICEPROPDEFS(
             IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "rom"),

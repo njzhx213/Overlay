@@ -1328,90 +1328,9 @@ static void update_state_once(aon_timer_state *s)
     s->u_lc_sync_escalate_en_clk_i = (s->clk_aon_i) & ((1ULL << 1) - 1);
     s->u_lc_sync_escalate_en_rst_ni = (s->rst_aon_ni) & ((1ULL << 1) - 1);
     s->u_lc_sync_escalate_en_lc_en_i = (s->lc_escalate_en_i) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_clk_i = (s->u_lc_sync_escalate_en_clk_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_rst_ni = (s->u_lc_sync_escalate_en_rst_ni) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_d_i = (s->u_lc_sync_escalate_en_lc_en_i) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_d_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_d_i) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_d_o = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_d_i) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_clk_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_rst_ni) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_d_o) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_clk_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_rst_ni) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o = (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 0) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out & ~0x1ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o) & 0x1ULL) << 0)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 1) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out & ~0x2ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o) & 0x1ULL) << 1)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 2) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out & ~0x4ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o) & 0x1ULL) << 2)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 3) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out & ~0x8ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o) & 0x1ULL) << 3)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_lc_en_o_0_ = (s->u_lc_sync_escalate_en_gen_buffs_0_lc_en_out) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 0) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out & ~0x1ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_0_u_prim_buf_out_o) & 0x1ULL) << 0)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 1) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out & ~0x2ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_1_u_prim_buf_out_o) & 0x1ULL) << 1)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 2) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out & ~0x4ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_2_u_prim_buf_out_o) & 0x1ULL) << 2)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 3) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out & ~0x8ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_1_gen_bits_3_u_prim_buf_out_o) & 0x1ULL) << 3)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_lc_en_o_1_ = (s->u_lc_sync_escalate_en_gen_buffs_1_lc_en_out) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 0) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out & ~0x1ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_0_u_prim_buf_out_o) & 0x1ULL) << 0)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 1) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out & ~0x2ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_1_u_prim_buf_out_o) & 0x1ULL) << 1)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 2) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out & ~0x4ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_2_u_prim_buf_out_o) & 0x1ULL) << 2)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_in_i = ((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_q_o) >> 3) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_out_o = (s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out = ((s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out & ~0x8ULL) | (((s->u_lc_sync_escalate_en_gen_buffs_2_gen_bits_3_u_prim_buf_out_o) & 0x1ULL) << 3)) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_lc_en_o_2_ = (s->u_lc_sync_escalate_en_gen_buffs_2_lc_en_out) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_lc_en_o_0_ = (s->u_lc_sync_escalate_en_lc_en_o_0_) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_lc_en_o_1_ = (s->u_lc_sync_escalate_en_lc_en_o_1_) & ((1ULL << 4) - 1);
-    s->u_lc_sync_escalate_en_lc_en_o_2_ = (s->u_lc_sync_escalate_en_lc_en_o_2_) & ((1ULL << 4) - 1);
+    s->u_lc_sync_escalate_en_lc_en_o_0_ = (((s->u_lc_sync_escalate_en_lc_en_i) & 0xFULL)) & ((1ULL << 4) - 1);
+    s->u_lc_sync_escalate_en_lc_en_o_1_ = (((s->u_lc_sync_escalate_en_lc_en_i) & 0xFULL)) & ((1ULL << 4) - 1);
+    s->u_lc_sync_escalate_en_lc_en_o_2_ = (((s->u_lc_sync_escalate_en_lc_en_i) & 0xFULL)) & ((1ULL << 4) - 1);
     s->u_core_clk_aon_i = (s->clk_aon_i) & ((1ULL << 1) - 1);
     s->u_core_rst_aon_ni = (s->rst_aon_ni) & ((1ULL << 1) - 1);
     s->u_core_lc_escalate_en_i_0_ = (s->u_lc_sync_escalate_en_lc_en_o_0_) & ((1ULL << 4) - 1);
@@ -1675,8 +1594,6 @@ static bool tick(aon_timer_state *s)
     uint8_t _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_1_q_o = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_1_q_o;
     uint8_t _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o = s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o;
     uint8_t _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o = s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o;
-    uint8_t _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;
-    uint8_t _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;
     uint16_t _qp_next_u_core_prescale_count_q = s->u_core_prescale_count_q;
     uint8_t _qp_next_u_aon_intr_flop_q_o = s->u_aon_intr_flop_q_o;
     uint8_t _qp_next_u_intr_sync_q_sync_q = s->u_intr_sync_q_sync_q;
@@ -1781,10 +1698,6 @@ static bool tick(aon_timer_state *s)
     _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o = (((!(((s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_rst_ni) ^ 1))) ? (s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_d_i) : _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o)) & ((1ULL << 1) - 1);
     _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o = (((((s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_rst_ni) ^ 1)) ? (-2) : _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o)) & ((1ULL << 2) - 1);
     _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o = (((!(((s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_rst_ni) ^ 1))) ? (s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_d_i) : _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o)) & ((1ULL << 2) - 1);
-    _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = (((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni) ^ 1)) ? (-6) : _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o)) & ((1ULL << 4) - 1);
-    _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = (((!(((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni) ^ 1))) ? (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i) : _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o)) & ((1ULL << 4) - 1);
-    _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = (((((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni) ^ 1)) ? (-6) : _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o)) & ((1ULL << 4) - 1);
-    _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = (((!(((s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni) ^ 1))) ? (s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i) : _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o)) & ((1ULL << 4) - 1);
     _qp_next_u_core_prescale_count_q = ((((((!(((s->u_core_rst_aon_ni) ^ 1))) && (s->u_core_reg2hw_i_wkup_ctrl_prescaler_qe)) || (((s->u_core_rst_aon_ni) ^ 1))) && (s->_qp_pump)) ? (0) : _qp_next_u_core_prescale_count_q)) & ((1ULL << 12) - 1);
     _qp_next_u_core_prescale_count_q = ((((((!(((s->u_core_rst_aon_ni) ^ 1))) && (!(s->u_core_reg2hw_i_wkup_ctrl_prescaler_qe))) && (s->u_core_prescale_en)) && (s->_qp_pump)) ? (s->u_core_prescale_count_d) : _qp_next_u_core_prescale_count_q)) & ((1ULL << 12) - 1);
     _qp_next_u_aon_intr_flop_q_o = (((((s->u_aon_intr_flop_rst_ni) ^ 1)) ? (0) : _qp_next_u_aon_intr_flop_q_o)) & ((1ULL << 2) - 1);
@@ -1848,8 +1761,6 @@ static bool tick(aon_timer_state *s)
     _qp_changed |= _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_1_q_o != s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_1_q_o;
     _qp_changed |= _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o != s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o;
     _qp_changed |= _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o != s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o;
-    _qp_changed |= _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o != s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;
-    _qp_changed |= _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o != s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;
     _qp_changed |= _qp_next_u_core_prescale_count_q != s->u_core_prescale_count_q;
     _qp_changed |= _qp_next_u_aon_intr_flop_q_o != s->u_aon_intr_flop_q_o;
     _qp_changed |= _qp_next_u_intr_sync_q_sync_q != s->u_intr_sync_q_sync_q;
@@ -1907,8 +1818,6 @@ static bool tick(aon_timer_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_1_q_o = _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_1_q_o;
     s->gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o = _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_gen_async_i_sync_n_u_sync_2_q_o;
     s->gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o = _qp_next_gen_alert_tx_0_u_prim_alert_sender_u_prim_flop_alert_u_secure_anchor_flop_q_o;
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;
-    s->u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = _qp_next_u_lc_sync_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;
     s->u_core_prescale_count_q = _qp_next_u_core_prescale_count_q;
     s->u_aon_intr_flop_q_o = _qp_next_u_aon_intr_flop_q_o;
     s->u_intr_sync_q_sync_q = _qp_next_u_intr_sync_q_sync_q;
@@ -2078,11 +1987,13 @@ uint64_t aon_timer_read(void *opaque, hwaddr addr, unsigned size)
     qp_tick(s);
     s->tl_i_a_valid = 0;   /* request lasted one clock */
     s->_qp_in_request = 0;
+    s->_qp_rd_cap = 0;
     {
     if (!s->_qp_busy) {
         s->_qp_busy = 1;
         unsigned _qp_ticks = 0;
         update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
@@ -2093,6 +2004,7 @@ uint64_t aon_timer_read(void *opaque, hwaddr addr, unsigned size)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;
@@ -2115,9 +2027,10 @@ uint64_t aon_timer_read(void *opaque, hwaddr addr, unsigned size)
     }
     update_state(s);
 
+    uint32_t _qp_rv = s->_qp_rd_cap ? s->_qp_rd_capv : s->u_reg_tl_o_d_data;
     if (size < 4)
-        return ((uint64_t)s->u_reg_tl_o_d_data >> (8u * (addr & 3u))) & ((1ULL << (8u * size)) - 1u);
-    return (uint64_t)s->u_reg_tl_o_d_data;
+        return ((uint64_t)_qp_rv >> (8u * (addr & 3u))) & ((1ULL << (8u * size)) - 1u);
+    return (uint64_t)_qp_rv;
 }
 
 /*

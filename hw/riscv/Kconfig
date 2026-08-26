@@ -116,6 +116,7 @@ config OT_EARLGREY
     select RISCV_DTM
     select SIFIVE_PLIC
     select SPLIT_IRQ
+    select AT24C
     select TAP_CTRL_RBB
 
 config IBEXDEMO

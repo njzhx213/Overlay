@@ -1400,11 +1400,13 @@ uint64_t rv_timer_read(void *opaque, hwaddr addr, unsigned size)
     qp_tick(s);
     s->tl_i_a_valid = 0;   /* request lasted one clock */
     s->_qp_in_request = 0;
+    s->_qp_rd_cap = 0;
     {
     if (!s->_qp_busy) {
         s->_qp_busy = 1;
         unsigned _qp_ticks = 0;
         update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
@@ -1415,6 +1417,7 @@ uint64_t rv_timer_read(void *opaque, hwaddr addr, unsigned size)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;
@@ -1437,9 +1440,10 @@ uint64_t rv_timer_read(void *opaque, hwaddr addr, unsigned size)
     }
     update_state(s);
 
+    uint32_t _qp_rv = s->_qp_rd_cap ? s->_qp_rd_capv : s->u_reg_tl_o_d_data;
     if (size < 4)
-        return ((uint64_t)s->u_reg_tl_o_d_data >> (8u * (addr & 3u))) & ((1ULL << (8u * size)) - 1u);
-    return (uint64_t)s->u_reg_tl_o_d_data;
+        return ((uint64_t)_qp_rv >> (8u * (addr & 3u))) & ((1ULL << (8u * size)) - 1u);
+    return (uint64_t)_qp_rv;
 }
 
 /*

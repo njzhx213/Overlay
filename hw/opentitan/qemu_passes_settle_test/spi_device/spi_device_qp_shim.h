@@ -1,0 +1,9 @@
+#ifndef HW_OPENTITAN_SPI_DEVICE_QP_SHIM_H
+#define HW_OPENTITAN_SPI_DEVICE_QP_SHIM_H
+
+#include "qom/object.h"
+
+#define TYPE_OT_SPI_DEVICE_QP "ot-spi-device-qp"
+OBJECT_DECLARE_SIMPLE_TYPE(OtSPIDeviceQpState, OT_SPI_DEVICE_QP)
+
+#endif /* HW_OPENTITAN_SPI_DEVICE_QP_SHIM_H */

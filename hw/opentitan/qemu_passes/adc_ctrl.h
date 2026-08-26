@@ -3367,6 +3367,8 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
+    uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
     uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } adc_ctrl_state;

@@ -18,12 +18,11 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint16_t cmd_dp_sel;  /* BIP, 10-bit */
     uint8_t cmd_read_pipeline_sel;  /* BIP, 1-bit */
-    uint32_t hw2reg_last_read_addr_d;  /* BIP, 32-bit */
     uint8_t rst_ni;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t tl_sram_d2h_0__d_data;  /* BIP, 32-bit */
     uint32_t unnamed_rdata_0;  /* BIP, 32-bit */
+    __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t _unknown_arg0;  /* 1-bit */
@@ -591,6 +590,7 @@ typedef struct {
     uint8_t hw2reg_intr_state_upload_payload_not_empty_de;  /* 1-bit */
     uint8_t hw2reg_intr_state_upload_payload_overflow_d;  /* 1-bit */
     uint8_t hw2reg_intr_state_upload_payload_overflow_de;  /* 1-bit */
+    uint32_t hw2reg_last_read_addr_d;  /* 32-bit */
     uint8_t hw2reg_status_csb_d;  /* 1-bit */
     uint8_t hw2reg_status_tpm_csb_d;  /* 1-bit */
     uint8_t hw2reg_tpm_cap_locality_d;  /* 1-bit */
@@ -1556,6 +1556,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -20337,6 +20338,8 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
+    uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
     uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } spi_device_state;

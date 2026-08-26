@@ -20,7 +20,6 @@ typedef struct {
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
@@ -5534,6 +5533,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -7613,75 +7613,6 @@ typedef struct {
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_lc_en_o;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_1_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_2_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_buffs_3_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_gen_no_flops_unused_logic;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_lc_en_o_1_;  /* 4-bit */
@@ -7693,75 +7624,6 @@ typedef struct {
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_lc_en_o__3_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_a_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_1_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_2_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_buffs_3_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_gen_no_flops_unused_logic;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_or_hardened_u_prim_lc_sync_b_lc_en_o_1_;  /* 4-bit */
@@ -7785,88 +7647,11 @@ typedef struct {
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sender_pinmux_hw_debug_en_lc_en_o;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sender_pinmux_hw_debug_en_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_d_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_lc_en_o__0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_check_byp_en_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_buffs_1_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_d_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_lc_en_o_1_;  /* 4-bit */
@@ -7874,163 +7659,21 @@ typedef struct {
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_lc_en_o__1_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_dft_en_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_d_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_lc_en_o__0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_escalate_en_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_d_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_1_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_2_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_lc_en_o__0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_clr_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_d_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_1_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_2_d_i;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_lc_en_o__0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_lc_hw_debug_en_rst_ni;  /* 1-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_clk_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_0_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_1_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_0_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_1_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_1_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_2_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_2_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_3_u_prim_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_3_u_prim_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o;  /* 1-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_buffs_2_lc_en_out;  /* 4-bit */
-    uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_gen_no_flops_unused_logic;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_lc_en_i;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_lc_en_o_0_;  /* 4-bit */
     uint8_t u_pinmux_strap_sampling_u_prim_lc_sync_pinmux_hw_debug_en_lc_en_o_1_;  /* 4-bit */
@@ -29935,6 +29578,8 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
+    uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
     uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } pinmux_state;

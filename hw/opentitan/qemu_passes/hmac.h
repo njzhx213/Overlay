@@ -16,11 +16,11 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint64_t digest_i_5_;  /* BIP, 64-bit */
+    uint64_t digest_i_2_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint8_t digest_swap;  /* BIP, 1-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t hw2reg_digest_6__d;  /* BIP, 32-bit */
+    uint32_t hw2reg_key_11__d;  /* BIP, 32-bit */
     uint8_t key_length_supplied;  /* BIP, 6-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
     uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
@@ -260,6 +260,7 @@ typedef struct {
     uint32_t hw2reg_digest_3__d;  /* 32-bit */
     uint32_t hw2reg_digest_4__d;  /* 32-bit */
     uint32_t hw2reg_digest_5__d;  /* 32-bit */
+    uint32_t hw2reg_digest_6__d;  /* 32-bit */
     uint32_t hw2reg_digest_7__d;  /* 32-bit */
     uint32_t hw2reg_digest_8__d;  /* 32-bit */
     uint32_t hw2reg_digest_9__d;  /* 32-bit */
@@ -273,7 +274,6 @@ typedef struct {
     uint8_t hw2reg_intr_state_hmac_err_de;  /* 1-bit */
     uint32_t hw2reg_key_0__d;  /* 32-bit */
     uint32_t hw2reg_key_10__d;  /* 32-bit */
-    uint32_t hw2reg_key_11__d;  /* 32-bit */
     uint32_t hw2reg_key_12__d;  /* 32-bit */
     uint32_t hw2reg_key_13__d;  /* 32-bit */
     uint32_t hw2reg_key_14__d;  /* 32-bit */
@@ -673,35 +673,23 @@ typedef struct {
     uint64_t u_msg_fifo_wdata_i;  /* 36-bit */
     uint8_t u_msg_fifo_wready_o;  /* 1-bit */
     uint8_t u_msg_fifo_wvalid_i;  /* 1-bit */
-    uint8_t u_packer__unknown_arg0;  /* 5-bit */
-    uint8_t u_packer_ack_in;  /* 1-bit */
-    uint8_t u_packer_ack_out;  /* 1-bit */
     uint8_t u_packer_clk_i;  /* 1-bit */
-    __uint128_t u_packer_concat_data;  /* 96-bit */
-    __uint128_t u_packer_concat_mask;  /* 96-bit */
     uint32_t u_packer_data_i;  /* 32-bit */
     uint32_t u_packer_data_o;  /* 32-bit */
     uint8_t u_packer_err_o;  /* 1-bit */
-    uint8_t u_packer_flush_done;  /* 1-bit */
     uint8_t u_packer_flush_done_o;  /* 1-bit */
     uint8_t u_packer_flush_i;  /* 1-bit */
-    uint8_t u_packer_flush_st;  /* 1-bit */
-    uint8_t u_packer_flush_st_next;  /* 1-bit */
-    uint8_t u_packer_flush_valid;  /* 1-bit */
-    uint8_t u_packer_g_pos_nodup_pos_d;  /* 7-bit */
-    uint8_t u_packer_inmask_ones;  /* 6-bit */
-    uint8_t u_packer_lod_idx;  /* 5-bit */
     uint32_t u_packer_mask_i;  /* 32-bit */
     uint32_t u_packer_mask_o;  /* 32-bit */
-    uint8_t u_packer_pos_q;  /* 7-bit */
-    uint8_t u_packer_pos_with_input;  /* 7-bit */
+    uint64_t u_packer_pkdhi;  /* 64-bit */
+    uint64_t u_packer_pkdlo;  /* 64-bit */
+    uint8_t u_packer_pkflush;  /* 1-bit */
+    uint64_t u_packer_pkmhi;  /* 64-bit */
+    uint64_t u_packer_pkmlo;  /* 64-bit */
+    uint8_t u_packer_pkpos;  /* 8-bit */
     uint8_t u_packer_ready_i;  /* 1-bit */
     uint8_t u_packer_ready_o;  /* 1-bit */
     uint8_t u_packer_rst_ni;  /* 1-bit */
-    uint64_t u_packer_stored_data;  /* 64-bit */
-    uint64_t u_packer_stored_data_next;  /* 64-bit */
-    uint64_t u_packer_stored_mask;  /* 64-bit */
-    uint64_t u_packer_stored_mask_next;  /* 64-bit */
     uint8_t u_packer_valid_i;  /* 1-bit */
     uint8_t u_packer_valid_o;  /* 1-bit */
     uint8_t u_prim_sha2_512_clk_i;  /* 1-bit */
@@ -3101,6 +3089,8 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
+    uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
     uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } hmac_state;

@@ -18,7 +18,7 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint16_t blink_param_x_i;  /* BIP, 16-bit */
     uint8_t blink_y_phase_q_or_htbt_en_i;  /* BIP, 1-bit */
-    uint16_t phase_delay_i_and_unnamed_addr_1_xor_unnamed_addr_1;  /* BIP, 16-bit */
+    uint16_t phase_delay_i_and_unnamed_addr_0_xor_unnamed_addr_0;  /* BIP, 16-bit */
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
     uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
@@ -2650,6 +2650,8 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
+    uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
     uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } pwm_state;

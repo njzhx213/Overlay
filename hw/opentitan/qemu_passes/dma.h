@@ -18,7 +18,7 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint8_t control_q_cfg_digest_swap;  /* BIP, 1-bit */
     uint8_t ctrl_state_q;  /* BIP, 8-bit */
-    uint64_t digest_i_0_;  /* BIP, 64-bit */
+    uint64_t digest_i_4_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
     uint32_t reg2hw_intr_src_addr_3__q;  /* BIP, 32-bit */
@@ -3386,6 +3386,8 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
+    uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
     uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } dma_state;

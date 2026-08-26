@@ -1237,142 +1237,142 @@ static void update_state_once(aes_state *s)
     s->u_reg_reg2hw_alert_test_recov_ctrl_update_err_qe = (s->u_reg_reg2hw_alert_test_recov_ctrl_update_err_qe) & ((1ULL << 1) - 1);
     s->alert_test = ((s->alert_test & ~0x1ULL) | ((((s->u_reg_reg2hw_alert_test_recov_ctrl_update_err_q) & (s->u_reg_reg2hw_alert_test_recov_ctrl_update_err_qe)) & 0x1ULL) << 0)) & ((1ULL << 2) - 1);
     s->alert_test = ((s->alert_test & ~0x2ULL) | ((((s->u_reg_reg2hw_alert_test_fatal_fault_q) & (s->u_reg_reg2hw_alert_test_fatal_fault_qe)) & 0x1ULL) << 1)) & ((1ULL << 2) - 1);
-    /* comb SCC 4800: 2 assignment(s), local fixed point */
+    /* comb SCC 4766: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_0__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_0__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_0__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_0__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4789: 2 assignment(s), local fixed point */
+    /* comb SCC 4755: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_1__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_1__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_1__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_1__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4778: 2 assignment(s), local fixed point */
+    /* comb SCC 4744: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_2__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_2__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_2__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_2__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4767: 2 assignment(s), local fixed point */
+    /* comb SCC 4733: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_3__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_3__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_3__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_3__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4756: 2 assignment(s), local fixed point */
+    /* comb SCC 4722: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_4__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_4__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_4__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_4__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_4__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_4__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4745: 2 assignment(s), local fixed point */
+    /* comb SCC 4711: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_5__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_5__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_5__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_5__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_5__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_5__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4734: 2 assignment(s), local fixed point */
+    /* comb SCC 4700: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_6__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_6__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_6__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_6__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_6__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_6__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4723: 2 assignment(s), local fixed point */
+    /* comb SCC 4689: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share0_7__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_7__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_7__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share0_7__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share0_7__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share0_7__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4704: 2 assignment(s), local fixed point */
+    /* comb SCC 4670: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_0__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_0__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_0__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_0__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4693: 2 assignment(s), local fixed point */
+    /* comb SCC 4659: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_1__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_1__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_1__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_1__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4682: 2 assignment(s), local fixed point */
+    /* comb SCC 4648: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_2__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_2__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_2__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_2__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4671: 2 assignment(s), local fixed point */
+    /* comb SCC 4637: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_3__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_3__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_3__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_3__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4660: 2 assignment(s), local fixed point */
+    /* comb SCC 4626: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_4__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_4__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_4__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_4__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_4__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_4__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4649: 2 assignment(s), local fixed point */
+    /* comb SCC 4615: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_5__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_5__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_5__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_5__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_5__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_5__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4638: 2 assignment(s), local fixed point */
+    /* comb SCC 4604: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_6__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_6__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_6__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_6__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_6__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_6__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4627: 2 assignment(s), local fixed point */
+    /* comb SCC 4593: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_key_share1_7__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_7__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_7__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_key_share1_7__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_key_share1_7__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_key_share1_7__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4604: 2 assignment(s), local fixed point */
+    /* comb SCC 4570: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_iv_0__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_0__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_iv_0__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_0__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4593: 2 assignment(s), local fixed point */
+    /* comb SCC 4559: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_iv_1__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_1__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_iv_1__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_1__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4582: 2 assignment(s), local fixed point */
+    /* comb SCC 4548: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_iv_2__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_2__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_iv_2__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_2__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4571: 2 assignment(s), local fixed point */
+    /* comb SCC 4537: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_iv_3__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_3__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_iv_3__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_iv_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_iv_3__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 3754: 2 assignment(s), local fixed point */
+    /* comb SCC 3720: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_in_0__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_0__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_in_0__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_0__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 3743: 2 assignment(s), local fixed point */
+    /* comb SCC 3709: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_in_1__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_1__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_in_1__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_1__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_1__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 3732: 2 assignment(s), local fixed point */
+    /* comb SCC 3698: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_in_2__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_2__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_in_2__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_2__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_2__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 3721: 2 assignment(s), local fixed point */
+    /* comb SCC 3687: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_in_3__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_3__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_in_3__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_in_3__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_in_3__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4405: 2 assignment(s), local fixed point */
+    /* comb SCC 4371: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_out_0__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_0__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_0__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_out_0__re = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_0__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_0__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4396: 2 assignment(s), local fixed point */
+    /* comb SCC 4362: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_out_1__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_1__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_1__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_out_1__re = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_1__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_1__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4387: 2 assignment(s), local fixed point */
+    /* comb SCC 4353: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_out_2__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_2__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_2__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_out_2__re = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_2__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_2__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
     }
-    /* comb SCC 4378: 2 assignment(s), local fixed point */
+    /* comb SCC 4344: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_reg_reg2hw_data_out_3__q = ((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_3__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_3__q)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_reg_reg2hw_data_out_3__re = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_data_out_3__re)) << 0) | (((uint64_t)(s->u_reg_reg2hw_data_out_3__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
@@ -1415,46 +1415,7 @@ static void update_state_once(aes_state *s)
     s->u_prim_lc_sync_clk_i = (s->clk_i) & ((1ULL << 1) - 1);
     s->u_prim_lc_sync_rst_ni = (s->rst_ni) & ((1ULL << 1) - 1);
     s->u_prim_lc_sync_lc_en_i = (s->lc_escalate_en_i) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_clk_i = (s->u_prim_lc_sync_clk_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_rst_ni = (s->u_prim_lc_sync_rst_ni) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_d_i = (s->u_prim_lc_sync_lc_en_i) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_d_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_d_i) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_d_o = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_d_i) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_clk_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_clk_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_rst_ni) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_d_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_d_o) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_d_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_d_i) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_clk_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_clk_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_rst_ni) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_d_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_d_i = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_d_i) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_q_o = (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_in_i = ((((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_q_o) >> 0) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_lc_en_out = ((s->u_prim_lc_sync_gen_buffs_0_lc_en_out & ~0x1ULL) | (((s->u_prim_lc_sync_gen_buffs_0_gen_bits_0_u_prim_buf_out_o) & 0x1ULL) << 0)) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_in_i = ((((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_q_o) >> 1) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_lc_en_out = ((s->u_prim_lc_sync_gen_buffs_0_lc_en_out & ~0x2ULL) | (((s->u_prim_lc_sync_gen_buffs_0_gen_bits_1_u_prim_buf_out_o) & 0x1ULL) << 1)) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_in_i = ((((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_q_o) >> 2) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_lc_en_out = ((s->u_prim_lc_sync_gen_buffs_0_lc_en_out & ~0x4ULL) | (((s->u_prim_lc_sync_gen_buffs_0_gen_bits_2_u_prim_buf_out_o) & 0x1ULL) << 2)) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_in_i = ((((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_q_o) >> 3) & 0x1)) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_in_i) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_out_o = (s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_u_secure_anchor_buf_out_o) & ((1ULL << 1) - 1);
-    s->u_prim_lc_sync_gen_buffs_0_lc_en_out = ((s->u_prim_lc_sync_gen_buffs_0_lc_en_out & ~0x8ULL) | (((s->u_prim_lc_sync_gen_buffs_0_gen_bits_3_u_prim_buf_out_o) & 0x1ULL) << 3)) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_lc_en_o_0_ = (s->u_prim_lc_sync_gen_buffs_0_lc_en_out) & ((1ULL << 4) - 1);
-    s->u_prim_lc_sync_lc_en_o_0_ = (s->u_prim_lc_sync_lc_en_o_0_) & ((1ULL << 4) - 1);
+    s->u_prim_lc_sync_lc_en_o_0_ = (((s->u_prim_lc_sync_lc_en_i) & 0xFULL)) & ((1ULL << 4) - 1);
     s->u_prim_sync_reqack_data_clk_src_i = (s->clk_i) & ((1ULL << 1) - 1);
     s->u_prim_sync_reqack_data_rst_src_ni = (s->rst_ni) & ((1ULL << 1) - 1);
     s->u_prim_sync_reqack_data_clk_dst_i = (s->clk_edn_i) & ((1ULL << 1) - 1);
@@ -2358,10 +2319,10 @@ static void update_state_once(aes_state *s)
     /* TODO Bug G: unhandled wide-array whole assignment */
     /* s->u_aes_core_u_aes_prng_clearing_data_o_0_ = (s->u_aes_core_u_aes_prng_clearing_data_o_0_ & ~0x8000000000000000ULL) | ((((((s->u_aes_core_u_aes_prng_clearing_u_lfsr_state_o) >> 61) & 0x1)) & 0x1ULL) << 63); */
     /* self-copy skipped: s->u_aes_core_u_aes_prng_clearing_data_o_0_ unchanged */
-    s->u_aes_core_prd_clearing_key_init_0_[0] = (s->u_aes_core_prd_clearing_key_init_0_[0] & ~0xFFFFFFFFFFFFFFFFULL) | (((uint64_t)(s->u_aes_core_u_aes_prng_clearing_data_o_0_) & 0xFFFFFFFFFFFFFFFFULL) << 0);
-    s->u_aes_core_prd_clearing_key_init_0_[1] = (s->u_aes_core_prd_clearing_key_init_0_[1] & ~0xFFFFFFFFFFFFFFFFULL) | (((uint64_t)(s->u_aes_core_u_aes_prng_clearing_data_o_0_) & 0xFFFFFFFFFFFFFFFFULL) << 0);
-    s->u_aes_core_prd_clearing_key_init_0_[2] = (s->u_aes_core_prd_clearing_key_init_0_[2] & ~0xFFFFFFFFFFFFFFFFULL) | (((uint64_t)(s->u_aes_core_u_aes_prng_clearing_data_o_0_) & 0xFFFFFFFFFFFFFFFFULL) << 0);
-    s->u_aes_core_prd_clearing_key_init_0_[3] = (s->u_aes_core_prd_clearing_key_init_0_[3] & ~0xFFFFFFFFFFFFFFFFULL) | (((uint64_t)(s->u_aes_core_u_aes_prng_clearing_data_o_0_) & 0xFFFFFFFFFFFFFFFFULL) << 0);
+    /* TODO: wide operand in scalar context dropped: s->u_aes_core_prd_clearing_key_init_0_ */
+    /* TODO: wide operand in scalar context dropped: s->u_aes_core_prd_clearing_key_init_0_ */
+    /* TODO: wide operand in scalar context dropped: s->u_aes_core_prd_clearing_key_init_0_ */
+    /* TODO: wide operand in scalar context dropped: s->u_aes_core_prd_clearing_key_init_0_ */
     s->u_aes_core_u_aes_prng_clearing_data_o_1_ = s->u_aes_core_u_aes_prng_clearing_data_o_1_;
     s->u_aes_core_prd_clearing_128_0_ = (s->u_aes_core_prd_clearing_128_0_ & ~(((__uint128_t)0x0ULL << 64) | (__uint128_t)0xFFFFFFFFFFFFFFFFULL)) | (((__uint128_t)(s->u_aes_core_u_aes_prng_clearing_data_o_1_) & (((__uint128_t)0x0ULL << 64) | (__uint128_t)0xFFFFFFFFFFFFFFFFULL)) << 0);
     s->u_aes_core_prd_clearing_128_0_ = (s->u_aes_core_prd_clearing_128_0_ & ~(((__uint128_t)0xFFFFFFFFFFFFFFFFULL << 64) | (__uint128_t)0x0ULL)) | (((__uint128_t)(s->u_aes_core_u_aes_prng_clearing_data_o_1_) & (((__uint128_t)0x0ULL << 64) | (__uint128_t)0xFFFFFFFFFFFFFFFFULL)) << 64);
@@ -4893,7 +4854,7 @@ static void update_state_once(aes_state *s)
     s->u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_ghash_out_valid_i = ((((s->u_aes_core_u_aes_control_sp2v_sig_chk_5_) >> 0) & 0x1)) & ((1ULL << 1) - 1);
     s->u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_ghash_out_valid_i = ((((s->u_aes_core_u_aes_control_sp2v_sig_chk_5_) >> 1) & 0x1)) & ((1ULL << 1) - 1);
     s->u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_ghash_out_valid_ni = ((((s->u_aes_core_u_aes_control_sp2v_sig_chk_5_) >> 2) & 0x1)) & ((1ULL << 1) - 1);
-    /* comb SCC 4844: 1599 assignment(s), local fixed point */
+    /* comb SCC 4810: 1599 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_entropy_clearing_ack_i = (((s->u_aes_core_entropy_clearing_req_o) & (s->u_prim_sync_reqack_data_src_ack_o))) & ((1ULL << 1) - 1);
     s->u_aes_core_alert_fatal_o = (((s->u_aes_core_ctrl_err_storage_d) | (s->u_aes_core_ctrl_err_storage_q)) | (s->u_aes_core_u_aes_ctr_alert_o) | (s->u_aes_core_u_aes_cipher_core_alert_o) | (s->u_aes_core_u_aes_control_alert_o) | (s->u_aes_core_intg_err_alert_i)) & ((1ULL << 1) - 1);
@@ -7030,7 +6991,7 @@ static void update_state_once(aes_state *s)
     s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_ = (((((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) || ((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) ? ((((((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) ? (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_0_) : (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_0_))) ^ (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_1_)) : s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_);
     s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_ = (((((((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2))))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (4))))) || (((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (4)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))))) || ((((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (4)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_rnd) == (0))))) || (((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (4)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_rnd) == (0))))) || ((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))))) || (((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))))) ? ((((((uint64_t)(s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_5_)) << 0)) & 0xFFFFFFFFULL)) : s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_);
     s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_ = ((((((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_rnd_type) & 1))) || ((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_rnd_type) & 1)))) && (((((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_rnd_type) & 1))) ? (0) : (1)))) ? (((((((!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (2)))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_rnd_type) & 1))) ? (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_1_) : (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_3_))) : s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_);
-    /* comb SCC 6695: 30 assignment(s), local fixed point */
+    /* comb SCC 6661: 30 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_2_ = (((((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) || ((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) ? ((((((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) ? (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_1_) : (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_1_))) ^ (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_2_)) : s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_2_);
     s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_3_ = (((((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) || ((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) ? ((((((((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i) == (1))) && (!(((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (1))))) && (((s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i) == (2)))) ? (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_2_) : (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_2_))) ^ (s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_key_share_3_)) : s->u_aes_core_u_aes_cipher_core_u_aes_key_expand_gen_shares_regular_0_regular_share_3_);
@@ -9716,7 +9677,7 @@ static void update_state_once(aes_state *s)
     s->u_reg_u_iv_3_ds = s->u_reg_u_iv_3_d;
     s->u_reg_u_iv_3_qs = s->u_reg_u_iv_3_d;
     s->u_reg_iv_3_qs = s->u_reg_u_iv_3_qs;
-    /* comb SCC 7683: 2 assignment(s), local fixed point */
+    /* comb SCC 7649: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_hw2reg_data_in_0__d = ((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_0__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_0__d)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_aes_core_hw2reg_data_in_0__de = (((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_0__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_0__d)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
@@ -9733,7 +9694,7 @@ static void update_state_once(aes_state *s)
     s->u_reg_u_data_in_0_wr_en_data_arb_wr_data = ((s->u_reg_u_data_in_0_wr_en_data_arb_we) ? (s->u_reg_u_data_in_0_wr_en_data_arb_wd) : (s->u_reg_u_data_in_0_wr_en_data_arb_d));
     s->u_reg_u_data_in_0_wr_data = s->u_reg_u_data_in_0_wr_en_data_arb_wr_data;
     s->u_reg_u_data_in_0_ds = ((s->u_reg_u_data_in_0_wr_en) ? (s->u_reg_u_data_in_0_wr_data) : (s->u_reg_u_data_in_0_qs));
-    /* comb SCC 7669: 2 assignment(s), local fixed point */
+    /* comb SCC 7635: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_hw2reg_data_in_1__d = ((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_1__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_1__d)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_aes_core_hw2reg_data_in_1__de = (((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_1__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_1__d)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
@@ -9750,7 +9711,7 @@ static void update_state_once(aes_state *s)
     s->u_reg_u_data_in_1_wr_en_data_arb_wr_data = ((s->u_reg_u_data_in_1_wr_en_data_arb_we) ? (s->u_reg_u_data_in_1_wr_en_data_arb_wd) : (s->u_reg_u_data_in_1_wr_en_data_arb_d));
     s->u_reg_u_data_in_1_wr_data = s->u_reg_u_data_in_1_wr_en_data_arb_wr_data;
     s->u_reg_u_data_in_1_ds = ((s->u_reg_u_data_in_1_wr_en) ? (s->u_reg_u_data_in_1_wr_data) : (s->u_reg_u_data_in_1_qs));
-    /* comb SCC 7655: 2 assignment(s), local fixed point */
+    /* comb SCC 7621: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_hw2reg_data_in_2__d = ((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_2__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_2__d)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_aes_core_hw2reg_data_in_2__de = (((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_2__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_2__d)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
@@ -9767,7 +9728,7 @@ static void update_state_once(aes_state *s)
     s->u_reg_u_data_in_2_wr_en_data_arb_wr_data = ((s->u_reg_u_data_in_2_wr_en_data_arb_we) ? (s->u_reg_u_data_in_2_wr_en_data_arb_wd) : (s->u_reg_u_data_in_2_wr_en_data_arb_d));
     s->u_reg_u_data_in_2_wr_data = s->u_reg_u_data_in_2_wr_en_data_arb_wr_data;
     s->u_reg_u_data_in_2_ds = ((s->u_reg_u_data_in_2_wr_en) ? (s->u_reg_u_data_in_2_wr_data) : (s->u_reg_u_data_in_2_qs));
-    /* comb SCC 7641: 2 assignment(s), local fixed point */
+    /* comb SCC 7607: 2 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_hw2reg_data_in_3__d = ((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_3__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_3__d)) << 1)))) >> 1) & ((1ULL << 32) - 1));
     s->u_aes_core_hw2reg_data_in_3__de = (((((uint64_t)(((((uint64_t)(s->u_aes_core_hw2reg_data_in_3__de)) << 0) | (((uint64_t)(s->u_aes_core_hw2reg_data_in_3__d)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
@@ -10510,8 +10471,6 @@ static bool tick(aes_state *s)
     uint8_t _qp_next_u_reg_u_status_input_ready_q = s->u_reg_u_status_input_ready_q;
     uint8_t _qp_next_u_reg_u_status_alert_recov_ctrl_update_err_q = s->u_reg_u_status_alert_recov_ctrl_update_err_q;
     uint8_t _qp_next_u_reg_u_status_alert_fatal_fault_q = s->u_reg_u_status_alert_fatal_fault_q;
-    uint8_t _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;
-    uint8_t _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;
     uint8_t _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs = s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs;
     uint8_t _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q = s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q;
     uint8_t _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_dst_fsm_cs = s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_dst_fsm_cs;
@@ -10793,10 +10752,6 @@ static bool tick(aes_state *s)
     _qp_next_u_reg_u_status_alert_recov_ctrl_update_err_q = ((((!(((s->u_reg_u_status_alert_recov_ctrl_update_err_rst_ni) ^ 1))) && (s->u_reg_u_status_alert_recov_ctrl_update_err_wr_en)) ? (s->u_reg_u_status_alert_recov_ctrl_update_err_wr_data) : _qp_next_u_reg_u_status_alert_recov_ctrl_update_err_q)) & ((1ULL << 1) - 1);
     _qp_next_u_reg_u_status_alert_fatal_fault_q = (((((s->u_reg_u_status_alert_fatal_fault_rst_ni) ^ 1)) ? (0) : _qp_next_u_reg_u_status_alert_fatal_fault_q)) & ((1ULL << 1) - 1);
     _qp_next_u_reg_u_status_alert_fatal_fault_q = ((((!(((s->u_reg_u_status_alert_fatal_fault_rst_ni) ^ 1))) && (s->u_reg_u_status_alert_fatal_fault_wr_en)) ? (s->u_reg_u_status_alert_fatal_fault_wr_data) : _qp_next_u_reg_u_status_alert_fatal_fault_q)) & ((1ULL << 1) - 1);
-    _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = (((((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni) ^ 1)) ? (-6) : _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o)) & ((1ULL << 4) - 1);
-    _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = (((!(((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_rst_ni) ^ 1))) ? (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_d_i) : _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o)) & ((1ULL << 4) - 1);
-    _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = (((((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni) ^ 1)) ? (-6) : _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o)) & ((1ULL << 4) - 1);
-    _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = (((!(((s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni) ^ 1))) ? (s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_d_i) : _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o)) & ((1ULL << 4) - 1);
     _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs = (((((s->u_prim_sync_reqack_data_u_prim_sync_reqack_rst_src_ni) ^ 1)) ? (0) : _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs)) & ((1ULL << 1) - 1);
     _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q = (((((s->u_prim_sync_reqack_data_u_prim_sync_reqack_rst_src_ni) ^ 1)) ? (0) : _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q)) & ((1ULL << 1) - 1);
     _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs = (((!(((s->u_prim_sync_reqack_data_u_prim_sync_reqack_rst_src_ni) ^ 1))) ? (s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_ns) : _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs)) & ((1ULL << 1) - 1);
@@ -11254,8 +11209,6 @@ static bool tick(aes_state *s)
     _qp_changed |= _qp_next_u_reg_u_status_input_ready_q != s->u_reg_u_status_input_ready_q;
     _qp_changed |= _qp_next_u_reg_u_status_alert_recov_ctrl_update_err_q != s->u_reg_u_status_alert_recov_ctrl_update_err_q;
     _qp_changed |= _qp_next_u_reg_u_status_alert_fatal_fault_q != s->u_reg_u_status_alert_fatal_fault_q;
-    _qp_changed |= _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o != s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;
-    _qp_changed |= _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o != s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;
     _qp_changed |= _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs != s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs;
     _qp_changed |= _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q != s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q;
     _qp_changed |= _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_dst_fsm_cs != s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_dst_fsm_cs;
@@ -11505,8 +11458,6 @@ static bool tick(aes_state *s)
     s->u_reg_u_status_input_ready_q = _qp_next_u_reg_u_status_input_ready_q;
     s->u_reg_u_status_alert_recov_ctrl_update_err_q = _qp_next_u_reg_u_status_alert_recov_ctrl_update_err_q;
     s->u_reg_u_status_alert_fatal_fault_q = _qp_next_u_reg_u_status_alert_fatal_fault_q;
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o = _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_1_q_o;
-    s->u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o = _qp_next_u_prim_lc_sync_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;
     s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs = _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_fsm_cs;
     s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q = _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_src_req_q;
     s->u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_dst_fsm_cs = _qp_next_u_prim_sync_reqack_data_u_prim_sync_reqack_gen_nrz_hs_protocol_dst_fsm_cs;
@@ -11837,11 +11788,13 @@ uint64_t aes_read(void *opaque, hwaddr addr, unsigned size)
     qp_tick(s);
     s->tl_i_a_valid = 0;   /* request lasted one clock */
     s->_qp_in_request = 0;
+    s->_qp_rd_cap = 0;
     {
     if (!s->_qp_busy) {
         s->_qp_busy = 1;
         unsigned _qp_ticks = 0;
         update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
@@ -11852,6 +11805,7 @@ uint64_t aes_read(void *opaque, hwaddr addr, unsigned size)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;
@@ -11874,9 +11828,10 @@ uint64_t aes_read(void *opaque, hwaddr addr, unsigned size)
     }
     update_state(s);
 
+    uint32_t _qp_rv = s->_qp_rd_cap ? s->_qp_rd_capv : s->u_reg_tl_o_d_data;
     if (size < 4)
-        return ((uint64_t)s->u_reg_tl_o_d_data >> (8u * (addr & 3u))) & ((1ULL << (8u * size)) - 1u);
-    return (uint64_t)s->u_reg_tl_o_d_data;
+        return ((uint64_t)_qp_rv >> (8u * (addr & 3u))) & ((1ULL << (8u * size)) - 1u);
+    return (uint64_t)_qp_rv;
 }
 
 /*
