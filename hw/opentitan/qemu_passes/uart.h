@@ -3,7 +3,6 @@
 
 #include "hw/sysbus.h"
 #include "qom/object.h"
-#include "hw/ptimer.h"
 
 #define TYPE_UART "uart"
 #define UART(obj) OBJECT_CHECK(uart_state, (obj), TYPE_UART)
@@ -20,6 +19,7 @@ typedef struct {
     uint8_t reg2hw_rdata_q;  /* BIP, 8-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t u_reg_if_wdata_o;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
@@ -34,7 +34,6 @@ typedef struct {
     uint8_t cio_tx_en_o;  /* 1-bit */
     uint8_t cio_tx_o;  /* 1-bit */
     uint8_t clk_i;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender__unknown_arg0;  /* 3-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_ack_level;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_ack_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_clr;  /* 1-bit */
@@ -113,7 +112,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_pi;  /* 1-bit */
@@ -163,7 +161,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;  /* 2-bit */
@@ -194,8 +191,14 @@ typedef struct {
     uint8_t intr_tx_empty_o;  /* 1-bit */
     uint8_t intr_tx_watermark_o;  /* 1-bit */
     uint8_t lsio_trigger_o;  /* 1-bit */
-    uint8_t racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t racl_error_o_ctn_uid;  /* 1-bit */
+    uint8_t racl_error_o_overflow;  /* 1-bit */
+    uint8_t racl_error_o_racl_role;  /* 1-bit */
+    uint8_t racl_error_o_read_access;  /* 1-bit */
+    uint32_t racl_error_o_request_address;  /* 32-bit */
+    uint8_t racl_error_o_valid;  /* 1-bit */
+    uint8_t racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t rst_ni;  /* 1-bit */
     uint32_t tl_i_a_data;  /* 32-bit */
     uint8_t tl_i_a_mask;  /* 4-bit */
@@ -205,11 +208,20 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
-    uint8_t u_reg__unknown_arg0;  /* 1-bit */
+    uint8_t tl_o_a_ready;  /* 1-bit */
+    uint32_t tl_o_d_data;  /* 32-bit */
+    uint8_t tl_o_d_error;  /* 1-bit */
+    uint8_t tl_o_d_opcode;  /* 3-bit */
+    uint8_t tl_o_d_param;  /* 3-bit */
+    uint8_t tl_o_d_sink;  /* 1-bit */
+    uint8_t tl_o_d_size;  /* 2-bit */
+    uint8_t tl_o_d_source;  /* 8-bit */
+    uint8_t tl_o_d_user_data_intg;  /* 7-bit */
+    uint8_t tl_o_d_user_rsp_intg;  /* 7-bit */
+    uint8_t tl_o_d_valid;  /* 1-bit */
     uint16_t u_reg_addr_hit;  /* 13-bit */
     uint8_t u_reg_alert_test_flds_we;  /* 1-bit */
     uint8_t u_reg_alert_test_we;  /* 1-bit */
@@ -440,16 +452,6 @@ typedef struct {
     uint8_t u_reg_u_chk_tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_chk_tl_i_a_valid;  /* 1-bit */
     uint8_t u_reg_u_chk_tl_i_d_ready;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_chk_data_i;  /* 64-bit */
-    uint64_t u_reg_u_chk_u_chk_data_o;  /* 57-bit */
-    uint8_t u_reg_u_chk_u_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_chk_syndrome_o;  /* 7-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_data_err_o;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_data_intg_i;  /* 39-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_i;  /* 39-bit */
-    uint32_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_o;  /* 32-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_syndrome_o;  /* 7-bit */
     uint8_t u_reg_u_ctrl_llpbk_clk_i;  /* 1-bit */
     uint8_t u_reg_u_ctrl_llpbk_d;  /* 1-bit */
     uint8_t u_reg_u_ctrl_llpbk_de;  /* 1-bit */
@@ -1185,17 +1187,6 @@ typedef struct {
     uint8_t u_reg_u_prim_reg_we_check_err_o;  /* 1-bit */
     uint16_t u_reg_u_prim_reg_we_check_oh_i;  /* 13-bit */
     uint8_t u_reg_u_prim_reg_we_check_rst_ni;  /* 1-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_buf_in_i;  /* 13-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_buf_out_o;  /* 13-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_addr_i;  /* 4-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_and_tree;  /* 31-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_clk_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_en_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_o;  /* 1-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_tree;  /* 31-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_oh_i;  /* 13-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_or_tree;  /* 31-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_rdata_d;  /* 8-bit */
     uint8_t u_reg_u_rdata_ds;  /* 8-bit */
     uint8_t u_reg_u_rdata_q;  /* 8-bit */
@@ -1205,7 +1196,6 @@ typedef struct {
     uint8_t u_reg_u_rdata_re;  /* 1-bit */
     uint8_t u_reg_u_rdata_wd;  /* 8-bit */
     uint8_t u_reg_u_rdata_we;  /* 1-bit */
-    uint8_t u_reg_u_reg_if__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_reg_if_a_ack;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_align_err;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_o;  /* 6-bit */
@@ -1305,6 +1295,9 @@ typedef struct {
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_size;  /* 2-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -1456,8 +1449,6 @@ typedef struct {
     uint8_t u_reg_wdata_flds_we;  /* 1-bit */
     uint8_t u_reg_wdata_we;  /* 1-bit */
     uint8_t u_reg_wr_err;  /* 1-bit */
-    uint8_t uart_core__294;  /* 1-bit */
-    uint8_t uart_core__unknown_arg0;  /* 1-bit */
     uint8_t uart_core_allzero_cnt_d;  /* 5-bit */
     uint8_t uart_core_allzero_cnt_q;  /* 5-bit */
     uint8_t uart_core_allzero_err;  /* 1-bit */
@@ -1739,6 +1730,70 @@ typedef struct {
     uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_fifo_wptr;  /* 6-bit */
     uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_rdata_int;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_0_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_10_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_11_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_12_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_13_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_14_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_15_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_16_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_17_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_18_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_19_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_1_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_20_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_21_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_22_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_23_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_24_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_25_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_26_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_27_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_28_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_29_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_2_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_30_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_31_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_32_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_33_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_34_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_35_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_36_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_37_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_38_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_39_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_3_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_40_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_41_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_42_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_43_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_44_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_45_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_46_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_47_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_48_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_49_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_4_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_50_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_51_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_52_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_53_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_54_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_55_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_56_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_57_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_58_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_59_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_5_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_60_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_61_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_62_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_63_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_6_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_7_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_8_;  /* 8-bit */
+    uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_storage_9_;  /* 8-bit */
     uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 7-bit */
@@ -1774,6 +1829,38 @@ typedef struct {
     uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_fifo_wptr;  /* 5-bit */
     uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_rdata_int;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_0_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_10_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_11_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_12_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_13_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_14_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_15_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_16_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_17_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_18_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_19_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_1_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_20_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_21_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_22_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_23_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_24_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_25_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_26_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_27_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_28_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_29_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_2_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_30_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_31_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_3_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_4_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_5_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_6_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_7_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_8_;  /* 8-bit */
+    uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_storage_9_;  /* 8-bit */
     uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 6-bit */
@@ -1846,23 +1933,32 @@ typedef struct {
     uint8_t uart_core_uart_tx_wr_data;  /* 8-bit */
     uint8_t uart_core_uart_tx_wr_parity;  /* 1-bit */
 
-    /* ---- ACCUMULATE counters (ptimer-backed) ---- */
-    /* One ptimer + IRQ line per counter recognised by
-     * DrvClassificationPass as `reg = prb(reg) +/- const`. */
-    ptimer_state *ptimer_uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_uart_core_u_uart_txfifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_uart_core_u_uart_rxfifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
+    uint8_t _qp_pump;  /* pump pulse: accumulate-ring step enable */
+    void (*_qp_before_tick)(void *ctx);
+    void *_qp_before_tick_ctx;
+    void (*_qp_on_tick)(void *ctx);  /* per-clock observer hook (organs) */
+    void *_qp_on_tick_ctx;
+    uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
+    uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
+    uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
+    uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } uart_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
 uint64_t uart_read(void *opaque, hwaddr addr, unsigned size);
 void     uart_write(void *opaque, hwaddr addr,
             uint64_t value, unsigned size);
+/* Asserts rst_ni for one settle round, then releases — primes the
+ * model so registers with non-zero RESVALs see their reset value. */
+void uart_reset(uart_state *s);
+/* Run the model to quiescence without a bus access (external event
+ * sources — SPI pumps, pin changes — call this after poking inputs). */
+void uart_settle(uart_state *s);
+
+void uart_step(uart_state *s);
+
+void uart_step_many(uart_state *s, unsigned count);
 
 /* Phase 2.d input setters — bridge host-side QEMU events into
  * the simulated device.  Each writes one input-port leaf field
@@ -1872,6 +1968,8 @@ void uart_set_alert_rx_i_0__ping_p(uart_state *s, uint8_t value);
 void uart_set_alert_rx_i_0__ping_n(uart_state *s, uint8_t value);
 void uart_set_alert_rx_i_0__ack_p(uart_state *s, uint8_t value);
 void uart_set_alert_rx_i_0__ack_n(uart_state *s, uint8_t value);
+void uart_set_racl_policies_i_0__write_perm(uart_state *s, uint8_t value);
+void uart_set_racl_policies_i_0__read_perm(uart_state *s, uint8_t value);
 void uart_set_cio_rx_i(uart_state *s, uint8_t value);
 
 #endif /* UART_H */

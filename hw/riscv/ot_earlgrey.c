@@ -68,6 +68,17 @@
 #include "hw/opentitan/ot_rom_ctrl.h"
 #include "hw/opentitan/ot_rstmgr.h"
 #include "hw/opentitan/ot_sensor_eg.h"
+#include "hw/opentitan/aes_qp_shim.h"
+#include "hw/opentitan/aon_timer_qp_shim.h"
+#include "hw/opentitan/dma_qp_shim.h"
+#include "hw/opentitan/rv_plic_qp_shim.h"
+#include "hw/opentitan/hmac_qp_shim.h"
+#include "hw/opentitan/adc_ctrl_qp_shim.h"
+#include "hw/opentitan/sysrst_ctrl_qp_shim.h"
+#include "hw/opentitan/alert_handler_qp_shim.h"
+#include "hw/opentitan/pattgen_qp_shim.h"
+#include "hw/opentitan/pinmux_qp_shim.h"
+#include "hw/opentitan/pwm_qp_shim.h"
 #include "hw/opentitan/ot_spi_device.h"
 #include "hw/opentitan/spi_device_qp_shim.h"
 #include "hw/opentitan/ot_spi_host.h"
@@ -111,6 +122,8 @@ static void ot_eg_soc_tap_ctrl_configure(
     DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent);
 static void ot_eg_soc_lc_ctrl_tap_ctrl_configure(
     DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent);
+static void ot_eg_soc_spi_device_configure(
+    DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent);
 static void ot_eg_soc_uart_configure(DeviceState *dev, const IbexDeviceDef *def,
                                      DeviceState *parent);
 static void ot_eg_soc_usbdev_configure(
@@ -137,6 +150,7 @@ enum OtEGSocDevice {
     OT_EG_SOC_DEV_CLKMGR,
     OT_EG_SOC_DEV_CSRNG,
     OT_EG_SOC_DEV_DM,
+    OT_EG_SOC_DEV_DMA,
     OT_EG_SOC_DEV_DTM,
     OT_EG_SOC_DEV_LC_CTRL_DTM,
     OT_EG_SOC_DEV_EDN0,
@@ -188,6 +202,11 @@ enum OtEGSocDevice {
     OT_EG_SOC_SPLITTER_LC_ESCALATE,
     OT_EG_SOC_SPLITTER_LC_SEED_HW_RD,
     OT_EG_SOC_SPLITTER_LC_CREATOR_SEED_SW_RW,
+    /* [qemu-passes] irq tap: uart0 rx_watermark fans out to its PLIC slot
+     * AND the generated DMA's hardware-handshake trigger 0 (lsio_trigger_i,
+     * qdev gpio-in of ot-dma-qp).  soc_glue.py understands this indirection
+     * (an "irq tap"): verify still requires the PLIC slot to be fed. */
+    OT_EG_SOC_SPLITTER_UART0_RX_DMA,
 };
 
 enum OtEgResetRequest {
@@ -454,18 +473,22 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_UART0] = {
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
         /* qemu-passes drop-in: UART0 routes through the auto-generated
          * frontend wrapped by ot_uart_qp.c.  UART1/2/3 below stay on
          * TYPE_OT_UART so a regression here is isolated to UART0. */
         .type = TYPE_OT_UART_QP,
-        .cfg = &ot_eg_soc_uart_configure,
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
+        .cfg = &ot_eg_soc_uart_configure,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40000000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 1),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(1, PLIC, 2),
+            /* [qemu-passes irq tap] rx_watermark (irq 1) routes through a
+             * 1-to-2 splitter: out0 -> PLIC input 2 (its normal slot),
+             * out1 -> DMA lsio_trigger_i[0] (hardware handshake). */
+            IBEX_GPIO_SYSBUS_IRQ(1, OT_EG_SOC_SPLITTER_UART0_RX_DMA, 0),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(2, PLIC, 3),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(3, PLIC, 4),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(4, PLIC, 5),
@@ -565,6 +588,7 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_GPIO] = {
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
         /* qemu-passes drop-in: route GPIO through ot_gpio_qp.c, which
          * wraps the auto-generated model in qemu_passes/gpio.c.  Switch
          * back to TYPE_OT_GPIO_EG to fall back to the upstream model. */
@@ -606,21 +630,20 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(30, PLIC, 67),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(31, PLIC, 68),
             OT_EG_SOC_GPIO_ALERT(0, 4)
-        )
+        ),
     },
     [OT_EG_SOC_DEV_SPI_DEVICE] = {
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
         /* qemu-passes drop-in: route through spi_device_qp_shim.c which
-         * wraps the auto-generated spi_device model.  shim drops the
-         * upstream `chardev` property (frontend-only) but keeps `ot_id`
-         * and `spi-host` link.  Link is typed TYPE_DEVICE so it accepts
+         * wraps the auto-generated spi_device model.  shim exposes the
+         * upstream `chardev` property for the spidev transport (SPI-slave
+         * organ, qemu.spi_slave_blueprint) plus `ot_id` and `spi-host` link.  Link is typed TYPE_DEVICE so it accepts
          * either the QP or upstream SPI_HOST flavour. */
         .type = TYPE_OT_SPI_DEVICE_QP,
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
+        .cfg = &ot_eg_soc_spi_device_configure,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40050000u }
-        ),
-        .link = IBEXDEVICELINKDEFS(
-            OT_EG_SOC_DEVLINK("spi-host", SPI_HOST1)
         ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 69),
@@ -632,15 +655,13 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(6, PLIC, 75),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(7, PLIC, 76),
             OT_EG_SOC_GPIO_ALERT(0, 5)
-            /* qemu-passes drop-in: PASSTHROUGH_EN/CS connections to
-             * SPI_HOST0 dropped — SPI_HOST0 now uses TYPE_OT_SPI_HOST_QP
-             * (auto-emitted shim) which doesn't register the named GPIO
-             * inputs OT_SPI_HOST_PASSTHROUGH_EN/CS.  Frontend-only:
-             * passthrough mode never exercised so this dead wire is
-             * harmless. */
+        ),
+        .link = IBEXDEVICELINKDEFS(
+            OT_EG_SOC_DEVLINK("spi-host", SPI_HOST1)
         ),
     },
     [OT_EG_SOC_DEV_I2C0] = {
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
         /* qemu-passes drop-in: route I2C0 through i2c_qp_shim.c, which
          * wraps the auto-generated model in qemu_passes/i2c.c.  I2C1/I2C2
          * stay on TYPE_OT_I2C upstream so a regression here is isolated.
@@ -653,10 +674,6 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         .instance = IBEX_MAKE_INSTANCE_NUM(0),
         .memmap = MEMMAPENTRIES(
             { .base = 0x40080000u }
-        ),
-        .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "i2c0"),
-            IBEX_DEV_STRING_PROP("clock-name", "peri.io_div4")
         ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 77),
@@ -673,7 +690,11 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
         .link = IBEXDEVICELINKDEFS(
             OT_EG_SOC_DEVLINK("clock-src", CLKMGR)
-        )
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "i2c0"),
+            IBEX_DEV_STRING_PROP("clock-name", "peri.io_div4")
+        ),
     },
     [OT_EG_SOC_DEV_I2C1] = {
         .type = TYPE_OT_I2C,
@@ -747,23 +768,26 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_PATTGEN] = {
-        .type = TYPE_OT_UNIMP,
-        .cfg = &ibex_unimp_configure,
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
+        /* qemu-passes drop-in: pattgen was unimp upstream; we replace with
+         * the auto-generated model.  2 IRQ outputs (intr_done_ch{0,1}) are
+         * unwired in frontend mode (upstream UNIMP didn't connect them to
+         * PLIC either).  cio_p{c,d}{a,l}{0,1}_tx_o channels go nowhere. */
+        .type = TYPE_OT_PATTGEN_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x400e0000u }
         ),
-        .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "pattgen"),
-            IBEX_DEV_UINT_PROP("size", 0x40u),
-            IBEX_DEV_UINT_PROP("irq-count", 2u),
-            IBEX_DEV_UINT_PROP("alert-count", 1u),
-            IBEX_DEV_BOOL_PROP("warn-once", true)
-        ),
         .gpio = IBEXGPIOCONNDEFS(
+            OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 122),
+            OT_EG_SOC_GPIO_SYSBUS_IRQ(1, PLIC, 123),
             OT_EG_SOC_GPIO_ALERT(0, 9)
-        )
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "pattgen")
+        ),
     },
     [OT_EG_SOC_DEV_TIMER] = {
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
         /* qemu-passes drop-in: route rv_timer through rv_timer_qp_shim.c,
          * which wraps the auto-generated model in qemu_passes/rv_timer.c.
          * Switch back to TYPE_OT_TIMER to fall back to the upstream model.
@@ -884,7 +908,11 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         )
     },
     [OT_EG_SOC_DEV_ALERT_HANDLER] = {
-        .type = TYPE_OT_ALERT,
+        /* qemu-passes drop-in: the SoC's alert COLLECTOR is now the
+         * auto-generated model — every peripheral's OT_DEVICE_ALERT line
+         * lands on the generated alert_tx_i diff pairs (alert_in organ).
+         * Escalation outputs / ping-timer semantics: later phase. */
+        .type = TYPE_OT_ALERT_HANDLER_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40150000u }
         ),
@@ -892,26 +920,14 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 127),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(1, PLIC, 128),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(2, PLIC, 129),
-            OT_EG_SOC_GPIO_SYSBUS_IRQ(3, PLIC, 130),
-            OT_EG_SOC_GPIO_ESCALATE(0, IBEX_WRAPPER, 0),
-            OT_EG_SOC_GPIO_ESCALATE(1, LC_CTRL, 0),
-            OT_EG_SOC_GPIO_ESCALATE(1, LC_CTRL, 1),
-            OT_EG_SOC_GPIO_ESCALATE(3, PWRMGR, 0)
-        ),
-        .link = IBEXDEVICELINKDEFS(
-            OT_EG_SOC_DEVLINK("clock-src", CLKMGR),
-            OT_EG_SOC_DEVLINK("edn", EDN0)
+            OT_EG_SOC_GPIO_SYSBUS_IRQ(3, PLIC, 130)
         ),
         .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_UINT_PROP("n_alerts", 65u),
-            IBEX_DEV_UINT_PROP("n_classes", 4u),
-            IBEX_DEV_UINT_PROP("n_lpg", 22u),
-            IBEX_DEV_UINT_PROP("edn-ep", 4u),
-            IBEX_DEV_STRING_PROP("clock-name", "secure.io_div4"),
-            IBEX_DEV_STRING_PROP("clock-name-edn", "secure.main")
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "alert_handler")
         ),
     },
     [OT_EG_SOC_DEV_SPI_HOST0] = {
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
         /* qemu-passes drop-in: route SPI_HOST0 through spi_host_qp_shim.c,
          * which wraps the auto-generated model in qemu_passes/spi_host.c.
          * SPI_HOST1 stays on TYPE_OT_SPI_HOST upstream so a regression
@@ -1052,76 +1068,101 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_SYSRST_CTRL] = {
-        .type = TYPE_OT_UNIMP,
-        .cfg = &ibex_unimp_configure,
+        /* qemu-passes drop-in (was TYPE_OT_UNIMP): auto-generated sysrst
+         * controller.  event_detected -> PLIC 154 per the digest. */
+        .type = TYPE_OT_SYSRST_CTRL_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40430000u }
         ),
         .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "sysrst_ctrl"),
-            IBEX_DEV_UINT_PROP("size", 0x100u),
-            IBEX_DEV_UINT_PROP("irq-count", 1u),
-            IBEX_DEV_UINT_PROP("alert-count", 1u),
-            IBEX_DEV_BOOL_PROP("warn-once", true)
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "sysrst_ctrl")
         ),
         .gpio = IBEXGPIOCONNDEFS(
+            OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 154),
             OT_EG_SOC_GPIO_ALERT(0, 27)
         )
     },
     [OT_EG_SOC_DEV_ADC_CTRL] = {
-        .type = TYPE_OT_UNIMP,
-        .cfg = &ibex_unimp_configure,
+        /* qemu-passes drop-in (was TYPE_OT_UNIMP): auto-generated ADC
+         * controller.  match_pending -> PLIC 155 per the digest. */
+        .type = TYPE_OT_ADC_CTRL_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40440000u }
         ),
         .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "adc_ctrl"),
-            IBEX_DEV_UINT_PROP("size", 0x80u),
-            IBEX_DEV_UINT_PROP("irq-count", 1u),
-            IBEX_DEV_UINT_PROP("alert-count", 1u),
-            IBEX_DEV_BOOL_PROP("warn-once", true)
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "adc_ctrl")
         ),
         .gpio = IBEXGPIOCONNDEFS(
+            OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 155),
             OT_EG_SOC_GPIO_ALERT(0, 28)
         )
     },
     [OT_EG_SOC_DEV_PWM] = {
-        .type = TYPE_OT_UNIMP,
-        .cfg = &ibex_unimp_configure,
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
+        /* qemu-passes drop-in: pwm was an unimp placeholder upstream;
+         * we replace it with a real auto-generated model.  6 cio_pwm
+         * outputs go nowhere in frontend-only mode (no external pad
+         * receiver), so dropping the cio* GPIO connections is fine. */
+        .type = TYPE_OT_PWM_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40450000u }
         ),
-        .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "pwm"),
-            IBEX_DEV_UINT_PROP("size", 0x80u),
-            IBEX_DEV_UINT_PROP("alert-count", 1u),
-            IBEX_DEV_BOOL_PROP("warn-once", true)
-        ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_ALERT(0, 29)
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "pwm")
+        ),
+    },
+    [OT_EG_SOC_DEV_DMA] = {
+        /* Experimental: qemu-passes drop-in for the OT secure DMA.  Upstream
+         * EarlGrey doesn't include DMA (it's only in TopDarjeeling), so we
+         * place it at an unused base 0x404a0000.  COPY-mode transfers run
+         * for real: the generated bus_master organ executes the engine's
+         * TL-UL host beats against the system AddressSpace.  Hardware
+         * handshake: lsio_trigger_i is a qdev gpio-in (pin_io role); see
+         * the UART0_RX_DMA splitter for the declared trigger-0 wiring.
+         * prim_sha2_32 stays stubbed (opentitan-overlay/), so SHA opcode
+         * modes are no-ops. */
+        .type = TYPE_OT_DMA_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x404a0000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "dma")
         )
     },
     [OT_EG_SOC_DEV_PINMUX] = {
-        .type = TYPE_OT_PINMUX_EG,
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
+        /* qemu-passes drop-in: routes pinmux through pinmux_qp_shim.c
+         * which wraps the auto-generated model.  Pinmux's 568-bit
+         * addr_hit / 2047-bit one-hot trees exercise Bug G's wide-array
+         * (uint64_t arr[N]) storage path. */
+        .type = TYPE_OT_PINMUX_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40460000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_ALERT(0, 30)
-        )
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "pinmux")
+        ),
     },
     [OT_EG_SOC_DEV_AON_TIMER] = {
-        .type = TYPE_OT_AON_TIMER,
+        /* [soc_gen] generated from soc/earlgrey.soc.json (+ soc.digest.json); regenerate with `python3 soc/soc_glue.py write` — do not hand-edit. */
+        /* qemu-passes drop-in: routes aon_timer through aon_timer_qp_shim.c
+         * which wraps the auto-generated model.  AON_TIMER_WKUP /
+         * AON_TIMER_BITE named-GPIO outputs to PWRMGR are dropped — the
+         * QP shim doesn't register those output GPIO lines (frontend-only
+         * doesn't exercise PWRMGR wakeup/reset paths). */
+        .type = TYPE_OT_AON_TIMER_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x40470000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
             OT_EG_SOC_GPIO_SYSBUS_IRQ(0, PLIC, 156),
             OT_EG_SOC_GPIO_SYSBUS_IRQ(1, PLIC, 157),
-            OT_EG_SOC_SIGNAL(OT_AON_TIMER_WKUP, 0, PWRMGR, \
-                             OT_PWRMGR_WKUP, OT_PWRMGR_WAKEUP_AON_TIMER),
-            OT_EG_SOC_SIGNAL(OT_AON_TIMER_BITE, 0, PWRMGR, \
-                             OT_PWRMGR_RST, OT_EG_RESET_AON_TIMER),
             OT_EG_SOC_GPIO_ALERT(0, 31)
         ),
         .link = IBEXDEVICELINKDEFS(
@@ -1194,25 +1235,31 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_AES] = {
-        .type = TYPE_OT_AES,
+        /* qemu-passes drop-in: auto-generated AES model (aes_qp_shim.c),
+         * FIPS-197 KAT-verified.  Translated with the Earl Grey instance
+         * configuration (GCM disabled) and the functional unmasked
+         * simplification (ciphertext is bit-identical; masking is a
+         * side-channel countermeasure the MMIO model cannot observe).
+         * clock/edn links and the keymgr sideload sink are not modeled. */
+        .type = TYPE_OT_AES_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x41100000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
-            OT_EG_SOC_GPIO_ALERT(0, 42),
-            OT_EG_SOC_GPIO_ALERT(1, 43)
-        ),
-        .link = IBEXDEVICELINKDEFS(
-            OT_EG_SOC_DEVLINK("clock-src", CLKMGR),
-            OT_EG_SOC_DEVLINK("edn", EDN0)
+            OT_EG_SOC_GPIO_ALERT(0, 42)
         ),
         .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP("clock-name", "trans.aes"),
-            IBEX_DEV_UINT_PROP("edn-ep", 5u)
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "aes")
         ),
     },
     [OT_EG_SOC_DEV_HMAC] = {
-        .type = TYPE_OT_HMAC,
+        /* qemu-passes drop-in: HMAC routes through the auto-generated
+         * SHA-256 engine (hmac_qp_shim.c), model-level NIST-verified
+         * (SHA-256("abc") byte-exact).  A pure COMPUTE device: no
+         * chardev / pins / pump / bus-master — MMIO + the 3 irq lines
+         * + alert are its entire boundary.  HMAC keyed mode is campaign
+         * phase 2 (i_pad WIDE-DROP + 512-bit variable shifts). */
+        .type = TYPE_OT_HMAC_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x41110000u }
         ),
@@ -1222,11 +1269,8 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_SYSBUS_IRQ(2, PLIC, 168),
             OT_EG_SOC_GPIO_ALERT(0, 44)
         ),
-        .link = IBEXDEVICELINKDEFS(
-            OT_EG_SOC_DEVLINK("clock-src", CLKMGR)
-        ),
         .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP("clock-name", "trans.hmac")
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "hmac")
         ),
     },
     [OT_EG_SOC_DEV_KMAC] = {
@@ -1283,6 +1327,9 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             OT_EG_SOC_GPIO_ALERT(1, 50)
         ),
         .link = IBEXDEVICELINKDEFS(
+            /* QP AES implements TYPE_OT_KEY_SINK_IF with a no-op push_key
+             * (sideload key material not modeled; the keymgr asserts if the
+             * sink link is missing). */
             OT_EG_SOC_DEVLINK("aes", AES),
             OT_EG_SOC_DEVLINK("edn", EDN0),
             OT_EG_SOC_DEVLINK("flash_ctrl", FLASH_CTRL),
@@ -1460,38 +1507,35 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         )
     },
     [OT_EG_SOC_DEV_PLIC] = {
-        .type = TYPE_SIFIVE_PLIC,
+        /* qemu-passes drop-in: the machine's interrupt hub is the
+         * auto-generated OT rv_plic wrapped by rv_plic_qp_shim.c.  One
+         * generated model covers what upstream split across TWO devices:
+         * TYPE_SIFIVE_PLIC (prio/ie/threshold/claim @48000000) plus
+         * TYPE_OT_PLIC_EXT (OT's MSIP + alert extension @4c000000 — that is
+         * offset 0x4000000 INSIDE the real rv_plic register block, which the
+         * generated model decodes natively; the EXT entry below is disabled
+         * to free the address range).  Interrupt sources arrive on qdev
+         * gpio-in lines 0..185 (the pin_io.data_in role); sysbus IRQ 0 is
+         * the external interrupt to the hart, 1 the software interrupt
+         * (out_lines role: irq_o / msip_o); the alert-test alert stays on
+         * escalation line 41 as with the EXT device. */
+        .type = TYPE_OT_RV_PLIC_QP,
         .memmap = MEMMAPENTRIES(
             { .base = 0x48000000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
-            OT_EG_SOC_GPIO(1, HART, IRQ_M_EXT)
-        ),
-        .prop = IBEXDEVICEPROPDEFS(
-            IBEX_DEV_STRING_PROP("hart-config", "M"),
-            IBEX_DEV_UINT_PROP("hartid-base", 0u),
-            /* note: should always be max_irq + 1 */
-            IBEX_DEV_UINT_PROP("num-sources", 186u),
-            IBEX_DEV_UINT_PROP("num-priorities", 3u),
-            IBEX_DEV_UINT_PROP("priority-base", 0x0u),
-            IBEX_DEV_UINT_PROP("pending-base", 0x1000u),
-            IBEX_DEV_UINT_PROP("enable-base", 0x2000u),
-            IBEX_DEV_UINT_PROP("enable-stride", 32u),
-            IBEX_DEV_UINT_PROP("context-base", 0x200000u),
-            IBEX_DEV_UINT_PROP("context-stride", 8u),
-            IBEX_DEV_UINT_PROP("aperture-size", 0x4000000u)
-        ),
-    },
-    [OT_EG_SOC_DEV_PLIC_EXT] = {
-        .type = TYPE_OT_PLIC_EXT,
-        .memmap = MEMMAPENTRIES(
-            { .base = 0x4c000000u }
-        ),
-        .gpio = IBEXGPIOCONNDEFS(
-            OT_EG_SOC_GPIO(0, HART, IRQ_M_SOFT),
+            OT_EG_SOC_GPIO(0, HART, IRQ_M_EXT),
+            OT_EG_SOC_GPIO(1, HART, IRQ_M_SOFT),
             OT_EG_SOC_GPIO_ALERT(0, 41)
         ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "rv_plic")
+        ),
     },
+    /* [qp] OT_EG_SOC_DEV_PLIC_EXT intentionally absent: its register space
+     * (0x4c000000 = rv_plic + 0x4000000, the MSIP bank) and both of its
+     * lines (IRQ_M_SOFT, alert 41) are covered by the generated rv_plic
+     * above.  The enum slot stays; an empty definition creates no device. */
     [OT_EG_SOC_DEV_VMAPPER] = {
         .type = TYPE_OT_VMAPPER,
         .prop = IBEXDEVICEPROPDEFS(
@@ -1541,6 +1585,21 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
                           OT_OTP_LC_CREATOR_SEED_SW_RW_EN),
             OT_EG_SOC_S2D(1, FLASH_CTRL, OT_LC_BROADCAST,
                           OT_FLASH_LC_CREATOR_SEED_SW_RW_EN)
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_UINT_PROP("num-lines", 2u)
+        )
+    },
+    [OT_EG_SOC_SPLITTER_UART0_RX_DMA] = {
+        /* [qemu-passes irq tap] uart0 rx_watermark -> {PLIC 2, DMA hs
+         * trigger 0}.  The PLIC leg preserves the digest-checked slot;
+         * the DMA leg is the declared lsio trigger mapping (trigger 0 =
+         * uart0 rx watermark) driving the generated model's
+         * hardware-handshake mode through its unnamed gpio-in 0. */
+        .type = TYPE_SPLIT_IRQ,
+        .gpio = IBEXGPIOCONNDEFS(
+            OT_EG_SOC_GPIO(0, PLIC, 2),
+            OT_EG_SOC_GPIO(1, DMA, 0)
         ),
         .prop = IBEXDEVICEPROPDEFS(
             IBEX_DEV_UINT_PROP("num-lines", 2u)
@@ -1722,8 +1781,22 @@ static void ot_eg_soc_lc_ctrl_tap_ctrl_configure(
     }
 }
 
-/* qemu-passes drop-in: ot_eg_soc_spi_device_configure removed — the QP
- * shim doesn't expose the upstream chardev property (frontend-only). */
+/* qemu-passes: the QP spi_device shim exposes the upstream `chardev`
+ * property for its SPI-slave transport (spidev "/CS" framing, same host-side
+ * protocol/tooling as ot_spi_device.c: `-chardev socket,id=spidev,...`). */
+static void ot_eg_soc_spi_device_configure(
+    DeviceState *dev, const IbexDeviceDef *def, DeviceState *parent)
+{
+    (void)parent;
+    (void)def;
+
+    Chardev *chr;
+
+    chr = ibex_get_chardev_by_id("spidev");
+    if (chr) {
+        qdev_prop_set_chr(dev, "chardev", chr);
+    }
+}
 
 static void ot_eg_soc_uart_configure(DeviceState *dev, const IbexDeviceDef *def,
                                      DeviceState *parent)
@@ -1881,6 +1954,76 @@ static void ot_eg_soc_realize(DeviceState *dev, Error **errp)
                                 OT_RSTMGR_SOC_RST, 0,
                                 qdev_get_gpio_in_named(DEVICE(s),
                                                        OT_EG_SOC_RST_REQ, 0));
+
+    /* TEST SCAFFOLDING (opt-in via OT_GPIO_LOOPBACK env var, off by default so
+     * other GPIO tests are unaffected): loop each GPIO data-output pin back to
+     * the matching data-input pin.  Lets firmware verify the generic pin-I/O
+     * path (write DIRECT_OUT -> read DATA_IN, real-edge interrupts) without any
+     * external pin driver.  Not part of normal SoC behavior. */
+    if (getenv("OT_GPIO_LOOPBACK")) {
+        DeviceState *gpio = DEVICE(s->devices[OT_EG_SOC_DEV_GPIO]);
+        for (int i = 0; i < 32; i++) {
+            qdev_connect_gpio_out(gpio, i, qdev_get_gpio_in(gpio, i));
+        }
+    }
+
+    /* TEST SCAFFOLDING (opt-in via OT_PIN_GROUP env var): the pin-group
+     * closed loop.  Wires the generated pwm/pattgen data outputs into the
+     * generated pinmux's PERIPHERAL side, loops every MIO pad output back
+     * to the matching pad input, and feeds pinmux's peripheral outputs into
+     * the generated gpio's pin inputs.  Firmware then routes signals with
+     * ordinary pinmux OUTSEL/INSEL programming and observes them in GPIO
+     * DATA_IN — pwm -> pinmux -> pad -> pinmux -> gpio, five generated
+     * models in one ring, no CPU pin driver. */
+    if (getenv("OT_PIN_GROUP")) {
+        DeviceState *pinmux = DEVICE(s->devices[OT_EG_SOC_DEV_PINMUX]);
+        DeviceState *gpio = DEVICE(s->devices[OT_EG_SOC_DEV_GPIO]);
+        DeviceState *pwm = DEVICE(s->devices[OT_EG_SOC_DEV_PWM]);
+        DeviceState *pattgen = DEVICE(s->devices[OT_EG_SOC_DEV_PATTGEN]);
+        /* Peripheral-output indices (top_earlgrey.h OUTSEL constants - 3):
+         * PWM0..5 = 62..67, Pattgen pda0 = 46. */
+        for (int i = 0; i < 6; i++) {
+            qdev_connect_gpio_out(pwm, i,
+                qdev_get_gpio_in_named(pinmux, "periph-in", 62 + i));
+        }
+        qdev_connect_gpio_out(pattgen, 0,
+            qdev_get_gpio_in_named(pinmux, "periph-in", 46));
+        /* MIO pad loopback: pad output k -> pad input k (47 pads). */
+        for (int i = 0; i < 47; i++) {
+            qdev_connect_gpio_out(pinmux, i, qdev_get_gpio_in(pinmux, i));
+        }
+        /* Peripheral inputs: mio_to_periph 0..31 are GPIO0..31. */
+        for (int i = 0; i < 32; i++) {
+            qdev_connect_gpio_out_named(pinmux, "periph-out", i,
+                                        qdev_get_gpio_in(gpio, i));
+        }
+    }
+
+    /* TEST SCAFFOLDING (opt-in via OT_SPI_LOOP env var): the SPI self-loop.
+     * Hangs an SSI-to-pin bridge on the generated spi_host0's "spi0" bus
+     * (the m25p80 flash is only created when a -device flash is given on
+     * the command line, so the loop test owns the bus) and wires the
+     * bridge's raw SPI pins to the generated spi_device's aux pin lines:
+     * two generated models talking SPI to each other, no external client. */
+    if (getenv("OT_SPI_LOOP")) {
+        DeviceState *spihost = DEVICE(s->devices[OT_EG_SOC_DEV_SPI_HOST0]);
+        DeviceState *spidev = DEVICE(s->devices[OT_EG_SOC_DEV_SPI_DEVICE]);
+        BusState *spibus = qdev_get_child_bus(spihost, "spi0");
+        if (spibus) {
+            DeviceState *br = qdev_new("ot-ssi-pin-bridge");
+            qdev_realize_and_unref(br, spibus, &error_fatal);
+            qdev_connect_gpio_out_named(spihost, SSI_GPIO_CS, 0,
+                qdev_get_gpio_in_named(br, SSI_GPIO_CS, 0));
+            qdev_connect_gpio_out_named(br, "sck", 0,
+                qdev_get_gpio_in_named(spidev, "sck-in", 0));
+            qdev_connect_gpio_out_named(br, "csb", 0,
+                qdev_get_gpio_in_named(spidev, "csb-in", 0));
+            qdev_connect_gpio_out_named(br, "mosi", 0,
+                qdev_get_gpio_in_named(spidev, "sd-in", 0));
+            qdev_connect_gpio_out_named(spidev, "sd-out", 1,
+                qdev_get_gpio_in_named(br, "miso", 0));
+        }
+    }
 
     ot_common_check_rom_configuration();
 

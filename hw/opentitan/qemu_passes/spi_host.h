@@ -3,7 +3,6 @@
 
 #include "hw/sysbus.h"
 #include "qom/object.h"
-#include "hw/ptimer.h"
 
 #define TYPE_SPI_HOST "spi_host"
 #define SPI_HOST(obj) OBJECT_CHECK(spi_host_state, (obj), TYPE_SPI_HOST)
@@ -24,7 +23,6 @@ typedef struct {
     __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
-    uint8_t _unknown_arg0;  /* 1-bit */
     uint8_t access_valid;  /* 1-bit */
     uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
     uint8_t alert_rx_i_0__ack_p;  /* 1-bit */
@@ -76,7 +74,6 @@ typedef struct {
     uint8_t fifo_win_d2h_1__d_user_data_intg;  /* 7-bit */
     uint8_t fifo_win_d2h_1__d_user_rsp_intg;  /* 7-bit */
     uint8_t fifo_win_d2h_1__d_valid;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender__unknown_arg0;  /* 3-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_ack_level;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_ack_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_clr;  /* 1-bit */
@@ -155,7 +152,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_pi;  /* 1-bit */
@@ -205,7 +201,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;  /* 2-bit */
@@ -306,6 +301,7 @@ typedef struct {
     uint8_t output_en;  /* 1-bit */
     uint8_t passthrough_i_csb;  /* 1-bit */
     uint8_t passthrough_i_csb_en;  /* 1-bit */
+    uint8_t passthrough_i_passthrough_en;  /* 1-bit */
     uint8_t passthrough_i_s;  /* 4-bit */
     uint8_t passthrough_i_s_en;  /* 4-bit */
     uint8_t passthrough_i_sck;  /* 1-bit */
@@ -335,8 +331,8 @@ typedef struct {
     uint8_t racl_error_o_read_access;  /* 1-bit */
     uint32_t racl_error_o_request_address;  /* 32-bit */
     uint8_t racl_error_o_valid;  /* 1-bit */
-    uint8_t racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t reg2hw_alert_test_q;  /* 1-bit */
     uint8_t reg2hw_alert_test_qe;  /* 1-bit */
     uint8_t reg2hw_command_csaat_q;  /* 1-bit */
@@ -406,6 +402,17 @@ typedef struct {
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
+    uint8_t tl_o_a_ready;  /* 1-bit */
+    uint32_t tl_o_d_data;  /* 32-bit */
+    uint8_t tl_o_d_error;  /* 1-bit */
+    uint8_t tl_o_d_opcode;  /* 3-bit */
+    uint8_t tl_o_d_param;  /* 3-bit */
+    uint8_t tl_o_d_sink;  /* 1-bit */
+    uint8_t tl_o_d_size;  /* 2-bit */
+    uint8_t tl_o_d_source;  /* 8-bit */
+    uint8_t tl_o_d_user_data_intg;  /* 7-bit */
+    uint8_t tl_o_d_user_rsp_intg;  /* 7-bit */
+    uint8_t tl_o_d_valid;  /* 1-bit */
     uint8_t tx_be;  /* 4-bit */
     uint8_t tx_wm;  /* 1-bit */
     uint8_t u_cmd_queue_clk_i;  /* 1-bit */
@@ -417,6 +424,10 @@ typedef struct {
     uint8_t u_cmd_queue_cmd_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_cmd_queue_cmd_fifo_gen_normal_fifo_fifo_wptr;  /* 2-bit */
     uint64_t u_cmd_queue_cmd_fifo_gen_normal_fifo_rdata_int;  /* 57-bit */
+    uint64_t u_cmd_queue_cmd_fifo_gen_normal_fifo_storage_0_;  /* 57-bit */
+    uint64_t u_cmd_queue_cmd_fifo_gen_normal_fifo_storage_1_;  /* 57-bit */
+    uint64_t u_cmd_queue_cmd_fifo_gen_normal_fifo_storage_2_;  /* 57-bit */
+    uint64_t u_cmd_queue_cmd_fifo_gen_normal_fifo_storage_3_;  /* 57-bit */
     uint8_t u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 3-bit */
@@ -514,6 +525,70 @@ typedef struct {
     uint8_t u_data_fifos_u_rx_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_data_fifos_u_rx_fifo_gen_normal_fifo_fifo_wptr;  /* 6-bit */
     uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_rdata_int;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_0_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_10_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_11_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_12_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_13_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_14_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_15_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_16_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_17_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_18_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_19_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_1_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_20_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_21_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_22_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_23_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_24_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_25_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_26_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_27_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_28_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_29_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_2_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_30_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_31_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_32_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_33_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_34_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_35_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_36_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_37_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_38_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_39_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_3_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_40_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_41_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_42_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_43_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_44_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_45_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_46_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_47_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_48_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_49_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_4_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_50_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_51_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_52_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_53_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_54_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_55_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_56_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_57_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_58_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_59_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_5_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_60_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_61_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_62_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_63_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_6_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_7_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_8_;  /* 32-bit */
+    uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_9_;  /* 32-bit */
     uint32_t u_data_fifos_u_rx_fifo_gen_normal_fifo_storage_rdata;  /* 32-bit */
     uint8_t u_data_fifos_u_rx_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t u_data_fifos_u_rx_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
@@ -550,6 +625,7 @@ typedef struct {
     uint8_t u_data_fifos_u_tx_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_data_fifos_u_tx_fifo_gen_normal_fifo_fifo_wptr;  /* 7-bit */
     uint64_t u_data_fifos_u_tx_fifo_gen_normal_fifo_rdata_int;  /* 36-bit */
+    uint64_t u_data_fifos_u_tx_fifo_gen_normal_fifo_storage[41];  /* 2592-bit (wide-array) */
     uint64_t u_data_fifos_u_tx_fifo_gen_normal_fifo_storage_rdata;  /* 36-bit */
     uint8_t u_data_fifos_u_tx_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t u_data_fifos_u_tx_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
@@ -578,7 +654,6 @@ typedef struct {
     uint64_t u_data_fifos_u_tx_fifo_wdata_i;  /* 36-bit */
     uint8_t u_data_fifos_u_tx_fifo_wready_o;  /* 1-bit */
     uint8_t u_data_fifos_u_tx_fifo_wvalid_i;  /* 1-bit */
-    uint8_t u_reg__unknown_arg0;  /* 1-bit */
     uint16_t u_reg_addr_hit;  /* 12-bit */
     uint8_t u_reg_alert_test_flds_we;  /* 1-bit */
     uint8_t u_reg_alert_test_we;  /* 1-bit */
@@ -911,16 +986,6 @@ typedef struct {
     uint8_t u_reg_u_chk_tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_chk_tl_i_a_valid;  /* 1-bit */
     uint8_t u_reg_u_chk_tl_i_d_ready;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_chk_data_i;  /* 64-bit */
-    uint64_t u_reg_u_chk_u_chk_data_o;  /* 57-bit */
-    uint8_t u_reg_u_chk_u_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_chk_syndrome_o;  /* 7-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_data_err_o;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_data_intg_i;  /* 39-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_i;  /* 39-bit */
-    uint32_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_o;  /* 32-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_syndrome_o;  /* 7-bit */
     uint8_t u_reg_u_command_csaat_d;  /* 1-bit */
     uint8_t u_reg_u_command_csaat_ds;  /* 1-bit */
     uint8_t u_reg_u_command_csaat_q;  /* 1-bit */
@@ -1626,18 +1691,6 @@ typedef struct {
     uint8_t u_reg_u_prim_reg_we_check_err_o;  /* 1-bit */
     uint16_t u_reg_u_prim_reg_we_check_oh_i;  /* 12-bit */
     uint8_t u_reg_u_prim_reg_we_check_rst_ni;  /* 1-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_buf_in_i;  /* 12-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_buf_out_o;  /* 12-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_addr_i;  /* 4-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_and_tree;  /* 31-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_clk_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_en_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_o;  /* 1-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_tree;  /* 31-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_oh_i;  /* 12-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_or_tree;  /* 31-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_rst_ni;  /* 1-bit */
-    uint8_t u_reg_u_reg_if__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_reg_if_a_ack;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_align_err;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_o;  /* 6-bit */
@@ -1737,6 +1790,9 @@ typedef struct {
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl14_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl14_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl14_payload_size;  /* 2-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -2243,6 +2299,9 @@ typedef struct {
     uint64_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_qpinl14_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_qpinl14_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_qpinl14_payload_size;  /* 2-bit */
     uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -2269,6 +2328,11 @@ typedef struct {
     uint8_t u_reg_u_socket_hfifo_reqready;  /* 1-bit */
     uint8_t u_reg_u_socket_hold_all_requests;  /* 1-bit */
     uint16_t u_reg_u_socket_num_req_outstanding;  /* 9-bit */
+    uint32_t u_reg_u_socket_qpinl15_qpinl13_qpinl11_payload_addr;  /* 32-bit */
+    uint8_t u_reg_u_socket_qpinl15_qpinl13_qpinl11_payload_instr_type;  /* 4-bit */
+    uint8_t u_reg_u_socket_qpinl15_qpinl13_qpinl11_payload_mask;  /* 4-bit */
+    uint8_t u_reg_u_socket_qpinl15_qpinl13_qpinl11_payload_opcode;  /* 3-bit */
+    uint64_t u_reg_u_socket_qpinl15_qpinl13_qpinl12_data_o;  /* 64-bit */
     uint8_t u_reg_u_socket_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_socket_tl_d_i_0__a_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_tl_d_i_0__d_data;  /* 32-bit */
@@ -2838,9 +2902,6 @@ typedef struct {
     uint8_t u_spi_core_tx_ready_o;  /* 1-bit */
     uint8_t u_spi_core_tx_stall_o;  /* 1-bit */
     uint8_t u_spi_core_tx_valid_i;  /* 1-bit */
-    uint8_t u_spi_core_u_fsm__178;  /* 1-bit */
-    uint8_t u_spi_core_u_fsm__unknown_arg0;  /* 3-bit */
-    uint8_t u_spi_core_u_fsm__unknown_arg1;  /* 1-bit */
     uint8_t u_spi_core_u_fsm_active_o;  /* 1-bit */
     uint8_t u_spi_core_u_fsm_bit_cntr_d;  /* 3-bit */
     uint8_t u_spi_core_u_fsm_bit_cntr_q;  /* 3-bit */
@@ -3064,8 +3125,6 @@ typedef struct {
     uint8_t u_window_racl_error_tx_o_valid;  /* 1-bit */
     uint8_t u_window_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_window_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_window_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_window_racl_policies_i__0__write_perm;  /* 2-bit */
     uint8_t u_window_rst_ni;  /* 1-bit */
     uint32_t u_window_rx_data_i;  /* 32-bit */
     uint8_t u_window_rx_ready_o;  /* 1-bit */
@@ -3162,7 +3221,6 @@ typedef struct {
     uint8_t u_window_u_adapter_rx_tl_o_d_user_data_intg;  /* 7-bit */
     uint8_t u_window_u_adapter_rx_tl_o_d_user_rsp_intg;  /* 7-bit */
     uint8_t u_window_u_adapter_rx_tl_o_d_valid;  /* 1-bit */
-    uint8_t u_window_u_adapter_rx_tlul_adapter_reg__unknown_arg0;  /* 1-bit */
     uint8_t u_window_u_adapter_rx_tlul_adapter_reg_a_ack;  /* 1-bit */
     uint8_t u_window_u_adapter_rx_tlul_adapter_reg_addr_align_err;  /* 1-bit */
     uint8_t u_window_u_adapter_rx_tlul_adapter_reg_addr_o;  /* 6-bit */
@@ -3271,12 +3329,10 @@ typedef struct {
     uint8_t u_window_u_adapter_tx_racl_error_o_valid;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_window_u_adapter_tx_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_window_u_adapter_tx_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_window_u_adapter_tx_racl_policies_i__0__write_perm;  /* 2-bit */
-    uint32_t u_window_u_adapter_tx_racl_policy_sel_ranges_i__0__base;  /* 32-bit */
-    uint8_t u_window_u_adapter_tx_racl_policy_sel_ranges_i__0__enable;  /* 1-bit */
-    uint32_t u_window_u_adapter_tx_racl_policy_sel_ranges_i__0__limit;  /* 32-bit */
-    uint8_t u_window_u_adapter_tx_racl_policy_sel_ranges_i__0__policy_sel;  /* 1-bit */
+    uint32_t u_window_u_adapter_tx_racl_policy_sel_ranges_i_0__base;  /* 32-bit */
+    uint8_t u_window_u_adapter_tx_racl_policy_sel_ranges_i_0__enable;  /* 1-bit */
+    uint32_t u_window_u_adapter_tx_racl_policy_sel_ranges_i_0__limit;  /* 32-bit */
+    uint8_t u_window_u_adapter_tx_racl_policy_sel_ranges_i_0__policy_sel;  /* 1-bit */
     uint32_t u_window_u_adapter_tx_rdata_i;  /* 32-bit */
     uint8_t u_window_u_adapter_tx_readback_en_i;  /* 4-bit */
     uint8_t u_window_u_adapter_tx_readback_error_o;  /* 1-bit */
@@ -3371,7 +3427,6 @@ typedef struct {
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_tl_h2d_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_tl_h2d_i_a_valid;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_racl_tl_h2d_i_d_ready;  /* 1-bit */
-    uint8_t u_window_u_adapter_tx_tlul_adapter_sram__unknown_arg0;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_addr_o;  /* 6-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_clk_i;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_compound_txn_in_progress_o;  /* 1-bit */
@@ -3384,7 +3439,6 @@ typedef struct {
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_error_instr_integ;  /* 7-bit */
     uint32_t u_window_u_adapter_tx_tlul_adapter_sram_gen_rmask_rmask;  /* 32-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_gnt_i;  /* 1-bit */
-    uint32_t u_window_u_adapter_tx_tlul_adapter_sram_i;  /* 32-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_intg_error;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_intg_error_o;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_tlul_adapter_sram_intg_error_q;  /* 1-bit */
@@ -3628,31 +3682,33 @@ typedef struct {
     uint32_t u_window_u_adapter_tx_wmask_o;  /* 32-bit */
     uint8_t u_window_u_adapter_tx_wr_collision_i;  /* 1-bit */
     uint8_t u_window_u_adapter_tx_write_pending_i;  /* 1-bit */
-    uint8_t unnamed;  /* 1-bit */
 
-    /* ---- ACCUMULATE counters (ptimer-backed) ---- */
-    /* One ptimer + IRQ line per counter recognised by
-     * DrvClassificationPass as `reg = prb(reg) +/- const`. */
-    ptimer_state *ptimer_u_reg_u_socket_num_req_outstanding;  /* step=-1 */
-    qemu_irq     irq_u_reg_u_socket_num_req_outstanding;
-    ptimer_state *ptimer_u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_cmd_queue_cmd_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_data_fifos_u_tx_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_data_fifos_u_tx_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_data_fifos_u_tx_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_data_fifos_u_tx_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_data_fifos_u_rx_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_data_fifos_u_rx_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_data_fifos_u_rx_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_data_fifos_u_rx_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
+    uint8_t _qp_pump;  /* pump pulse: accumulate-ring step enable */
+    void (*_qp_before_tick)(void *ctx);
+    void *_qp_before_tick_ctx;
+    void (*_qp_on_tick)(void *ctx);  /* per-clock observer hook (organs) */
+    void *_qp_on_tick_ctx;
+    uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
+    uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
+    uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
+    uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } spi_host_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
 uint64_t spi_host_read(void *opaque, hwaddr addr, unsigned size);
 void     spi_host_write(void *opaque, hwaddr addr,
                 uint64_t value, unsigned size);
+/* Asserts rst_ni for one settle round, then releases — primes the
+ * model so registers with non-zero RESVALs see their reset value. */
+void spi_host_reset(spi_host_state *s);
+/* Run the model to quiescence without a bus access (external event
+ * sources — SPI pumps, pin changes — call this after poking inputs). */
+void spi_host_settle(spi_host_state *s);
+
+void spi_host_step(spi_host_state *s);
+
+void spi_host_step_many(spi_host_state *s, unsigned count);
 
 /* Phase 2.d input setters — bridge host-side QEMU events into
  * the simulated device.  Each writes one input-port leaf field
@@ -3662,7 +3718,10 @@ void spi_host_set_alert_rx_i_0__ping_p(spi_host_state *s, uint8_t value);
 void spi_host_set_alert_rx_i_0__ping_n(spi_host_state *s, uint8_t value);
 void spi_host_set_alert_rx_i_0__ack_p(spi_host_state *s, uint8_t value);
 void spi_host_set_alert_rx_i_0__ack_n(spi_host_state *s, uint8_t value);
+void spi_host_set_racl_policies_i_0__write_perm(spi_host_state *s, uint8_t value);
+void spi_host_set_racl_policies_i_0__read_perm(spi_host_state *s, uint8_t value);
 void spi_host_set_cio_sd_i(spi_host_state *s, uint8_t value);
+void spi_host_set_passthrough_i_passthrough_en(spi_host_state *s, uint8_t value);
 void spi_host_set_passthrough_i_sck(spi_host_state *s, uint8_t value);
 void spi_host_set_passthrough_i_sck_en(spi_host_state *s, uint8_t value);
 void spi_host_set_passthrough_i_csb(spi_host_state *s, uint8_t value);

@@ -3,7 +3,6 @@
 
 #include "hw/sysbus.h"
 #include "qom/object.h"
-#include "hw/ptimer.h"
 
 #define TYPE_SPI_DEVICE "spi_device"
 #define SPI_DEVICE(obj) OBJECT_CHECK(spi_device_state, (obj), TYPE_SPI_DEVICE)
@@ -17,10 +16,13 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint16_t data_valid_i;  /* BIP, 10-bit */
+    uint16_t cmd_dp_sel;  /* BIP, 10-bit */
+    uint8_t cmd_read_pipeline_sel;  /* BIP, 1-bit */
+    uint32_t hw2reg_last_read_addr_d;  /* BIP, 32-bit */
     uint8_t rst_ni;  /* BIP, 1-bit */
-    uint8_t st;  /* BIP, 4-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
+    uint32_t tl_sram_d2h_0__d_data;  /* BIP, 32-bit */
     uint32_t unnamed_rdata_0;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
@@ -41,10 +43,372 @@ typedef struct {
     uint8_t cio_tpm_csb_i;  /* 1-bit */
     uint8_t clk_i;  /* 1-bit */
     uint8_t clk_spi_out_buf;  /* 1-bit */
-    uint16_t cmd_dp_sel;  /* 10-bit */
-    __uint128_t cmd_filter;  /* 256-bit */
+    uint64_t cmd_filter[4];  /* 256-bit (wide-array) */
+    uint8_t cmd_info_0__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_0__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_0__busy;  /* 1-bit */
+    uint8_t cmd_info_0__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_0__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_0__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_0__opcode;  /* 8-bit */
+    uint8_t cmd_info_0__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_0__payload_en;  /* 4-bit */
+    uint8_t cmd_info_0__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_0__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_0__upload;  /* 1-bit */
+    uint8_t cmd_info_0__valid;  /* 1-bit */
+    uint8_t cmd_info_10__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_10__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_10__busy;  /* 1-bit */
+    uint8_t cmd_info_10__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_10__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_10__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_10__opcode;  /* 8-bit */
+    uint8_t cmd_info_10__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_10__payload_en;  /* 4-bit */
+    uint8_t cmd_info_10__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_10__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_10__upload;  /* 1-bit */
+    uint8_t cmd_info_10__valid;  /* 1-bit */
+    uint8_t cmd_info_11__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_11__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_11__busy;  /* 1-bit */
+    uint8_t cmd_info_11__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_11__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_11__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_11__opcode;  /* 8-bit */
+    uint8_t cmd_info_11__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_11__payload_en;  /* 4-bit */
+    uint8_t cmd_info_11__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_11__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_11__upload;  /* 1-bit */
+    uint8_t cmd_info_11__valid;  /* 1-bit */
+    uint8_t cmd_info_12__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_12__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_12__busy;  /* 1-bit */
+    uint8_t cmd_info_12__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_12__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_12__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_12__opcode;  /* 8-bit */
+    uint8_t cmd_info_12__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_12__payload_en;  /* 4-bit */
+    uint8_t cmd_info_12__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_12__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_12__upload;  /* 1-bit */
+    uint8_t cmd_info_12__valid;  /* 1-bit */
+    uint8_t cmd_info_13__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_13__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_13__busy;  /* 1-bit */
+    uint8_t cmd_info_13__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_13__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_13__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_13__opcode;  /* 8-bit */
+    uint8_t cmd_info_13__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_13__payload_en;  /* 4-bit */
+    uint8_t cmd_info_13__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_13__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_13__upload;  /* 1-bit */
+    uint8_t cmd_info_13__valid;  /* 1-bit */
+    uint8_t cmd_info_14__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_14__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_14__busy;  /* 1-bit */
+    uint8_t cmd_info_14__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_14__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_14__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_14__opcode;  /* 8-bit */
+    uint8_t cmd_info_14__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_14__payload_en;  /* 4-bit */
+    uint8_t cmd_info_14__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_14__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_14__upload;  /* 1-bit */
+    uint8_t cmd_info_14__valid;  /* 1-bit */
+    uint8_t cmd_info_15__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_15__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_15__busy;  /* 1-bit */
+    uint8_t cmd_info_15__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_15__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_15__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_15__opcode;  /* 8-bit */
+    uint8_t cmd_info_15__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_15__payload_en;  /* 4-bit */
+    uint8_t cmd_info_15__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_15__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_15__upload;  /* 1-bit */
+    uint8_t cmd_info_15__valid;  /* 1-bit */
+    uint8_t cmd_info_16__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_16__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_16__busy;  /* 1-bit */
+    uint8_t cmd_info_16__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_16__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_16__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_16__opcode;  /* 8-bit */
+    uint8_t cmd_info_16__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_16__payload_en;  /* 4-bit */
+    uint8_t cmd_info_16__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_16__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_16__upload;  /* 1-bit */
+    uint8_t cmd_info_16__valid;  /* 1-bit */
+    uint8_t cmd_info_17__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_17__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_17__busy;  /* 1-bit */
+    uint8_t cmd_info_17__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_17__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_17__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_17__opcode;  /* 8-bit */
+    uint8_t cmd_info_17__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_17__payload_en;  /* 4-bit */
+    uint8_t cmd_info_17__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_17__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_17__upload;  /* 1-bit */
+    uint8_t cmd_info_17__valid;  /* 1-bit */
+    uint8_t cmd_info_18__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_18__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_18__busy;  /* 1-bit */
+    uint8_t cmd_info_18__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_18__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_18__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_18__opcode;  /* 8-bit */
+    uint8_t cmd_info_18__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_18__payload_en;  /* 4-bit */
+    uint8_t cmd_info_18__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_18__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_18__upload;  /* 1-bit */
+    uint8_t cmd_info_18__valid;  /* 1-bit */
+    uint8_t cmd_info_19__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_19__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_19__busy;  /* 1-bit */
+    uint8_t cmd_info_19__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_19__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_19__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_19__opcode;  /* 8-bit */
+    uint8_t cmd_info_19__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_19__payload_en;  /* 4-bit */
+    uint8_t cmd_info_19__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_19__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_19__upload;  /* 1-bit */
+    uint8_t cmd_info_19__valid;  /* 1-bit */
+    uint8_t cmd_info_1__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_1__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_1__busy;  /* 1-bit */
+    uint8_t cmd_info_1__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_1__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_1__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_1__opcode;  /* 8-bit */
+    uint8_t cmd_info_1__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_1__payload_en;  /* 4-bit */
+    uint8_t cmd_info_1__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_1__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_1__upload;  /* 1-bit */
+    uint8_t cmd_info_1__valid;  /* 1-bit */
+    uint8_t cmd_info_20__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_20__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_20__busy;  /* 1-bit */
+    uint8_t cmd_info_20__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_20__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_20__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_20__opcode;  /* 8-bit */
+    uint8_t cmd_info_20__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_20__payload_en;  /* 4-bit */
+    uint8_t cmd_info_20__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_20__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_20__upload;  /* 1-bit */
+    uint8_t cmd_info_20__valid;  /* 1-bit */
+    uint8_t cmd_info_21__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_21__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_21__busy;  /* 1-bit */
+    uint8_t cmd_info_21__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_21__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_21__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_21__opcode;  /* 8-bit */
+    uint8_t cmd_info_21__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_21__payload_en;  /* 4-bit */
+    uint8_t cmd_info_21__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_21__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_21__upload;  /* 1-bit */
+    uint8_t cmd_info_21__valid;  /* 1-bit */
+    uint8_t cmd_info_22__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_22__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_22__busy;  /* 1-bit */
+    uint8_t cmd_info_22__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_22__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_22__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_22__opcode;  /* 8-bit */
+    uint8_t cmd_info_22__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_22__payload_en;  /* 4-bit */
+    uint8_t cmd_info_22__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_22__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_22__upload;  /* 1-bit */
+    uint8_t cmd_info_22__valid;  /* 1-bit */
+    uint8_t cmd_info_23__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_23__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_23__busy;  /* 1-bit */
+    uint8_t cmd_info_23__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_23__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_23__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_23__opcode;  /* 8-bit */
+    uint8_t cmd_info_23__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_23__payload_en;  /* 4-bit */
+    uint8_t cmd_info_23__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_23__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_23__upload;  /* 1-bit */
+    uint8_t cmd_info_23__valid;  /* 1-bit */
+    uint8_t cmd_info_24__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_24__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_24__busy;  /* 1-bit */
+    uint8_t cmd_info_24__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_24__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_24__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_24__opcode;  /* 8-bit */
+    uint8_t cmd_info_24__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_24__payload_en;  /* 4-bit */
+    uint8_t cmd_info_24__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_24__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_24__upload;  /* 1-bit */
+    uint8_t cmd_info_24__valid;  /* 1-bit */
+    uint8_t cmd_info_25__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_25__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_25__busy;  /* 1-bit */
+    uint8_t cmd_info_25__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_25__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_25__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_25__opcode;  /* 8-bit */
+    uint8_t cmd_info_25__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_25__payload_en;  /* 4-bit */
+    uint8_t cmd_info_25__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_25__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_25__upload;  /* 1-bit */
+    uint8_t cmd_info_25__valid;  /* 1-bit */
+    uint8_t cmd_info_26__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_26__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_26__busy;  /* 1-bit */
+    uint8_t cmd_info_26__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_26__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_26__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_26__opcode;  /* 8-bit */
+    uint8_t cmd_info_26__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_26__payload_en;  /* 4-bit */
+    uint8_t cmd_info_26__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_26__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_26__upload;  /* 1-bit */
+    uint8_t cmd_info_26__valid;  /* 1-bit */
+    uint8_t cmd_info_27__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_27__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_27__busy;  /* 1-bit */
+    uint8_t cmd_info_27__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_27__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_27__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_27__opcode;  /* 8-bit */
+    uint8_t cmd_info_27__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_27__payload_en;  /* 4-bit */
+    uint8_t cmd_info_27__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_27__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_27__upload;  /* 1-bit */
+    uint8_t cmd_info_27__valid;  /* 1-bit */
+    uint8_t cmd_info_2__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_2__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_2__busy;  /* 1-bit */
+    uint8_t cmd_info_2__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_2__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_2__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_2__opcode;  /* 8-bit */
+    uint8_t cmd_info_2__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_2__payload_en;  /* 4-bit */
+    uint8_t cmd_info_2__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_2__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_2__upload;  /* 1-bit */
+    uint8_t cmd_info_2__valid;  /* 1-bit */
+    uint8_t cmd_info_3__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_3__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_3__busy;  /* 1-bit */
+    uint8_t cmd_info_3__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_3__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_3__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_3__opcode;  /* 8-bit */
+    uint8_t cmd_info_3__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_3__payload_en;  /* 4-bit */
+    uint8_t cmd_info_3__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_3__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_3__upload;  /* 1-bit */
+    uint8_t cmd_info_3__valid;  /* 1-bit */
+    uint8_t cmd_info_4__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_4__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_4__busy;  /* 1-bit */
+    uint8_t cmd_info_4__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_4__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_4__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_4__opcode;  /* 8-bit */
+    uint8_t cmd_info_4__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_4__payload_en;  /* 4-bit */
+    uint8_t cmd_info_4__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_4__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_4__upload;  /* 1-bit */
+    uint8_t cmd_info_4__valid;  /* 1-bit */
+    uint8_t cmd_info_5__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_5__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_5__busy;  /* 1-bit */
+    uint8_t cmd_info_5__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_5__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_5__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_5__opcode;  /* 8-bit */
+    uint8_t cmd_info_5__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_5__payload_en;  /* 4-bit */
+    uint8_t cmd_info_5__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_5__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_5__upload;  /* 1-bit */
+    uint8_t cmd_info_5__valid;  /* 1-bit */
+    uint8_t cmd_info_6__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_6__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_6__busy;  /* 1-bit */
+    uint8_t cmd_info_6__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_6__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_6__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_6__opcode;  /* 8-bit */
+    uint8_t cmd_info_6__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_6__payload_en;  /* 4-bit */
+    uint8_t cmd_info_6__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_6__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_6__upload;  /* 1-bit */
+    uint8_t cmd_info_6__valid;  /* 1-bit */
+    uint8_t cmd_info_7__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_7__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_7__busy;  /* 1-bit */
+    uint8_t cmd_info_7__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_7__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_7__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_7__opcode;  /* 8-bit */
+    uint8_t cmd_info_7__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_7__payload_en;  /* 4-bit */
+    uint8_t cmd_info_7__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_7__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_7__upload;  /* 1-bit */
+    uint8_t cmd_info_7__valid;  /* 1-bit */
+    uint8_t cmd_info_8__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_8__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_8__busy;  /* 1-bit */
+    uint8_t cmd_info_8__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_8__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_8__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_8__opcode;  /* 8-bit */
+    uint8_t cmd_info_8__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_8__payload_en;  /* 4-bit */
+    uint8_t cmd_info_8__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_8__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_8__upload;  /* 1-bit */
+    uint8_t cmd_info_8__valid;  /* 1-bit */
+    uint8_t cmd_info_9__addr_mode;  /* 2-bit */
+    uint8_t cmd_info_9__addr_swap_en;  /* 1-bit */
+    uint8_t cmd_info_9__busy;  /* 1-bit */
+    uint8_t cmd_info_9__dummy_en;  /* 1-bit */
+    uint8_t cmd_info_9__dummy_size;  /* 3-bit */
+    uint8_t cmd_info_9__mbyte_en;  /* 1-bit */
+    uint8_t cmd_info_9__opcode;  /* 8-bit */
+    uint8_t cmd_info_9__payload_dir;  /* 1-bit */
+    uint8_t cmd_info_9__payload_en;  /* 4-bit */
+    uint8_t cmd_info_9__payload_swap_en;  /* 1-bit */
+    uint8_t cmd_info_9__read_pipeline_mode;  /* 2-bit */
+    uint8_t cmd_info_9__upload;  /* 1-bit */
+    uint8_t cmd_info_9__valid;  /* 1-bit */
     uint16_t cmd_only_dp_sel;  /* 10-bit */
-    uint8_t cmd_read_pipeline_sel;  /* 1-bit */
     uint16_t flash_sram_l2m_addr;  /* 10-bit */
     uint8_t flash_sram_l2m_req;  /* 1-bit */
     uint32_t flash_sram_l2m_wdata;  /* 32-bit */
@@ -54,7 +418,6 @@ typedef struct {
     uint8_t flash_sram_m2l_rerror_corr;  /* 1-bit */
     uint8_t flash_sram_m2l_rerror_uncorr;  /* 1-bit */
     uint8_t flash_sram_m2l_rvalid;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender__unknown_arg0;  /* 3-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_ack_level;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_ack_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_clr;  /* 1-bit */
@@ -133,7 +496,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_pi;  /* 1-bit */
@@ -183,7 +545,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;  /* 2-bit */
@@ -230,7 +591,6 @@ typedef struct {
     uint8_t hw2reg_intr_state_upload_payload_not_empty_de;  /* 1-bit */
     uint8_t hw2reg_intr_state_upload_payload_overflow_d;  /* 1-bit */
     uint8_t hw2reg_intr_state_upload_payload_overflow_de;  /* 1-bit */
-    uint32_t hw2reg_last_read_addr_d;  /* 32-bit */
     uint8_t hw2reg_status_csb_d;  /* 1-bit */
     uint8_t hw2reg_status_tpm_csb_d;  /* 1-bit */
     uint8_t hw2reg_tpm_cap_locality_d;  /* 1-bit */
@@ -300,8 +660,23 @@ typedef struct {
     uint8_t p2s_sent;  /* 1-bit */
     uint8_t p2s_valid;  /* 1-bit */
     uint8_t passthrough_i_s;  /* 4-bit */
+    uint8_t passthrough_o_csb;  /* 1-bit */
+    uint8_t passthrough_o_csb_en;  /* 1-bit */
+    uint8_t passthrough_o_passthrough_en;  /* 1-bit */
+    uint8_t passthrough_o_s;  /* 4-bit */
+    uint8_t passthrough_o_s_en;  /* 4-bit */
+    uint8_t passthrough_o_sck;  /* 1-bit */
+    uint8_t passthrough_o_sck_en;  /* 1-bit */
     uint8_t passthrough_sd;  /* 4-bit */
     uint8_t passthrough_sd_en;  /* 4-bit */
+    uint32_t qpinl10_result;  /* 32-bit */
+    uint32_t qpinl11_result;  /* 32-bit */
+    uint32_t qpinl12_result;  /* 32-bit */
+    uint8_t qpinl5_result;  /* 4-bit */
+    uint8_t qpinl6_result;  /* 4-bit */
+    uint32_t qpinl7_result;  /* 32-bit */
+    uint32_t qpinl8_result;  /* 32-bit */
+    uint32_t qpinl9_result;  /* 32-bit */
     uint8_t racl_error_0__ctn_uid;  /* 1-bit */
     uint8_t racl_error_0__overflow;  /* 1-bit */
     uint8_t racl_error_0__racl_role;  /* 1-bit */
@@ -326,8 +701,10 @@ typedef struct {
     uint8_t racl_error_o_read_access;  /* 1-bit */
     uint32_t racl_error_o_request_address;  /* 32-bit */
     uint8_t racl_error_o_valid;  /* 1-bit */
-    uint8_t racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__write_perm;  /* 2-bit */
+    uint8_t ram_cfg_rsp_spi2sys_o_done;  /* 1-bit */
+    uint8_t ram_cfg_rsp_sys2spi_o_done;  /* 1-bit */
     uint8_t ram_cfg_spi2sys_i_a_ram_fcfg_cfg;  /* 4-bit */
     uint8_t ram_cfg_spi2sys_i_a_ram_fcfg_cfg_en;  /* 1-bit */
     uint8_t ram_cfg_spi2sys_i_a_ram_fcfg_test;  /* 1-bit */
@@ -1083,6 +1460,26 @@ typedef struct {
     uint32_t sub_sram_l2m_4__wdata;  /* 32-bit */
     uint8_t sub_sram_l2m_4__we;  /* 1-bit */
     uint8_t sub_sram_l2m_4__wstrb;  /* 4-bit */
+    uint32_t sub_sram_m2l_0__rdata;  /* 32-bit */
+    uint8_t sub_sram_m2l_0__rerror_corr;  /* 1-bit */
+    uint8_t sub_sram_m2l_0__rerror_uncorr;  /* 1-bit */
+    uint8_t sub_sram_m2l_0__rvalid;  /* 1-bit */
+    uint32_t sub_sram_m2l_1__rdata;  /* 32-bit */
+    uint8_t sub_sram_m2l_1__rerror_corr;  /* 1-bit */
+    uint8_t sub_sram_m2l_1__rerror_uncorr;  /* 1-bit */
+    uint8_t sub_sram_m2l_1__rvalid;  /* 1-bit */
+    uint32_t sub_sram_m2l_2__rdata;  /* 32-bit */
+    uint8_t sub_sram_m2l_2__rerror_corr;  /* 1-bit */
+    uint8_t sub_sram_m2l_2__rerror_uncorr;  /* 1-bit */
+    uint8_t sub_sram_m2l_2__rvalid;  /* 1-bit */
+    uint32_t sub_sram_m2l_3__rdata;  /* 32-bit */
+    uint8_t sub_sram_m2l_3__rerror_corr;  /* 1-bit */
+    uint8_t sub_sram_m2l_3__rerror_uncorr;  /* 1-bit */
+    uint8_t sub_sram_m2l_3__rvalid;  /* 1-bit */
+    uint32_t sub_sram_m2l_4__rdata;  /* 32-bit */
+    uint8_t sub_sram_m2l_4__rerror_corr;  /* 1-bit */
+    uint8_t sub_sram_m2l_4__rerror_uncorr;  /* 1-bit */
+    uint8_t sub_sram_m2l_4__rvalid;  /* 1-bit */
     uint8_t sys_csb_deasserted_pulse;  /* 1-bit */
     uint16_t sys_sram_addr_0_;  /* 10-bit */
     uint16_t sys_sram_addr_1_;  /* 10-bit */
@@ -1159,12 +1556,21 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
+    uint8_t tl_o_a_ready;  /* 1-bit */
+    uint32_t tl_o_d_data;  /* 32-bit */
+    uint8_t tl_o_d_error;  /* 1-bit */
+    uint8_t tl_o_d_opcode;  /* 3-bit */
+    uint8_t tl_o_d_param;  /* 3-bit */
+    uint8_t tl_o_d_sink;  /* 1-bit */
+    uint8_t tl_o_d_size;  /* 2-bit */
+    uint8_t tl_o_d_source;  /* 8-bit */
+    uint8_t tl_o_d_user_data_intg;  /* 7-bit */
+    uint8_t tl_o_d_user_rsp_intg;  /* 7-bit */
+    uint8_t tl_o_d_valid;  /* 1-bit */
     uint8_t tl_sram_d2h_0__a_ready;  /* 1-bit */
-    uint32_t tl_sram_d2h_0__d_data;  /* 32-bit */
     uint8_t tl_sram_d2h_0__d_error;  /* 1-bit */
     uint8_t tl_sram_d2h_0__d_opcode;  /* 3-bit */
     uint8_t tl_sram_d2h_0__d_param;  /* 3-bit */
@@ -1222,13 +1628,11 @@ typedef struct {
     uint8_t u_clk_spi_out_mux_clk_o;  /* 1-bit */
     uint8_t u_clk_spi_out_mux_sel_i;  /* 1-bit */
     uint8_t u_clk_spi_scanmode_i;  /* 1-bit */
-    uint8_t u_cmdparse__unknown_arg0;  /* 5-bit */
-    uint16_t u_cmdparse__unknown_arg2;  /* 10-bit */
-    uint16_t u_cmdparse__unknown_arg3;  /* 10-bit */
     uint8_t u_cmdparse_cfg_intercept_en_jedec_i;  /* 1-bit */
     uint8_t u_cmdparse_cfg_intercept_en_sfdp_i;  /* 1-bit */
     uint8_t u_cmdparse_cfg_intercept_en_status_i;  /* 1-bit */
     uint8_t u_cmdparse_clk_i;  /* 1-bit */
+    uint8_t u_cmdparse_clk_i_prev;  /* 1-bit */
     uint8_t u_cmdparse_cmd_config_idx_o;  /* 5-bit */
     uint8_t u_cmdparse_cmd_config_req_o;  /* 1-bit */
     uint8_t u_cmdparse_cmd_info_d_addr_mode;  /* 2-bit */
@@ -1680,7 +2084,6 @@ typedef struct {
     uint8_t u_cmdparse_spi_mode_i;  /* 2-bit */
     uint8_t u_cmdparse_st;  /* 4-bit */
     uint8_t u_cmdparse_st_d;  /* 4-bit */
-    uint8_t u_cmdparse_unnamed;  /* 4-bit */
     uint8_t u_cmdparse_unused_cmdinfo_members;  /* 1-bit */
     uint8_t u_cmdparse_upload;  /* 1-bit */
     uint8_t u_csb_buf_in_i;  /* 4-bit */
@@ -1695,6 +2098,7 @@ typedef struct {
     uint8_t u_csb_rst_scan_mux_sel_i;  /* 1-bit */
     uint8_t u_flash_readbuf_flip_pulse_sync_clk_dst_i;  /* 1-bit */
     uint8_t u_flash_readbuf_flip_pulse_sync_clk_src_i;  /* 1-bit */
+    uint8_t u_flash_readbuf_flip_pulse_sync_clk_src_i_prev;  /* 1-bit */
     uint8_t u_flash_readbuf_flip_pulse_sync_dst_level;  /* 1-bit */
     uint8_t u_flash_readbuf_flip_pulse_sync_dst_level_q;  /* 1-bit */
     uint8_t u_flash_readbuf_flip_pulse_sync_dst_pulse_o;  /* 1-bit */
@@ -1717,6 +2121,7 @@ typedef struct {
     uint8_t u_flash_readbuf_flip_pulse_sync_src_pulse_i;  /* 1-bit */
     uint8_t u_flash_readbuf_watermark_pulse_sync_clk_dst_i;  /* 1-bit */
     uint8_t u_flash_readbuf_watermark_pulse_sync_clk_src_i;  /* 1-bit */
+    uint8_t u_flash_readbuf_watermark_pulse_sync_clk_src_i_prev;  /* 1-bit */
     uint8_t u_flash_readbuf_watermark_pulse_sync_dst_level;  /* 1-bit */
     uint8_t u_flash_readbuf_watermark_pulse_sync_dst_level_q;  /* 1-bit */
     uint8_t u_flash_readbuf_watermark_pulse_sync_dst_pulse_o;  /* 1-bit */
@@ -1834,13 +2239,14 @@ typedef struct {
     uint8_t u_intr_upload_edge_q_sync_o;  /* 2-bit */
     uint8_t u_intr_upload_edge_q_sync_q;  /* 2-bit */
     uint8_t u_intr_upload_edge_rst_ni;  /* 1-bit */
-    uint8_t u_jedec__unknown_arg0;  /* 2-bit */
     uint8_t u_jedec_byte_sel_d;  /* 2-bit */
     uint8_t u_jedec_byte_sel_q;  /* 2-bit */
     uint8_t u_jedec_cc_count;  /* 8-bit */
     uint8_t u_jedec_cc_needed;  /* 1-bit */
     uint8_t u_jedec_clk_i;  /* 1-bit */
+    uint8_t u_jedec_clk_i_prev;  /* 1-bit */
     uint8_t u_jedec_clk_out_i;  /* 1-bit */
+    uint8_t u_jedec_clk_out_i_prev;  /* 1-bit */
     uint8_t u_jedec_cmd_info_i_addr_mode;  /* 2-bit */
     uint8_t u_jedec_cmd_info_i_addr_swap_en;  /* 1-bit */
     uint8_t u_jedec_cmd_info_i_busy;  /* 1-bit */
@@ -1876,9 +2282,8 @@ typedef struct {
     uint16_t u_jedec_sys_jedec_i_device_id;  /* 16-bit */
     uint8_t u_jedec_sys_jedec_i_jedec_id;  /* 8-bit */
     uint8_t u_jedec_sys_jedec_i_num_cc;  /* 8-bit */
-    uint8_t u_jedec_unnamed;  /* 1-bit */
-    uint8_t u_p2s__unknown_arg0;  /* 1-bit */
     uint8_t u_p2s_clk_i;  /* 1-bit */
+    uint8_t u_p2s_clk_i_prev;  /* 1-bit */
     uint8_t u_p2s_cnt;  /* 3-bit */
     uint8_t u_p2s_csb_i;  /* 1-bit */
     uint8_t u_p2s_data_i;  /* 8-bit */
@@ -1895,7 +2300,6 @@ typedef struct {
     uint8_t u_p2s_rst_ni;  /* 1-bit */
     uint8_t u_p2s_s_en_o;  /* 4-bit */
     uint8_t u_p2s_s_o;  /* 4-bit */
-    uint8_t u_passthrough__unknown_arg0;  /* 1-bit */
     uint8_t u_passthrough_addr_mode;  /* 2-bit */
     uint8_t u_passthrough_addr_phase;  /* 1-bit */
     uint8_t u_passthrough_addr_phase_outclk;  /* 1-bit */
@@ -1908,11 +2312,13 @@ typedef struct {
     uint8_t u_passthrough_cfg_addr_4b_en_i;  /* 1-bit */
     uint32_t u_passthrough_cfg_addr_mask_i;  /* 32-bit */
     uint32_t u_passthrough_cfg_addr_value_i;  /* 32-bit */
-    __uint128_t u_passthrough_cfg_cmd_filter_i;  /* 256-bit */
+    uint64_t u_passthrough_cfg_cmd_filter_i[4];  /* 256-bit (wide-array) */
     uint32_t u_passthrough_cfg_payload_data_i;  /* 32-bit */
     uint32_t u_passthrough_cfg_payload_mask_i;  /* 32-bit */
     uint8_t u_passthrough_clk_i;  /* 1-bit */
+    uint8_t u_passthrough_clk_i_prev;  /* 1-bit */
     uint8_t u_passthrough_clk_out_i;  /* 1-bit */
+    uint8_t u_passthrough_clk_out_i_prev;  /* 1-bit */
     uint8_t u_passthrough_cmd_7th;  /* 1-bit */
     uint8_t u_passthrough_cmd_8th;  /* 1-bit */
     uint8_t u_passthrough_cmd_filter;  /* 2-bit */
@@ -2421,31 +2827,37 @@ typedef struct {
     uint8_t u_passthrough_u_pt_sck_cg_en_latch;  /* 1-bit */
     uint8_t u_passthrough_u_pt_sck_cg_test_en_i;  /* 1-bit */
     uint8_t u_passthrough_u_read_half_cycle_clk_i;  /* 1-bit */
+    uint8_t u_passthrough_u_read_half_cycle_clk_i_prev;  /* 1-bit */
     uint8_t u_passthrough_u_read_half_cycle_d_i;  /* 4-bit */
     uint8_t u_passthrough_u_read_half_cycle_q_o;  /* 4-bit */
     uint8_t u_passthrough_u_read_half_cycle_rst_ni;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg1_clk_i;  /* 1-bit */
+    uint8_t u_passthrough_u_read_pipe_oe_stg1_clk_i_prev;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg1_d_i;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg1_q_o;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg1_rst_ni;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg2_clk_i;  /* 1-bit */
+    uint8_t u_passthrough_u_read_pipe_oe_stg2_clk_i_prev;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg2_d_i;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg2_q_o;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_oe_stg2_rst_ni;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_stg1_clk_i;  /* 1-bit */
+    uint8_t u_passthrough_u_read_pipe_stg1_clk_i_prev;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_stg1_d_i;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_stg1_q_o;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_stg1_rst_ni;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_stg2_clk_i;  /* 1-bit */
+    uint8_t u_passthrough_u_read_pipe_stg2_clk_i_prev;  /* 1-bit */
     uint8_t u_passthrough_u_read_pipe_stg2_d_i;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_stg2_q_o;  /* 4-bit */
     uint8_t u_passthrough_u_read_pipe_stg2_rst_ni;  /* 1-bit */
-    uint8_t u_passthrough_unnamed;  /* 4-bit */
     uint8_t u_read_en_pipe_stg1_clk_i;  /* 1-bit */
+    uint8_t u_read_en_pipe_stg1_clk_i_prev;  /* 1-bit */
     uint8_t u_read_en_pipe_stg1_d_i;  /* 4-bit */
     uint8_t u_read_en_pipe_stg1_q_o;  /* 4-bit */
     uint8_t u_read_en_pipe_stg1_rst_ni;  /* 1-bit */
     uint8_t u_read_en_pipe_stg2_clk_i;  /* 1-bit */
+    uint8_t u_read_en_pipe_stg2_clk_i_prev;  /* 1-bit */
     uint8_t u_read_en_pipe_stg2_d_i;  /* 4-bit */
     uint8_t u_read_en_pipe_stg2_q_o;  /* 4-bit */
     uint8_t u_read_en_pipe_stg2_rst_ni;  /* 1-bit */
@@ -2458,14 +2870,15 @@ typedef struct {
     uint8_t u_read_intercept_pipe_stg2_q_o;  /* 1-bit */
     uint8_t u_read_intercept_pipe_stg2_rst_ni;  /* 1-bit */
     uint8_t u_read_pipe_stg1_clk_i;  /* 1-bit */
+    uint8_t u_read_pipe_stg1_clk_i_prev;  /* 1-bit */
     uint8_t u_read_pipe_stg1_d_i;  /* 4-bit */
     uint8_t u_read_pipe_stg1_q_o;  /* 4-bit */
     uint8_t u_read_pipe_stg1_rst_ni;  /* 1-bit */
     uint8_t u_read_pipe_stg2_clk_i;  /* 1-bit */
+    uint8_t u_read_pipe_stg2_clk_i_prev;  /* 1-bit */
     uint8_t u_read_pipe_stg2_d_i;  /* 4-bit */
     uint8_t u_read_pipe_stg2_q_o;  /* 4-bit */
     uint8_t u_read_pipe_stg2_rst_ni;  /* 1-bit */
-    uint8_t u_readcmd__unknown_arg0;  /* 3-bit */
     uint8_t u_readcmd_addr_4b_en_i;  /* 1-bit */
     uint8_t u_readcmd_addr_cnt_d;  /* 5-bit */
     uint8_t u_readcmd_addr_cnt_q;  /* 5-bit */
@@ -2485,7 +2898,9 @@ typedef struct {
     uint8_t u_readcmd_bitcnt_update;  /* 1-bit */
     uint8_t u_readcmd_cfg_intercept_en_mbx_i;  /* 1-bit */
     uint8_t u_readcmd_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_clk_i_prev;  /* 1-bit */
     uint8_t u_readcmd_clk_out_i;  /* 1-bit */
+    uint8_t u_readcmd_clk_out_i_prev;  /* 1-bit */
     uint8_t u_readcmd_cmd_info_i_addr_mode;  /* 2-bit */
     uint8_t u_readcmd_cmd_info_i_addr_swap_en;  /* 1-bit */
     uint8_t u_readcmd_cmd_info_i_busy;  /* 1-bit */
@@ -2546,6 +2961,7 @@ typedef struct {
     uint8_t u_readcmd_sys_readbuf_clr_i;  /* 1-bit */
     uint8_t u_readcmd_sys_rst_ni;  /* 1-bit */
     uint8_t u_readcmd_u_addr_latch_pulse_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_u_addr_latch_pulse_clk_i_prev;  /* 1-bit */
     uint8_t u_readcmd_u_addr_latch_pulse_d_i;  /* 1-bit */
     uint8_t u_readcmd_u_addr_latch_pulse_q_negedge_pulse_o;  /* 1-bit */
     uint8_t u_readcmd_u_addr_latch_pulse_q_posedge_pulse_o;  /* 1-bit */
@@ -2553,10 +2969,10 @@ typedef struct {
     uint8_t u_readcmd_u_addr_latch_pulse_q_sync_o;  /* 1-bit */
     uint8_t u_readcmd_u_addr_latch_pulse_q_sync_q;  /* 1-bit */
     uint8_t u_readcmd_u_addr_latch_pulse_rst_ni;  /* 1-bit */
-    uint8_t u_readcmd_u_readbuffer__unknown_arg0;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_active;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_address_update_i;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_u_readbuffer_clk_i_prev;  /* 1-bit */
     uint32_t u_readcmd_u_readbuffer_current_address_i;  /* 32-bit */
     uint8_t u_readcmd_u_readbuffer_event_flip_o;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_event_watermark_o;  /* 1-bit */
@@ -2578,8 +2994,8 @@ typedef struct {
     uint8_t u_readcmd_u_readbuffer_sys_clr_req;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_sys_rst_ni;  /* 1-bit */
     uint16_t u_readcmd_u_readbuffer_threshold_i;  /* 10-bit */
-    uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr__unknown_arg0;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr_clk_dst_i;  /* 1-bit */
+    uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr_clk_dst_i_prev;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr_clk_src_i;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr_dst_ack_i;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr_dst_req_o;  /* 1-bit */
@@ -2628,10 +3044,10 @@ typedef struct {
     uint8_t u_readcmd_u_readbuffer_u_sys2spi_clr_src_req_i;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_watermark_cross;  /* 1-bit */
     uint8_t u_readcmd_u_readbuffer_watermark_crossed;  /* 1-bit */
-    uint8_t u_readcmd_u_readsram__unknown_arg0;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_addr_latched_i;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_addr_sel;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_u_readsram_clk_i_prev;  /* 1-bit */
     uint32_t u_readcmd_u_readsram_current_address_i;  /* 32-bit */
     uint8_t u_readcmd_u_readsram_data_inc;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_fifo_rdata_o;  /* 8-bit */
@@ -2668,14 +3084,18 @@ typedef struct {
     uint8_t u_readcmd_u_readsram_strb;  /* 2-bit */
     uint8_t u_readcmd_u_readsram_strb_set;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_u_readsram_u_fifo_clk_i_prev;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_clr_i;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_depth_o;  /* 2-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_err_o;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_full_o;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_fifo_wptr;  /* 1-bit */
+    uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_storage_0_;  /* 8-bit */
+    uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_storage_1_;  /* 8-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_storage_rdata;  /* 8-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_clk_i_prev;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
@@ -2703,6 +3123,7 @@ typedef struct {
     uint8_t u_readcmd_u_readsram_u_fifo_wready_o;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_fifo_wvalid_i;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_sram_fifo_clk_i;  /* 1-bit */
+    uint8_t u_readcmd_u_readsram_u_sram_fifo_clk_i_prev;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_sram_fifo_clr_i;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_sram_fifo_depth_o;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_sram_fifo_err_o;  /* 1-bit */
@@ -2718,9 +3139,6 @@ typedef struct {
     uint32_t u_readcmd_u_readsram_u_sram_fifo_wdata_i;  /* 32-bit */
     uint8_t u_readcmd_u_readsram_u_sram_fifo_wready_o;  /* 1-bit */
     uint8_t u_readcmd_u_readsram_u_sram_fifo_wvalid_i;  /* 1-bit */
-    uint8_t u_readcmd_u_readsram_unnamed;  /* 1-bit */
-    uint8_t u_readcmd_unnamed;  /* 1-bit */
-    uint8_t u_reg__unknown_arg0;  /* 1-bit */
     __uint128_t u_reg_addr_hit;  /* 73-bit */
     uint8_t u_reg_addr_mode_addr_4b_en_qs;  /* 1-bit */
     uint8_t u_reg_addr_mode_flds_we;  /* 2-bit */
@@ -4465,16 +4883,6 @@ typedef struct {
     uint8_t u_reg_u_chk_tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_chk_tl_i_a_valid;  /* 1-bit */
     uint8_t u_reg_u_chk_tl_i_d_ready;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_chk_data_i;  /* 64-bit */
-    uint64_t u_reg_u_chk_u_chk_data_o;  /* 57-bit */
-    uint8_t u_reg_u_chk_u_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_chk_syndrome_o;  /* 7-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_data_err_o;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_data_intg_i;  /* 39-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_i;  /* 39-bit */
-    uint32_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_o;  /* 32-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_syndrome_o;  /* 7-bit */
     uint8_t u_reg_u_cmd_filter_0_filter_0_clk_i;  /* 1-bit */
     uint8_t u_reg_u_cmd_filter_0_filter_0_d;  /* 1-bit */
     uint8_t u_reg_u_cmd_filter_0_filter_0_de;  /* 1-bit */
@@ -16102,17 +16510,6 @@ typedef struct {
     uint8_t u_reg_u_prim_reg_we_check_err_o;  /* 1-bit */
     __uint128_t u_reg_u_prim_reg_we_check_oh_i;  /* 73-bit */
     uint8_t u_reg_u_prim_reg_we_check_rst_ni;  /* 1-bit */
-    __uint128_t u_reg_u_prim_reg_we_check_u_prim_buf_in_i;  /* 73-bit */
-    __uint128_t u_reg_u_prim_reg_we_check_u_prim_buf_out_o;  /* 73-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_addr_i;  /* 7-bit */
-    __uint128_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_and_tree;  /* 255-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_clk_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_en_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_o;  /* 1-bit */
-    __uint128_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_tree;  /* 255-bit */
-    __uint128_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_oh_i;  /* 73-bit */
-    __uint128_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_or_tree;  /* 255-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_read_threshold_clk_i;  /* 1-bit */
     uint16_t u_reg_u_read_threshold_d;  /* 10-bit */
     uint8_t u_reg_u_read_threshold_de;  /* 1-bit */
@@ -16132,7 +16529,6 @@ typedef struct {
     uint8_t u_reg_u_read_threshold_wr_en_data_arb_we;  /* 1-bit */
     uint16_t u_reg_u_read_threshold_wr_en_data_arb_wr_data;  /* 10-bit */
     uint8_t u_reg_u_read_threshold_wr_en_data_arb_wr_en;  /* 1-bit */
-    uint8_t u_reg_u_reg_if__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_reg_if_a_ack;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_align_err;  /* 1-bit */
     uint16_t u_reg_u_reg_if_addr_o;  /* 13-bit */
@@ -16232,6 +16628,9 @@ typedef struct {
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl20_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl20_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl20_payload_size;  /* 2-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -16738,6 +17137,9 @@ typedef struct {
     uint64_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_qpinl20_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_qpinl20_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_qpinl20_payload_size;  /* 2-bit */
     uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_gen_err_resp_err_resp_u_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -16764,6 +17166,11 @@ typedef struct {
     uint8_t u_reg_u_socket_hfifo_reqready;  /* 1-bit */
     uint8_t u_reg_u_socket_hold_all_requests;  /* 1-bit */
     uint16_t u_reg_u_socket_num_req_outstanding;  /* 9-bit */
+    uint32_t u_reg_u_socket_qpinl21_qpinl19_qpinl17_payload_addr;  /* 32-bit */
+    uint8_t u_reg_u_socket_qpinl21_qpinl19_qpinl17_payload_instr_type;  /* 4-bit */
+    uint8_t u_reg_u_socket_qpinl21_qpinl19_qpinl17_payload_mask;  /* 4-bit */
+    uint8_t u_reg_u_socket_qpinl21_qpinl19_qpinl17_payload_opcode;  /* 3-bit */
+    uint64_t u_reg_u_socket_qpinl21_qpinl19_qpinl18_data_o;  /* 64-bit */
     uint8_t u_reg_u_socket_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_socket_tl_d_i_0__a_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_tl_d_i_0__d_data;  /* 32-bit */
@@ -17696,8 +18103,8 @@ typedef struct {
     uint8_t u_rst_spi_out_sync_d_i;  /* 1-bit */
     uint8_t u_rst_spi_out_sync_q_o;  /* 1-bit */
     uint8_t u_rst_spi_out_sync_rst_ni;  /* 1-bit */
-    uint8_t u_s2p__unknown_arg0;  /* 1-bit */
     uint8_t u_s2p_clk_i;  /* 1-bit */
+    uint8_t u_s2p_clk_i_prev;  /* 1-bit */
     uint8_t u_s2p_cnt;  /* 3-bit */
     uint8_t u_s2p_data_d;  /* 8-bit */
     uint8_t u_s2p_data_o;  /* 8-bit */
@@ -17766,7 +18173,6 @@ typedef struct {
     uint8_t u_scanmode_sync_mubi_o__3_;  /* 4-bit */
     uint8_t u_scanmode_sync_mubi_o__4_;  /* 4-bit */
     uint8_t u_scanmode_sync_rst_ni;  /* 1-bit */
-    uint8_t u_spi_tpm__unknown_arg0;  /* 1-bit */
     uint32_t u_spi_tpm_addr;  /* 24-bit */
     uint8_t u_spi_tpm_cfg_tpm_en_i;  /* 1-bit */
     uint8_t u_spi_tpm_cfg_tpm_hw_reg_dis_i;  /* 1-bit */
@@ -17776,7 +18182,9 @@ typedef struct {
     uint8_t u_spi_tpm_check_hw_reg;  /* 1-bit */
     uint8_t u_spi_tpm_check_locality;  /* 1-bit */
     uint8_t u_spi_tpm_clk_in_i;  /* 1-bit */
+    uint8_t u_spi_tpm_clk_in_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_clk_out_i;  /* 1-bit */
+    uint8_t u_spi_tpm_clk_out_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_cmd_type;  /* 1-bit */
     uint8_t u_spi_tpm_cmdaddr_bitcnt;  /* 5-bit */
     uint8_t u_spi_tpm_cmdaddr_shift_en;  /* 1-bit */
@@ -17806,6 +18214,8 @@ typedef struct {
     uint8_t u_spi_tpm_miso_en_o;  /* 1-bit */
     uint8_t u_spi_tpm_miso_o;  /* 1-bit */
     uint8_t u_spi_tpm_mosi_i;  /* 1-bit */
+    uint8_t u_spi_tpm_qpinl3_result;  /* 4-bit */
+    uint8_t u_spi_tpm_qpinl4_result;  /* 4-bit */
     uint8_t u_spi_tpm_rst_ni;  /* 1-bit */
     uint8_t u_spi_tpm_rst_out_ni;  /* 1-bit */
     uint32_t u_spi_tpm_sck_cmdaddr_wdata_d;  /* 32-bit */
@@ -17926,6 +18336,7 @@ typedef struct {
     uint8_t u_spi_tpm_tpm_cap_o_rev;  /* 8-bit */
     uint8_t u_spi_tpm_u_arbiter_clk_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_gen_arb_ppc_u_reqarb_clk_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_arbiter_gen_arb_ppc_u_reqarb_clk_i_prev;  /* 1-bit */
     __uint128_t u_spi_tpm_u_arbiter_gen_arb_ppc_u_reqarb_data_i_0_;  /* 75-bit */
     __uint128_t u_spi_tpm_u_arbiter_gen_arb_ppc_u_reqarb_data_i_1_;  /* 75-bit */
     __uint128_t u_spi_tpm_u_arbiter_gen_arb_ppc_u_reqarb_data_o;  /* 75-bit */
@@ -17958,6 +18369,8 @@ typedef struct {
     uint32_t u_spi_tpm_u_arbiter_req_packed_1__wdata;  /* 32-bit */
     uint32_t u_spi_tpm_u_arbiter_req_packed_1__wmask;  /* 32-bit */
     uint8_t u_spi_tpm_u_arbiter_req_packed_1__write;  /* 1-bit */
+    __uint128_t u_spi_tpm_u_arbiter_req_packed_c_0_;  /* 75-bit */
+    __uint128_t u_spi_tpm_u_arbiter_req_packed_c_1_;  /* 75-bit */
     uint32_t u_spi_tpm_u_arbiter_req_wdata_i_0_;  /* 32-bit */
     uint32_t u_spi_tpm_u_arbiter_req_wdata_i_1_;  /* 32-bit */
     uint32_t u_spi_tpm_u_arbiter_req_wmask_i_0_;  /* 32-bit */
@@ -17986,6 +18399,7 @@ typedef struct {
     uint32_t u_spi_tpm_u_arbiter_sram_wmask_o;  /* 32-bit */
     uint8_t u_spi_tpm_u_arbiter_sram_write_o;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_clk_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_arbiter_u_req_fifo_clk_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_clr_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_depth_o;  /* 3-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_err_o;  /* 1-bit */
@@ -17993,6 +18407,10 @@ typedef struct {
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_fifo_wptr;  /* 2-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_rdata_int;  /* 2-bit */
+    uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_storage_0_;  /* 2-bit */
+    uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_storage_1_;  /* 2-bit */
+    uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_storage_2_;  /* 2-bit */
+    uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_storage_3_;  /* 2-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 3-bit */
@@ -18022,6 +18440,7 @@ typedef struct {
     uint8_t u_spi_tpm_u_arbiter_u_req_fifo_wvalid_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_clk_rd_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_clk_wr_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_cmdaddr_buffer_clk_wr_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_fifo_incr_rptr;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_fifo_rptr_d;  /* 2-bit */
@@ -18049,6 +18468,8 @@ typedef struct {
     uint8_t u_spi_tpm_u_cmdaddr_buffer_rst_rd_ni;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_rst_wr_ni;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_rvalid_o;  /* 1-bit */
+    uint32_t u_spi_tpm_u_cmdaddr_buffer_storage_0_;  /* 32-bit */
+    uint32_t u_spi_tpm_u_cmdaddr_buffer_storage_1_;  /* 32-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_sync_rptr_clk_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_sync_rptr_d_i;  /* 2-bit */
     uint8_t u_spi_tpm_u_cmdaddr_buffer_sync_rptr_d_o;  /* 2-bit */
@@ -18117,6 +18538,7 @@ typedef struct {
     uint8_t u_spi_tpm_u_rdfifo_ready_u_sync_2_q_o;  /* 1-bit */
     uint8_t u_spi_tpm_u_rdfifo_ready_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_spi_tpm_u_sram_fifo_clk_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_sram_fifo_clk_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_u_sram_fifo_clr_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_sram_fifo_depth_o;  /* 1-bit */
     uint8_t u_spi_tpm_u_sram_fifo_err_o;  /* 1-bit */
@@ -18134,8 +18556,10 @@ typedef struct {
     uint8_t u_spi_tpm_u_sram_fifo_wvalid_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_clk_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_clr_i;  /* 1-bit */
-    uint8_t u_spi_tpm_u_tpm_rd_buffer_fifoptr;  /* 4-bit */
-    uint8_t u_spi_tpm_u_tpm_rd_buffer_fifoptr_inc;  /* 1-bit */
+    uint16_t u_spi_tpm_u_tpm_rd_buffer_qcnt;  /* 16-bit */
+    uint64_t u_spi_tpm_u_tpm_rd_buffer_qdata[8192];  /* 524288-bit (wide-array) */
+    uint16_t u_spi_tpm_u_tpm_rd_buffer_qrptr;  /* 16-bit */
+    uint16_t u_spi_tpm_u_tpm_rd_buffer_qwptr;  /* 16-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_rst_ni;  /* 1-bit */
     uint16_t u_spi_tpm_u_tpm_rd_buffer_sram_addr_o;  /* 10-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_sram_gnt_i;  /* 1-bit */
@@ -18152,8 +18576,10 @@ typedef struct {
     uint8_t u_spi_tpm_u_tpm_rd_buffer_wvalid_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_wr_buffer_clk_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_wr_buffer_clr_i;  /* 1-bit */
-    uint8_t u_spi_tpm_u_tpm_wr_buffer_fifoptr;  /* 6-bit */
-    uint8_t u_spi_tpm_u_tpm_wr_buffer_fifoptr_inc;  /* 1-bit */
+    uint16_t u_spi_tpm_u_tpm_wr_buffer_qcnt;  /* 16-bit */
+    uint64_t u_spi_tpm_u_tpm_wr_buffer_qdata[8192];  /* 524288-bit (wide-array) */
+    uint16_t u_spi_tpm_u_tpm_wr_buffer_qrptr;  /* 16-bit */
+    uint16_t u_spi_tpm_u_tpm_wr_buffer_qwptr;  /* 16-bit */
     uint8_t u_spi_tpm_u_tpm_wr_buffer_rst_ni;  /* 1-bit */
     uint16_t u_spi_tpm_u_tpm_wr_buffer_sram_addr_o;  /* 10-bit */
     uint8_t u_spi_tpm_u_tpm_wr_buffer_sram_gnt_i;  /* 1-bit */
@@ -18181,8 +18607,8 @@ typedef struct {
     uint8_t u_spi_tpm_u_wrfifo_busy_sync_u_sync_2_d_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_busy_sync_u_sync_2_q_o;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_busy_sync_u_sync_2_rst_ni;  /* 1-bit */
-    uint8_t u_spi_tpm_u_wrfifo_release_reqack__unknown_arg0;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_clk_dst_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_wrfifo_release_reqack_clk_dst_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_clk_src_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_dst_ack_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_dst_req_o;  /* 1-bit */
@@ -18229,7 +18655,6 @@ typedef struct {
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_rst_src_ni;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_src_ack_o;  /* 1-bit */
     uint8_t u_spi_tpm_u_wrfifo_release_reqack_src_req_i;  /* 1-bit */
-    uint32_t u_spi_tpm_unnamed;  /* 32-bit */
     uint8_t u_spi_tpm_wrdata_bitcnt;  /* 3-bit */
     uint8_t u_spi_tpm_wrdata_d;  /* 8-bit */
     uint8_t u_spi_tpm_wrdata_q;  /* 8-bit */
@@ -18238,7 +18663,6 @@ typedef struct {
     uint8_t u_spi_tpm_xfer_bytes_q;  /* 6-bit */
     uint8_t u_spi_tpm_xfer_size;  /* 6-bit */
     uint8_t u_spi_tpm_xfer_size_met;  /* 1-bit */
-    uint8_t u_spid_addr_4b__unknown_arg0;  /* 1-bit */
     uint8_t u_spid_addr_4b_cmd_sync_cfg_addr_4b_en_o;  /* 1-bit */
     uint8_t u_spid_addr_4b_cmd_sync_pulse_i;  /* 1-bit */
     uint8_t u_spid_addr_4b_hw2reg_addr_mode_addr_4b_en_d_o;  /* 1-bit */
@@ -18251,6 +18675,7 @@ typedef struct {
     uint8_t u_spid_addr_4b_spi_cfg_addr_4b_en_o;  /* 1-bit */
     uint8_t u_spid_addr_4b_spi_cfg_addr_4b_en_q;  /* 1-bit */
     uint8_t u_spid_addr_4b_spi_clk_i;  /* 1-bit */
+    uint8_t u_spid_addr_4b_spi_clk_i_prev;  /* 1-bit */
     uint8_t u_spid_addr_4b_spi_fw_new_addr_mode_data;  /* 1-bit */
     uint8_t u_spid_addr_4b_spi_fw_new_addr_mode_req;  /* 1-bit */
     uint8_t u_spid_addr_4b_sys_cfg_addr_4b_en;  /* 1-bit */
@@ -18283,8 +18708,8 @@ typedef struct {
     uint8_t u_spid_addr_4b_u_sys2spi_sync_rst_src_ni;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_src_ack_o;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_src_req_i;  /* 1-bit */
-    uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack__unknown_arg0;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_clk_dst_i;  /* 1-bit */
+    uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_clk_dst_i_prev;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_clk_src_i;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_dst_ack_i;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_dst_req_o;  /* 1-bit */
@@ -18331,13 +18756,14 @@ typedef struct {
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_rst_src_ni;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_src_ack_o;  /* 1-bit */
     uint8_t u_spid_addr_4b_u_sys2spi_sync_u_prim_sync_reqack_src_req_i;  /* 1-bit */
-    uint8_t u_spid_addr_4b_unnamed;  /* 1-bit */
     uint8_t u_spid_csb_sync_clk_i;  /* 1-bit */
     uint8_t u_spid_csb_sync_csb_deasserted_pulse_o;  /* 1-bit */
     uint8_t u_spid_csb_sync_csb_i;  /* 1-bit */
+    uint8_t u_spid_csb_sync_csb_i_prev;  /* 1-bit */
     uint8_t u_spid_csb_sync_csb_toggle;  /* 1-bit */
     uint8_t u_spid_csb_sync_rst_ni;  /* 1-bit */
     uint8_t u_spid_csb_sync_sck_i;  /* 1-bit */
+    uint8_t u_spid_csb_sync_sck_i_prev;  /* 1-bit */
     uint8_t u_spid_csb_sync_sck_pulse_en_i;  /* 1-bit */
     uint8_t u_spid_csb_sync_sck_toggle;  /* 1-bit */
     uint8_t u_spid_csb_sync_sys_toggle;  /* 1-bit */
@@ -18382,6 +18808,7 @@ typedef struct {
     uint8_t u_spid_dpram_cfg_sys2spi_i_b_ram_lcfg_cfg_en;  /* 1-bit */
     uint8_t u_spid_dpram_cfg_sys2spi_i_b_ram_lcfg_test;  /* 1-bit */
     uint8_t u_spid_dpram_clk_spi_i;  /* 1-bit */
+    uint8_t u_spid_dpram_clk_spi_i_prev;  /* 1-bit */
     uint8_t u_spid_dpram_clk_sys_i;  /* 1-bit */
     uint16_t u_spid_dpram_gen_ram2p_u_memory_2p_a_addr_i;  /* 10-bit */
     uint32_t u_spid_dpram_gen_ram2p_u_memory_2p_a_rdata_o;  /* 32-bit */
@@ -18414,6 +18841,8 @@ typedef struct {
     uint8_t u_spid_dpram_gen_ram2p_u_memory_2p_cfg_rsp_o_done;  /* 1-bit */
     uint8_t u_spid_dpram_gen_ram2p_u_memory_2p_clk_a_i;  /* 1-bit */
     uint8_t u_spid_dpram_gen_ram2p_u_memory_2p_clk_b_i;  /* 1-bit */
+    uint8_t u_spid_dpram_gen_ram2p_u_memory_2p_clk_b_i_prev;  /* 1-bit */
+    uint64_t u_spid_dpram_gen_ram2p_u_memory_2p_mem[512];  /* 32768-bit (wide-array) */
     uint8_t u_spid_dpram_gen_ram2p_u_memory_2p_rst_a_ni;  /* 1-bit */
     uint8_t u_spid_dpram_gen_ram2p_u_memory_2p_rst_b_ni;  /* 1-bit */
     __uint128_t u_spid_dpram_initialized_words_d;  /* 128-bit */
@@ -18440,13 +18869,14 @@ typedef struct {
     uint32_t u_spid_dpram_sys_wdata_i;  /* 32-bit */
     uint32_t u_spid_dpram_sys_wmask_i;  /* 32-bit */
     uint8_t u_spid_dpram_sys_write_i;  /* 1-bit */
-    uint32_t u_spid_status__unknown_arg0;  /* 24-bit */
     uint8_t u_spid_status_byte_sel_d;  /* 2-bit */
     uint8_t u_spid_status_byte_sel_q;  /* 2-bit */
     uint8_t u_spid_status_byte_sel_update;  /* 1-bit */
     uint8_t u_spid_status_clk_csb_i;  /* 1-bit */
     uint8_t u_spid_status_clk_i;  /* 1-bit */
+    uint8_t u_spid_status_clk_i_prev;  /* 1-bit */
     uint8_t u_spid_status_clk_out_i;  /* 1-bit */
+    uint8_t u_spid_status_clk_out_i_prev;  /* 1-bit */
     uint8_t u_spid_status_cmd_info_i_addr_mode;  /* 2-bit */
     uint8_t u_spid_status_cmd_info_i_addr_swap_en;  /* 1-bit */
     uint8_t u_spid_status_cmd_info_i_busy;  /* 1-bit */
@@ -18501,16 +18931,19 @@ typedef struct {
     uint8_t u_spid_status_u_csb_rst_scan_mux_clk_o;  /* 1-bit */
     uint8_t u_spid_status_u_csb_rst_scan_mux_sel_i;  /* 1-bit */
     uint8_t u_spid_status_u_sck2csb_status_clk_i;  /* 1-bit */
+    uint8_t u_spid_status_u_sck2csb_status_clk_i_prev;  /* 1-bit */
     uint32_t u_spid_status_u_sck2csb_status_d_i;  /* 24-bit */
     uint32_t u_spid_status_u_sck2csb_status_q_o;  /* 24-bit */
     uint8_t u_spid_status_u_sck2csb_status_rst_ni;  /* 1-bit */
     uint8_t u_spid_status_u_stage_to_commit_clk_i;  /* 1-bit */
+    uint8_t u_spid_status_u_stage_to_commit_clk_i_prev;  /* 1-bit */
     uint32_t u_spid_status_u_stage_to_commit_d_i;  /* 24-bit */
     uint8_t u_spid_status_u_stage_to_commit_en;  /* 1-bit */
     uint8_t u_spid_status_u_stage_to_commit_en_i;  /* 1-bit */
     uint32_t u_spid_status_u_stage_to_commit_q_o;  /* 24-bit */
     uint8_t u_spid_status_u_stage_to_commit_rst_ni;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_clk_rd_i;  /* 1-bit */
+    uint8_t u_spid_status_u_sw_status_update_sync_clk_rd_i_prev;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_clk_wr_i;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_fifo_incr_rptr;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_fifo_incr_wptr;  /* 1-bit */
@@ -18539,6 +18972,8 @@ typedef struct {
     uint8_t u_spid_status_u_sw_status_update_sync_rst_rd_ni;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_rst_wr_ni;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_rvalid_o;  /* 1-bit */
+    uint32_t u_spid_status_u_sw_status_update_sync_storage_0_;  /* 24-bit */
+    uint32_t u_spid_status_u_sw_status_update_sync_storage_1_;  /* 24-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_sync_rptr_clk_i;  /* 1-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_sync_rptr_d_i;  /* 2-bit */
     uint8_t u_spid_status_u_sw_status_update_sync_sync_rptr_d_o;  /* 2-bit */
@@ -18634,6 +19069,11 @@ typedef struct {
     uint32_t u_sys_sram_arbiter_req_packed_4__wdata;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_req_packed_4__wmask;  /* 32-bit */
     uint8_t u_sys_sram_arbiter_req_packed_4__write;  /* 1-bit */
+    __uint128_t u_sys_sram_arbiter_req_packed_c_0_;  /* 75-bit */
+    __uint128_t u_sys_sram_arbiter_req_packed_c_1_;  /* 75-bit */
+    __uint128_t u_sys_sram_arbiter_req_packed_c_2_;  /* 75-bit */
+    __uint128_t u_sys_sram_arbiter_req_packed_c_3_;  /* 75-bit */
+    __uint128_t u_sys_sram_arbiter_req_packed_c_4_;  /* 75-bit */
     uint32_t u_sys_sram_arbiter_req_wdata_i_0_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_req_wdata_i_1_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_req_wdata_i_2_;  /* 32-bit */
@@ -18687,6 +19127,10 @@ typedef struct {
     uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_fifo_wptr;  /* 2-bit */
     uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_rdata_int;  /* 5-bit */
+    uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_storage_0_;  /* 5-bit */
+    uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_storage_1_;  /* 5-bit */
+    uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_storage_2_;  /* 5-bit */
+    uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_storage_3_;  /* 5-bit */
     uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 3-bit */
@@ -18741,12 +19185,10 @@ typedef struct {
     uint8_t u_tlul2sram_egress_racl_error_o_valid;  /* 1-bit */
     uint8_t u_tlul2sram_egress_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_tlul2sram_egress_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_tlul2sram_egress_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_tlul2sram_egress_racl_policies_i__0__write_perm;  /* 2-bit */
-    uint32_t u_tlul2sram_egress_racl_policy_sel_ranges_i__0__base;  /* 32-bit */
-    uint8_t u_tlul2sram_egress_racl_policy_sel_ranges_i__0__enable;  /* 1-bit */
-    uint32_t u_tlul2sram_egress_racl_policy_sel_ranges_i__0__limit;  /* 32-bit */
-    uint8_t u_tlul2sram_egress_racl_policy_sel_ranges_i__0__policy_sel;  /* 1-bit */
+    uint32_t u_tlul2sram_egress_racl_policy_sel_ranges_i_0__base;  /* 32-bit */
+    uint8_t u_tlul2sram_egress_racl_policy_sel_ranges_i_0__enable;  /* 1-bit */
+    uint32_t u_tlul2sram_egress_racl_policy_sel_ranges_i_0__limit;  /* 32-bit */
+    uint8_t u_tlul2sram_egress_racl_policy_sel_ranges_i_0__policy_sel;  /* 1-bit */
     uint32_t u_tlul2sram_egress_rdata_i;  /* 32-bit */
     uint8_t u_tlul2sram_egress_readback_en_i;  /* 4-bit */
     uint8_t u_tlul2sram_egress_readback_error_o;  /* 1-bit */
@@ -18841,7 +19283,6 @@ typedef struct {
     uint8_t u_tlul2sram_egress_tlul_adapter_racl_tl_h2d_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_racl_tl_h2d_i_a_valid;  /* 1-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_racl_tl_h2d_i_d_ready;  /* 1-bit */
-    uint8_t u_tlul2sram_egress_tlul_adapter_sram__unknown_arg0;  /* 1-bit */
     uint16_t u_tlul2sram_egress_tlul_adapter_sram_addr_o;  /* 10-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_clk_i;  /* 1-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_compound_txn_in_progress_o;  /* 1-bit */
@@ -18854,7 +19295,6 @@ typedef struct {
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_error_instr_integ;  /* 7-bit */
     uint32_t u_tlul2sram_egress_tlul_adapter_sram_gen_rmask_rmask;  /* 32-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_gnt_i;  /* 1-bit */
-    uint32_t u_tlul2sram_egress_tlul_adapter_sram_i;  /* 32-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_intg_error;  /* 1-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_intg_error_o;  /* 1-bit */
     uint8_t u_tlul2sram_egress_tlul_adapter_sram_intg_error_q;  /* 1-bit */
@@ -19112,12 +19552,10 @@ typedef struct {
     uint8_t u_tlul2sram_ingress_racl_error_o_valid;  /* 1-bit */
     uint8_t u_tlul2sram_ingress_racl_policies_i_0__read_perm;  /* 2-bit */
     uint8_t u_tlul2sram_ingress_racl_policies_i_0__write_perm;  /* 2-bit */
-    uint8_t u_tlul2sram_ingress_racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t u_tlul2sram_ingress_racl_policies_i__0__write_perm;  /* 2-bit */
-    uint32_t u_tlul2sram_ingress_racl_policy_sel_ranges_i__0__base;  /* 32-bit */
-    uint8_t u_tlul2sram_ingress_racl_policy_sel_ranges_i__0__enable;  /* 1-bit */
-    uint32_t u_tlul2sram_ingress_racl_policy_sel_ranges_i__0__limit;  /* 32-bit */
-    uint8_t u_tlul2sram_ingress_racl_policy_sel_ranges_i__0__policy_sel;  /* 1-bit */
+    uint32_t u_tlul2sram_ingress_racl_policy_sel_ranges_i_0__base;  /* 32-bit */
+    uint8_t u_tlul2sram_ingress_racl_policy_sel_ranges_i_0__enable;  /* 1-bit */
+    uint32_t u_tlul2sram_ingress_racl_policy_sel_ranges_i_0__limit;  /* 32-bit */
+    uint8_t u_tlul2sram_ingress_racl_policy_sel_ranges_i_0__policy_sel;  /* 1-bit */
     uint32_t u_tlul2sram_ingress_rdata_i;  /* 32-bit */
     uint8_t u_tlul2sram_ingress_readback_en_i;  /* 4-bit */
     uint8_t u_tlul2sram_ingress_readback_error_o;  /* 1-bit */
@@ -19212,7 +19650,6 @@ typedef struct {
     uint8_t u_tlul2sram_ingress_tlul_adapter_racl_tl_h2d_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_racl_tl_h2d_i_a_valid;  /* 1-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_racl_tl_h2d_i_d_ready;  /* 1-bit */
-    uint8_t u_tlul2sram_ingress_tlul_adapter_sram__unknown_arg0;  /* 1-bit */
     uint16_t u_tlul2sram_ingress_tlul_adapter_sram_addr_o;  /* 10-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_clk_i;  /* 1-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_compound_txn_in_progress_o;  /* 1-bit */
@@ -19225,7 +19662,6 @@ typedef struct {
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_error_instr_integ;  /* 7-bit */
     uint32_t u_tlul2sram_ingress_tlul_adapter_sram_gen_rmask_rmask;  /* 32-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_gnt_i;  /* 1-bit */
-    uint32_t u_tlul2sram_ingress_tlul_adapter_sram_i;  /* 32-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_intg_error;  /* 1-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_intg_error_o;  /* 1-bit */
     uint8_t u_tlul2sram_ingress_tlul_adapter_sram_intg_error_q;  /* 1-bit */
@@ -19505,7 +19941,6 @@ typedef struct {
     uint8_t u_tpm_rst_out_sync_d_i;  /* 1-bit */
     uint8_t u_tpm_rst_out_sync_q_o;  /* 1-bit */
     uint8_t u_tpm_rst_out_sync_rst_ni;  /* 1-bit */
-    uint16_t u_upload__unknown_arg0;  /* 9-bit */
     uint8_t u_upload_addr_shift;  /* 1-bit */
     uint8_t u_upload_addr_update;  /* 1-bit */
     uint8_t u_upload_addrcnt;  /* 5-bit */
@@ -19514,6 +19949,7 @@ typedef struct {
     uint8_t u_upload_addrfifo_wvalid;  /* 1-bit */
     uint8_t u_upload_clk_csb_i;  /* 1-bit */
     uint8_t u_upload_clk_i;  /* 1-bit */
+    uint8_t u_upload_clk_i_prev;  /* 1-bit */
     uint8_t u_upload_cmd_only_info_i_addr_mode;  /* 2-bit */
     uint8_t u_upload_cmd_only_info_i_addr_swap_en;  /* 1-bit */
     uint8_t u_upload_cmd_only_info_i_busy;  /* 1-bit */
@@ -19545,12 +19981,19 @@ typedef struct {
     uint8_t u_upload_payloadptr;  /* 8-bit */
     uint8_t u_upload_payloadptr_clr;  /* 1-bit */
     uint8_t u_upload_payloadptr_inc;  /* 1-bit */
+    uint8_t u_upload_qpinl0_result;  /* 4-bit */
+    uint8_t u_upload_qpinl1_result;  /* 4-bit */
+    uint8_t u_upload_qpinl2_result;  /* 4-bit */
     uint8_t u_upload_rst_ni;  /* 1-bit */
     uint8_t u_upload_s2p_byte_i;  /* 8-bit */
     uint8_t u_upload_s2p_valid_i;  /* 1-bit */
     uint16_t u_upload_sck_sram_addr_0_;  /* 10-bit */
     uint16_t u_upload_sck_sram_addr_1_;  /* 10-bit */
     uint16_t u_upload_sck_sram_addr_2_;  /* 10-bit */
+    uint32_t u_upload_sck_sram_i_rdata;  /* 32-bit */
+    uint8_t u_upload_sck_sram_i_rerror_corr;  /* 1-bit */
+    uint8_t u_upload_sck_sram_i_rerror_uncorr;  /* 1-bit */
+    uint8_t u_upload_sck_sram_i_rvalid;  /* 1-bit */
     uint16_t u_upload_sck_sram_o_addr;  /* 10-bit */
     uint8_t u_upload_sck_sram_o_req;  /* 1-bit */
     uint32_t u_upload_sck_sram_o_wdata;  /* 32-bit */
@@ -19577,6 +20020,7 @@ typedef struct {
     uint8_t u_upload_sys_addrfifo_rready_i;  /* 1-bit */
     uint8_t u_upload_sys_addrfifo_rvalid_o;  /* 1-bit */
     uint32_t u_upload_sys_addrfifo_sram_i_rdata;  /* 32-bit */
+    uint8_t u_upload_sys_addrfifo_sram_i_rerror;  /* 2-bit */
     uint8_t u_upload_sys_addrfifo_sram_i_rerror_corr;  /* 1-bit */
     uint8_t u_upload_sys_addrfifo_sram_i_rerror_uncorr;  /* 1-bit */
     uint8_t u_upload_sys_addrfifo_sram_i_rvalid;  /* 1-bit */
@@ -19596,6 +20040,7 @@ typedef struct {
     uint8_t u_upload_sys_cmdfifo_set;  /* 1-bit */
     uint8_t u_upload_sys_cmdfifo_set_o;  /* 1-bit */
     uint32_t u_upload_sys_cmdfifo_sram_i_rdata;  /* 32-bit */
+    uint8_t u_upload_sys_cmdfifo_sram_i_rerror;  /* 2-bit */
     uint8_t u_upload_sys_cmdfifo_sram_i_rerror_corr;  /* 1-bit */
     uint8_t u_upload_sys_cmdfifo_sram_i_rerror_uncorr;  /* 1-bit */
     uint8_t u_upload_sys_cmdfifo_sram_i_rvalid;  /* 1-bit */
@@ -19626,66 +20071,28 @@ typedef struct {
     uint8_t u_upload_sys_sram_write;  /* 2-bit */
     uint8_t u_upload_u_addrfifo_clk_rd_i;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_clk_wr_i;  /* 1-bit */
+    uint16_t u_upload_u_addrfifo_qcnt;  /* 16-bit */
+    uint64_t u_upload_u_addrfifo_qdata[8192];  /* 524288-bit (wide-array) */
+    uint16_t u_upload_u_addrfifo_qrptr;  /* 16-bit */
+    uint16_t u_upload_u_addrfifo_qwptr;  /* 16-bit */
     uint8_t u_upload_u_addrfifo_r_full_o;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_r_notempty_o;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_r_rptr_d;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_r_rptr_gray_d;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_r_rptr_gray_q;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_r_rptr_inc;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_r_rptr_q;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_r_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_addrfifo_r_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_addrfifo_r_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_addrfifo_r_sram_rdata_i;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_r_sram_req_o;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_r_sram_rerror_i;  /* 2-bit */
-    uint8_t u_upload_u_addrfifo_r_sram_rptr;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_r_sram_rptr_inc;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_r_sram_rvalid_i;  /* 1-bit */
     uint32_t u_upload_u_addrfifo_r_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_addrfifo_r_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_r_sram_write_o;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_r_sramrptr_empty;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_r_wptr_v;  /* 4-bit */
-    uint32_t u_upload_u_addrfifo_rdata_d;  /* 32-bit */
     uint32_t u_upload_u_addrfifo_rdata_o;  /* 32-bit */
-    uint32_t u_upload_u_addrfifo_rdata_q;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_rdepth_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_rfifo_ack;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rready_i;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rst_rd_ni;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rst_wr_ni;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rvalid_o;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_store_en;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_stored;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_d_i;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_d_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_q_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_d_i;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_q_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_d_i;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_q_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_d_i;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_d_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_q_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_d_i;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_q_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_d_i;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_q_o;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_w_full_o;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_w_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_addrfifo_w_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_addrfifo_w_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_addrfifo_w_sram_rdata_i;  /* 32-bit */
@@ -19695,18 +20102,13 @@ typedef struct {
     uint32_t u_upload_u_addrfifo_w_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_addrfifo_w_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_w_sram_write_o;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_w_wptr_d;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_w_wptr_gray_d;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_w_wptr_gray_q;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_w_wptr_inc;  /* 1-bit */
-    uint8_t u_upload_u_addrfifo_w_wptr_q;  /* 5-bit */
-    uint8_t u_upload_u_addrfifo_w_wptr_v;  /* 4-bit */
     uint32_t u_upload_u_addrfifo_wdata_i;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_wdepth_o;  /* 5-bit */
     uint8_t u_upload_u_addrfifo_wready_o;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_wvalid_i;  /* 1-bit */
     uint8_t u_upload_u_arbiter_clk_i;  /* 1-bit */
     uint8_t u_upload_u_arbiter_gen_arb_ppc_u_reqarb_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_arbiter_gen_arb_ppc_u_reqarb_clk_i_prev;  /* 1-bit */
     __uint128_t u_upload_u_arbiter_gen_arb_ppc_u_reqarb_data_i_0_;  /* 75-bit */
     __uint128_t u_upload_u_arbiter_gen_arb_ppc_u_reqarb_data_i_1_;  /* 75-bit */
     __uint128_t u_upload_u_arbiter_gen_arb_ppc_u_reqarb_data_i_2_;  /* 75-bit */
@@ -19745,6 +20147,9 @@ typedef struct {
     uint32_t u_upload_u_arbiter_req_packed_2__wdata;  /* 32-bit */
     uint32_t u_upload_u_arbiter_req_packed_2__wmask;  /* 32-bit */
     uint8_t u_upload_u_arbiter_req_packed_2__write;  /* 1-bit */
+    __uint128_t u_upload_u_arbiter_req_packed_c_0_;  /* 75-bit */
+    __uint128_t u_upload_u_arbiter_req_packed_c_1_;  /* 75-bit */
+    __uint128_t u_upload_u_arbiter_req_packed_c_2_;  /* 75-bit */
     uint32_t u_upload_u_arbiter_req_wdata_i_0_;  /* 32-bit */
     uint32_t u_upload_u_arbiter_req_wdata_i_1_;  /* 32-bit */
     uint32_t u_upload_u_arbiter_req_wdata_i_2_;  /* 32-bit */
@@ -19779,6 +20184,7 @@ typedef struct {
     uint32_t u_upload_u_arbiter_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_arbiter_sram_write_o;  /* 1-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_arbiter_u_req_fifo_clk_i_prev;  /* 1-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_clr_i;  /* 1-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_depth_o;  /* 3-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_err_o;  /* 1-bit */
@@ -19786,6 +20192,10 @@ typedef struct {
     uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_fifo_wptr;  /* 2-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_rdata_int;  /* 3-bit */
+    uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_storage_0_;  /* 3-bit */
+    uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_storage_1_;  /* 3-bit */
+    uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_storage_2_;  /* 3-bit */
+    uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_storage_3_;  /* 3-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
     uint8_t u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 3-bit */
@@ -19815,66 +20225,28 @@ typedef struct {
     uint8_t u_upload_u_arbiter_u_req_fifo_wvalid_i;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_clk_rd_i;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_clk_wr_i;  /* 1-bit */
+    uint16_t u_upload_u_cmdfifo_qcnt;  /* 16-bit */
+    uint64_t u_upload_u_cmdfifo_qdata[8192];  /* 524288-bit (wide-array) */
+    uint16_t u_upload_u_cmdfifo_qrptr;  /* 16-bit */
+    uint16_t u_upload_u_cmdfifo_qwptr;  /* 16-bit */
     uint8_t u_upload_u_cmdfifo_r_full_o;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_r_notempty_o;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_r_rptr_d;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_r_rptr_gray_d;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_r_rptr_gray_q;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_r_rptr_inc;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_r_rptr_q;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_r_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_cmdfifo_r_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_cmdfifo_r_sram_rdata_i;  /* 32-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_req_o;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_rerror_i;  /* 2-bit */
-    uint8_t u_upload_u_cmdfifo_r_sram_rptr;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_r_sram_rptr_inc;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_rvalid_i;  /* 1-bit */
     uint32_t u_upload_u_cmdfifo_r_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_cmdfifo_r_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_write_o;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_r_sramrptr_empty;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_r_wptr_v;  /* 4-bit */
-    uint16_t u_upload_u_cmdfifo_rdata_d;  /* 16-bit */
     uint16_t u_upload_u_cmdfifo_rdata_o;  /* 16-bit */
-    uint16_t u_upload_u_cmdfifo_rdata_q;  /* 16-bit */
     uint8_t u_upload_u_cmdfifo_rdepth_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_rfifo_ack;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rready_i;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rst_rd_ni;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rst_wr_ni;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rvalid_o;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_store_en;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_stored;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_d_i;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_d_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_q_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_d_i;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_q_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_d_i;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_q_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_d_i;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_d_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_q_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_d_i;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_q_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_rst_ni;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_clk_i;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_d_i;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_q_o;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_w_full_o;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_w_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_cmdfifo_w_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_cmdfifo_w_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_cmdfifo_w_sram_rdata_i;  /* 32-bit */
@@ -19884,20 +20256,16 @@ typedef struct {
     uint32_t u_upload_u_cmdfifo_w_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_cmdfifo_w_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_cmdfifo_w_sram_write_o;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_w_wptr_d;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_w_wptr_gray_d;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_w_wptr_gray_q;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_w_wptr_inc;  /* 1-bit */
-    uint8_t u_upload_u_cmdfifo_w_wptr_q;  /* 5-bit */
-    uint8_t u_upload_u_cmdfifo_w_wptr_v;  /* 4-bit */
     uint16_t u_upload_u_cmdfifo_wdata_i;  /* 16-bit */
     uint8_t u_upload_u_cmdfifo_wdepth_o;  /* 5-bit */
     uint8_t u_upload_u_cmdfifo_wready_o;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_wvalid_i;  /* 1-bit */
     uint8_t u_upload_u_payload_buffer_clk_i;  /* 1-bit */
     uint8_t u_upload_u_payload_buffer_clr_i;  /* 1-bit */
-    uint8_t u_upload_u_payload_buffer_fifoptr;  /* 8-bit */
-    uint8_t u_upload_u_payload_buffer_fifoptr_inc;  /* 1-bit */
+    uint16_t u_upload_u_payload_buffer_qcnt;  /* 16-bit */
+    uint64_t u_upload_u_payload_buffer_qdata[8192];  /* 524288-bit (wide-array) */
+    uint16_t u_upload_u_payload_buffer_qrptr;  /* 16-bit */
+    uint16_t u_upload_u_payload_buffer_qwptr;  /* 16-bit */
     uint8_t u_upload_u_payload_buffer_rst_ni;  /* 1-bit */
     uint16_t u_upload_u_payload_buffer_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_payload_buffer_sram_gnt_i;  /* 1-bit */
@@ -19914,6 +20282,7 @@ typedef struct {
     uint8_t u_upload_u_payload_buffer_wvalid_i;  /* 1-bit */
     uint8_t u_upload_u_payloadptr_clr_psync_clk_dst_i;  /* 1-bit */
     uint8_t u_upload_u_payloadptr_clr_psync_clk_src_i;  /* 1-bit */
+    uint8_t u_upload_u_payloadptr_clr_psync_clk_src_i_prev;  /* 1-bit */
     uint8_t u_upload_u_payloadptr_clr_psync_dst_level;  /* 1-bit */
     uint8_t u_upload_u_payloadptr_clr_psync_dst_level_q;  /* 1-bit */
     uint8_t u_upload_u_payloadptr_clr_psync_dst_pulse_o;  /* 1-bit */
@@ -19937,9 +20306,11 @@ typedef struct {
     uint8_t u_upload_u_sys_cmdfifo_set_clk_i;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_csb_deasserted_pulse_o;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_csb_i;  /* 1-bit */
+    uint8_t u_upload_u_sys_cmdfifo_set_csb_i_prev;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_csb_toggle;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_rst_ni;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_sck_i;  /* 1-bit */
+    uint8_t u_upload_u_sys_cmdfifo_set_sck_i_prev;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_sck_pulse_en_i;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_sck_toggle;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_sys_toggle;  /* 1-bit */
@@ -19957,81 +20328,33 @@ typedef struct {
     uint8_t u_upload_u_sys_cmdfifo_set_u_count_sync_u_sync_2_d_i;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_u_count_sync_u_sync_2_q_o;  /* 1-bit */
     uint8_t u_upload_u_sys_cmdfifo_set_u_count_sync_u_sync_2_rst_ni;  /* 1-bit */
-    uint8_t unnamed;  /* 1-bit */
 
-    /* ---- ACCUMULATE counters (ptimer-backed) ---- */
-    /* One ptimer + IRQ line per counter recognised by
-     * DrvClassificationPass as `reg = prb(reg) +/- const`. */
-    ptimer_state *ptimer_u_s2p_cnt;  /* step=-1 */
-    qemu_irq     irq_u_s2p_cnt;
-    ptimer_state *ptimer_u_p2s_cnt;  /* step=1 */
-    qemu_irq     irq_u_p2s_cnt;
-    ptimer_state *ptimer_u_readcmd_dummycnt;  /* step=-1 */
-    qemu_irq     irq_u_readcmd_dummycnt;
-    ptimer_state *ptimer_u_readcmd_bitcnt;  /* step=-1 */
-    qemu_irq     irq_u_readcmd_bitcnt;
-    ptimer_state *ptimer_u_readcmd_u_readsram_strb;  /* step=1 */
-    qemu_irq     irq_u_readcmd_u_readsram_strb;
-    ptimer_state *ptimer_u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_readcmd_u_readsram_u_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_readcmd_u_readbuffer_next_buffer_addr;  /* step=1 */
-    qemu_irq     irq_u_readcmd_u_readbuffer_next_buffer_addr;
-    ptimer_state *ptimer_u_jedec_cc_count;  /* step=1 */
-    qemu_irq     irq_u_jedec_cc_count;
-    ptimer_state *ptimer_u_upload_addrcnt;  /* step=-1 */
-    qemu_irq     irq_u_upload_addrcnt;
-    ptimer_state *ptimer_u_upload_payloadptr;  /* step=1 */
-    qemu_irq     irq_u_upload_payloadptr;
-    ptimer_state *ptimer_u_upload_u_cmdfifo_r_sram_rptr;  /* step=1 */
-    qemu_irq     irq_u_upload_u_cmdfifo_r_sram_rptr;
-    ptimer_state *ptimer_u_upload_u_addrfifo_r_sram_rptr;  /* step=1 */
-    qemu_irq     irq_u_upload_u_addrfifo_r_sram_rptr;
-    ptimer_state *ptimer_u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_upload_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_passthrough_bitcnt;  /* step=1 */
-    qemu_irq     irq_u_passthrough_bitcnt;
-    ptimer_state *ptimer_u_passthrough_addrcnt_outclk;  /* step=-1 */
-    qemu_irq     irq_u_passthrough_addrcnt_outclk;
-    ptimer_state *ptimer_u_passthrough_payloadcnt;  /* step=-1 */
-    qemu_irq     irq_u_passthrough_payloadcnt;
-    ptimer_state *ptimer_u_passthrough_dummycnt;  /* step=-1 */
-    qemu_irq     irq_u_passthrough_dummycnt;
-    ptimer_state *ptimer_u_passthrough_mbyte_cnt;  /* step=-1 */
-    qemu_irq     irq_u_passthrough_mbyte_cnt;
-    ptimer_state *ptimer_u_spi_tpm_cmdaddr_bitcnt;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_cmdaddr_bitcnt;
-    ptimer_state *ptimer_u_spi_tpm_isck_fifoaddr;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_isck_fifoaddr;
-    ptimer_state *ptimer_u_spi_tpm_wrdata_bitcnt;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_wrdata_bitcnt;
-    ptimer_state *ptimer_u_spi_tpm_sys_rdfifo_wdepth;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_sys_rdfifo_wdepth;
-    ptimer_state *ptimer_u_spi_tpm_isck_p2s_bitcnt;  /* step=-1 */
-    qemu_irq     irq_u_spi_tpm_isck_p2s_bitcnt;
-    ptimer_state *ptimer_u_spi_tpm_sck_rdfifo_idx;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_sck_rdfifo_idx;
-    ptimer_state *ptimer_u_spi_tpm_sck_rdfifo_offset;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_sck_rdfifo_offset;
-    ptimer_state *ptimer_u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_spi_tpm_u_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_u_sys_sram_arbiter_u_req_fifo_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_u_reg_u_socket_num_req_outstanding;  /* step=-1 */
-    qemu_irq     irq_u_reg_u_socket_num_req_outstanding;
+    uint8_t _qp_pump;  /* pump pulse: accumulate-ring step enable */
+    void (*_qp_before_tick)(void *ctx);
+    void *_qp_before_tick_ctx;
+    void (*_qp_on_tick)(void *ctx);  /* per-clock observer hook (organs) */
+    void *_qp_on_tick_ctx;
+    uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
+    uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
+    uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
+    uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } spi_device_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
 uint64_t spi_device_read(void *opaque, hwaddr addr, unsigned size);
 void     spi_device_write(void *opaque, hwaddr addr,
                   uint64_t value, unsigned size);
+/* Asserts rst_ni for one settle round, then releases — primes the
+ * model so registers with non-zero RESVALs see their reset value. */
+void spi_device_reset(spi_device_state *s);
+/* Run the model to quiescence without a bus access (external event
+ * sources — SPI pumps, pin changes — call this after poking inputs). */
+void spi_device_settle(spi_device_state *s);
+
+void spi_device_step(spi_device_state *s);
+
+void spi_device_step_many(spi_device_state *s, unsigned count);
 
 /* Phase 2.d input setters — bridge host-side QEMU events into
  * the simulated device.  Each writes one input-port leaf field
@@ -20041,6 +20364,8 @@ void spi_device_set_alert_rx_i_0__ping_p(spi_device_state *s, uint8_t value);
 void spi_device_set_alert_rx_i_0__ping_n(spi_device_state *s, uint8_t value);
 void spi_device_set_alert_rx_i_0__ack_p(spi_device_state *s, uint8_t value);
 void spi_device_set_alert_rx_i_0__ack_n(spi_device_state *s, uint8_t value);
+void spi_device_set_racl_policies_i_0__write_perm(spi_device_state *s, uint8_t value);
+void spi_device_set_racl_policies_i_0__read_perm(spi_device_state *s, uint8_t value);
 void spi_device_set_cio_sck_i(spi_device_state *s, uint8_t value);
 void spi_device_set_cio_csb_i(spi_device_state *s, uint8_t value);
 void spi_device_set_cio_sd_i(spi_device_state *s, uint8_t value);

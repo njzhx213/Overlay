@@ -3,7 +3,6 @@
 
 #include "hw/sysbus.h"
 #include "qom/object.h"
-#include "hw/ptimer.h"
 
 #define TYPE_I2C "i2c"
 #define I2C(obj) OBJECT_CHECK(i2c_state, (obj), TYPE_I2C)
@@ -17,9 +16,10 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint32_t addr_hit;  /* BIP, 32-bit */
+    uint8_t auto_ack_load_i_and_ack_ctrl_stretching;  /* BIP, 1-bit */
+    uint16_t auto_ack_load_value_i;  /* BIP, 9-bit */
     uint16_t rdata_o;  /* BIP, 13-bit */
-    uint8_t reg_we;  /* BIP, 1-bit */
+    uint8_t state_q;  /* BIP, 5-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
@@ -37,7 +37,6 @@ typedef struct {
     uint8_t cio_sda_i;  /* 1-bit */
     uint8_t cio_sda_o;  /* 1-bit */
     uint8_t clk_i;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender__unknown_arg0;  /* 3-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_ack_level;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_ack_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_clr;  /* 1-bit */
@@ -116,7 +115,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_pi;  /* 1-bit */
@@ -166,7 +164,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;  /* 2-bit */
@@ -673,122 +670,19 @@ typedef struct {
     uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_fifo_wdata_i;  /* 13-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_fifo_wready_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_fifo_wvalid_i;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_inp_buf_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_inp_buf_rready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_inp_buf_rvalid;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_oup_buf_almost_full;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_oup_buf_full;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_oup_buf_wdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_oup_buf_wready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_oup_buf_wvalid;  /* 1-bit */
+    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_qcnt;  /* 9-bit */
+    uint64_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_qdata[128];  /* 8192-bit (wide-array) */
+    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_qrptr;  /* 9-bit */
+    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_qwptr;  /* 9-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_rst_ni;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_addr_o;  /* 9-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_empty;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_full;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_gnt_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_incr_rd_ptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_rd_addr;  /* 9-bit */
     uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_rdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_read_in_prev_cyc_d;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_read_in_prev_cyc_q;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_req_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_rvalid_i;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_wdata_o;  /* 13-bit */
     uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_wmask_o;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_wr_addr;  /* 9-bit */
     uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_sram_write_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_state_err;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_clr_i;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_depth_o;  /* 9-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_incr_wptr_i;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_o;  /* 9-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* 10-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set_cnt;  /* 10-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rst_ni;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_o;  /* 9-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* 10-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set_cnt;  /* 10-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_clk_i;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_clr_i;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_err_o;  /* 1-bit */
@@ -799,126 +693,31 @@ typedef struct {
     uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_fifo_wdata_i;  /* 13-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_fifo_wready_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_fifo_wvalid_i;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_inp_buf_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_inp_buf_rready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_inp_buf_rvalid;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_oup_buf_almost_full;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_oup_buf_full;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_oup_buf_wdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_oup_buf_wready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_oup_buf_wvalid;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_qcnt;  /* 7-bit */
+    uint64_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_qdata[32];  /* 2048-bit (wide-array) */
+    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_qrptr;  /* 7-bit */
+    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_qwptr;  /* 7-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_rst_ni;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_addr_o;  /* 9-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_empty;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_full;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_gnt_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_incr_rd_ptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_rd_addr;  /* 9-bit */
     uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_rdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_read_in_prev_cyc_d;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_read_in_prev_cyc_q;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_req_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_rvalid_i;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_wdata_o;  /* 13-bit */
     uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_wmask_o;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_wr_addr;  /* 9-bit */
     uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_sram_write_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_state_err;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_depth_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set_cnt;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set_cnt;  /* 7-bit */
     uint16_t i2c_core_u_fifos_u_ram_1p_addr_i;  /* 9-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_alert_o;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__ram_cfg_cfg;  /* 4-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__ram_cfg_cfg_en;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__ram_cfg_test;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__rf_cfg_cfg;  /* 4-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__rf_cfg_cfg_en;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__rf_cfg_test;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_rsp_o_0__done;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_cfg_rsp_o__0__done;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_clk_i;  /* 1-bit */
+    uint64_t i2c_core_u_fifos_u_ram_1p_mem[95];  /* 6032-bit (wide-array) */
     uint16_t i2c_core_u_fifos_u_ram_1p_rdata_o;  /* 13-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_req_i;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_rerror_o;  /* 2-bit */
@@ -970,122 +769,19 @@ typedef struct {
     uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_fifo_wdata_i;  /* 13-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_fifo_wready_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_fifo_wvalid_i;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_inp_buf_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_inp_buf_rready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_inp_buf_rvalid;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_oup_buf_almost_full;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_oup_buf_full;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_oup_buf_wdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_oup_buf_wready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_oup_buf_wvalid;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_qcnt;  /* 7-bit */
+    uint64_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_qdata[32];  /* 2048-bit (wide-array) */
+    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_qrptr;  /* 7-bit */
+    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_qwptr;  /* 7-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_rst_ni;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_addr_o;  /* 9-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_empty;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_full;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_gnt_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_incr_rd_ptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_rd_addr;  /* 9-bit */
     uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_rdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_read_in_prev_cyc_d;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_read_in_prev_cyc_q;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_req_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_rvalid_i;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_wdata_o;  /* 13-bit */
     uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_wmask_o;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_wr_addr;  /* 9-bit */
     uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_sram_write_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_state_err;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_depth_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set_cnt;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set_cnt;  /* 7-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_clk_i;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_clr_i;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_err_o;  /* 1-bit */
@@ -1096,123 +792,19 @@ typedef struct {
     uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_fifo_wdata_i;  /* 13-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_fifo_wready_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_fifo_wvalid_i;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_inp_buf_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_inp_buf_rready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_inp_buf_rvalid;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_oup_buf_almost_full;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_oup_buf_full;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_oup_buf_wdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_oup_buf_wready;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_oup_buf_wvalid;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_qcnt;  /* 7-bit */
+    uint64_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_qdata[32];  /* 2048-bit (wide-array) */
+    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_qrptr;  /* 7-bit */
+    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_qwptr;  /* 7-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_rst_ni;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_addr_o;  /* 9-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_empty;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_full;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_gnt_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_incr_rd_ptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_rd_addr;  /* 9-bit */
     uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_rdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_read_in_prev_cyc_d;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_read_in_prev_cyc_q;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_req_o;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_rvalid_i;  /* 1-bit */
     uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_wdata_o;  /* 13-bit */
     uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_wmask_o;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_wr_addr;  /* 9-bit */
     uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_sram_write_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_state_err;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_incr_wptr;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_fifo_wptr;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_rdata_int;  /* 13-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_storage_rdata;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_depth_o;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_set_cnt;  /* 2-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_under_rst;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_rdata_o;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_rready_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_rvalid_o;  /* 1-bit */
-    uint16_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_wdata_i;  /* 13-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_wready_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_wvalid_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_clk_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_clr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_depth_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_empty_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_err_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_full_o;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_incr_rptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_incr_wptr_i;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_set_cnt;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rst_ni;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_o;  /* 6-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* 7-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_msb;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_set_cnt;  /* 7-bit */
-    uint16_t i2c_core_u_i2c_bus_monitor__unknown_arg0;  /* 14-bit */
     uint8_t i2c_core_u_i2c_bus_monitor_bus_active_timeout_det_d;  /* 1-bit */
     uint8_t i2c_core_u_i2c_bus_monitor_bus_active_timeout_det_q;  /* 1-bit */
     uint8_t i2c_core_u_i2c_bus_monitor_bus_active_timeout_en_i;  /* 1-bit */
@@ -1253,10 +845,6 @@ typedef struct {
     uint8_t i2c_core_u_i2c_bus_monitor_target_enable_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_bus_monitor_target_idle_i;  /* 1-bit */
     uint16_t i2c_core_u_i2c_bus_monitor_thd_dat_i;  /* 13-bit */
-    uint8_t i2c_core_u_i2c_controller_fsm__unknown_arg0;  /* 1-bit */
-    uint8_t i2c_core_u_i2c_controller_fsm__unknown_arg1;  /* 1-bit */
-    uint8_t i2c_core_u_i2c_controller_fsm__unknown_arg2;  /* 4-bit */
-    uint8_t i2c_core_u_i2c_controller_fsm__unknown_arg3;  /* 1-bit */
     uint8_t i2c_core_u_i2c_controller_fsm_auto_stop_d;  /* 1-bit */
     uint8_t i2c_core_u_i2c_controller_fsm_auto_stop_q;  /* 1-bit */
     uint8_t i2c_core_u_i2c_controller_fsm_bit_clr;  /* 1-bit */
@@ -1336,7 +924,6 @@ typedef struct {
     uint8_t i2c_core_u_i2c_controller_fsm_unhandled_nak_cnt_expired;  /* 1-bit */
     uint8_t i2c_core_u_i2c_controller_fsm_unhandled_nak_timeout_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_controller_fsm_unhandled_unexp_nak_i;  /* 1-bit */
-    uint16_t i2c_core_u_i2c_controller_fsm_unnamed;  /* 16-bit */
     uint8_t i2c_core_u_i2c_sync_scl_clk_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_sync_scl_d_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_sync_scl_d_o;  /* 1-bit */
@@ -1363,8 +950,6 @@ typedef struct {
     uint8_t i2c_core_u_i2c_sync_sda_u_sync_2_d_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_sync_sda_u_sync_2_q_o;  /* 1-bit */
     uint8_t i2c_core_u_i2c_sync_sda_u_sync_2_rst_ni;  /* 1-bit */
-    uint16_t i2c_core_u_i2c_target_fsm__unknown_arg0;  /* 11-bit */
-    uint8_t i2c_core_u_i2c_target_fsm__unknown_arg1;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_ack_ctrl_mode_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_ack_ctrl_stretching;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_ack_ctrl_stretching_o;  /* 1-bit */
@@ -1447,7 +1032,6 @@ typedef struct {
     uint8_t i2c_core_u_i2c_target_fsm_tx_fifo_rready_o;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_tx_fifo_rvalid_i;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_unhandled_tx_stretch_event_i;  /* 1-bit */
-    uint16_t i2c_core_u_i2c_target_fsm_unnamed;  /* 9-bit */
     uint8_t i2c_core_u_i2c_target_fsm_xact_for_us_d;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_xact_for_us_q;  /* 1-bit */
     uint8_t i2c_core_u_i2c_target_fsm_xfer_for_us_d;  /* 1-bit */
@@ -1469,14 +1053,21 @@ typedef struct {
     uint8_t intr_tx_threshold_o;  /* 1-bit */
     uint8_t intr_unexp_stop_o;  /* 1-bit */
     uint8_t lsio_trigger_o;  /* 1-bit */
-    uint8_t racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t racl_error_o_ctn_uid;  /* 1-bit */
+    uint8_t racl_error_o_overflow;  /* 1-bit */
+    uint8_t racl_error_o_racl_role;  /* 1-bit */
+    uint8_t racl_error_o_read_access;  /* 1-bit */
+    uint32_t racl_error_o_request_address;  /* 32-bit */
+    uint8_t racl_error_o_valid;  /* 1-bit */
+    uint8_t racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t ram_cfg_i_ram_cfg_cfg;  /* 4-bit */
     uint8_t ram_cfg_i_ram_cfg_cfg_en;  /* 1-bit */
     uint8_t ram_cfg_i_ram_cfg_test;  /* 1-bit */
     uint8_t ram_cfg_i_rf_cfg_cfg;  /* 4-bit */
     uint8_t ram_cfg_i_rf_cfg_cfg_en;  /* 1-bit */
     uint8_t ram_cfg_i_rf_cfg_test;  /* 1-bit */
+    uint8_t ram_cfg_rsp_o_done;  /* 1-bit */
     uint8_t rst_ni;  /* 1-bit */
     uint32_t tl_i_a_data;  /* 32-bit */
     uint8_t tl_i_a_mask;  /* 4-bit */
@@ -1490,7 +1081,17 @@ typedef struct {
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
-    uint8_t u_reg__unknown_arg0;  /* 1-bit */
+    uint8_t tl_o_a_ready;  /* 1-bit */
+    uint32_t tl_o_d_data;  /* 32-bit */
+    uint8_t tl_o_d_error;  /* 1-bit */
+    uint8_t tl_o_d_opcode;  /* 3-bit */
+    uint8_t tl_o_d_param;  /* 3-bit */
+    uint8_t tl_o_d_sink;  /* 1-bit */
+    uint8_t tl_o_d_size;  /* 2-bit */
+    uint8_t tl_o_d_source;  /* 8-bit */
+    uint8_t tl_o_d_user_data_intg;  /* 7-bit */
+    uint8_t tl_o_d_user_rsp_intg;  /* 7-bit */
+    uint8_t tl_o_d_valid;  /* 1-bit */
     uint8_t u_reg_acq_fifo_next_data_qs;  /* 8-bit */
     uint8_t u_reg_acqdata_abyte_qs;  /* 8-bit */
     uint8_t u_reg_acqdata_signal_qs;  /* 3-bit */
@@ -1924,16 +1525,6 @@ typedef struct {
     uint8_t u_reg_u_chk_tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_chk_tl_i_a_valid;  /* 1-bit */
     uint8_t u_reg_u_chk_tl_i_d_ready;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_chk_data_i;  /* 64-bit */
-    uint64_t u_reg_u_chk_u_chk_data_o;  /* 57-bit */
-    uint8_t u_reg_u_chk_u_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_chk_syndrome_o;  /* 7-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_data_err_o;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_data_intg_i;  /* 39-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_i;  /* 39-bit */
-    uint32_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_o;  /* 32-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_syndrome_o;  /* 7-bit */
     uint8_t u_reg_u_controller_events_arbitration_lost_clk_i;  /* 1-bit */
     uint8_t u_reg_u_controller_events_arbitration_lost_d;  /* 1-bit */
     uint8_t u_reg_u_controller_events_arbitration_lost_de;  /* 1-bit */
@@ -3225,17 +2816,6 @@ typedef struct {
     uint8_t u_reg_u_prim_reg_we_check_err_o;  /* 1-bit */
     uint32_t u_reg_u_prim_reg_we_check_oh_i;  /* 32-bit */
     uint8_t u_reg_u_prim_reg_we_check_rst_ni;  /* 1-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_buf_in_i;  /* 32-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_buf_out_o;  /* 32-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_addr_i;  /* 5-bit */
-    uint64_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_and_tree;  /* 63-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_clk_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_en_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_o;  /* 1-bit */
-    uint64_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_tree;  /* 63-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_oh_i;  /* 32-bit */
-    uint64_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_or_tree;  /* 63-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_rst_ni;  /* 1-bit */
     uint8_t u_reg_u_rdata_d;  /* 8-bit */
     uint8_t u_reg_u_rdata_ds;  /* 8-bit */
     uint8_t u_reg_u_rdata_q;  /* 8-bit */
@@ -3245,7 +2825,6 @@ typedef struct {
     uint8_t u_reg_u_rdata_re;  /* 1-bit */
     uint8_t u_reg_u_rdata_wd;  /* 8-bit */
     uint8_t u_reg_u_rdata_we;  /* 1-bit */
-    uint8_t u_reg_u_reg_if__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_reg_if_a_ack;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_align_err;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_o;  /* 7-bit */
@@ -3345,6 +2924,9 @@ typedef struct {
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_size;  /* 2-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -4027,81 +3609,32 @@ typedef struct {
     uint16_t u_reg_val_sda_rx_qs;  /* 16-bit */
     uint8_t u_reg_wr_err;  /* 1-bit */
 
-    /* ---- ACCUMULATE counters (ptimer-backed) ---- */
-    /* One ptimer + IRQ line per counter recognised by
-     * DrvClassificationPass as `reg = prb(reg) +/- const`. */
-    ptimer_state *ptimer_i2c_core_bus_event_detect_cnt;  /* step=-1 */
-    qemu_irq     irq_i2c_core_bus_event_detect_cnt;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_fmt_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_rx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_tx_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_inp_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_oup_buf_gen_normal_fifo_u_fifo_cnt_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_wptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_fifos_u_acq_fifo_sram_adapter_u_sram_ptrs_rptr_wrap_cnt_q;
-    ptimer_state *ptimer_i2c_core_u_i2c_bus_monitor_ctrl_det_count;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_i2c_bus_monitor_ctrl_det_count;
-    ptimer_state *ptimer_i2c_core_u_i2c_bus_monitor_bus_release_cnt;  /* step=-1 */
-    qemu_irq     irq_i2c_core_u_i2c_bus_monitor_bus_release_cnt;
-    ptimer_state *ptimer_i2c_core_u_i2c_controller_fsm_stretch_idle_cnt;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_i2c_controller_fsm_stretch_idle_cnt;
-    ptimer_state *ptimer_i2c_core_u_i2c_controller_fsm_unhandled_nak_cnt;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_i2c_controller_fsm_unhandled_nak_cnt;
-    ptimer_state *ptimer_i2c_core_u_i2c_controller_fsm_bit_index;  /* step=-1 */
-    qemu_irq     irq_i2c_core_u_i2c_controller_fsm_bit_index;
-    ptimer_state *ptimer_i2c_core_u_i2c_controller_fsm_byte_index;  /* step=-1 */
-    qemu_irq     irq_i2c_core_u_i2c_controller_fsm_byte_index;
-    ptimer_state *ptimer_i2c_core_u_i2c_target_fsm_stretch_active_cnt;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_i2c_target_fsm_stretch_active_cnt;
-    ptimer_state *ptimer_i2c_core_u_i2c_target_fsm_bit_idx;  /* step=1 */
-    qemu_irq     irq_i2c_core_u_i2c_target_fsm_bit_idx;
+    uint8_t _qp_pump;  /* pump pulse: accumulate-ring step enable */
+    void (*_qp_before_tick)(void *ctx);
+    void *_qp_before_tick_ctx;
+    void (*_qp_on_tick)(void *ctx);  /* per-clock observer hook (organs) */
+    void *_qp_on_tick_ctx;
+    uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
+    uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
+    uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
+    uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } i2c_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
 uint64_t i2c_read(void *opaque, hwaddr addr, unsigned size);
 void     i2c_write(void *opaque, hwaddr addr,
            uint64_t value, unsigned size);
+/* Asserts rst_ni for one settle round, then releases — primes the
+ * model so registers with non-zero RESVALs see their reset value. */
+void i2c_reset(i2c_state *s);
+/* Run the model to quiescence without a bus access (external event
+ * sources — SPI pumps, pin changes — call this after poking inputs). */
+void i2c_settle(i2c_state *s);
+
+void i2c_step(i2c_state *s);
+
+void i2c_step_many(i2c_state *s, unsigned count);
 
 /* Phase 2.d input setters — bridge host-side QEMU events into
  * the simulated device.  Each writes one input-port leaf field
@@ -4117,6 +3650,8 @@ void i2c_set_alert_rx_i_0__ping_p(i2c_state *s, uint8_t value);
 void i2c_set_alert_rx_i_0__ping_n(i2c_state *s, uint8_t value);
 void i2c_set_alert_rx_i_0__ack_p(i2c_state *s, uint8_t value);
 void i2c_set_alert_rx_i_0__ack_n(i2c_state *s, uint8_t value);
+void i2c_set_racl_policies_i_0__write_perm(i2c_state *s, uint8_t value);
+void i2c_set_racl_policies_i_0__read_perm(i2c_state *s, uint8_t value);
 void i2c_set_cio_scl_i(i2c_state *s, uint8_t value);
 void i2c_set_cio_sda_i(i2c_state *s, uint8_t value);
 

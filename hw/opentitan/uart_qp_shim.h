@@ -1,0 +1,9 @@
+#ifndef HW_OPENTITAN_UART_QP_SHIM_H
+#define HW_OPENTITAN_UART_QP_SHIM_H
+
+#include "qom/object.h"
+
+#define TYPE_OT_UART_QP "ot-uart-qp"
+OBJECT_DECLARE_SIMPLE_TYPE(OtUARTQpState, OT_UART_QP)
+
+#endif /* HW_OPENTITAN_UART_QP_SHIM_H */

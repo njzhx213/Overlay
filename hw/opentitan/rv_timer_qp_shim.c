@@ -18,6 +18,7 @@
 #include "qemu/module.h"
 #include "qapi/error.h"
 #include "chardev/char-fe.h"
+#include "hw/ptimer.h"
 #include "hw/sysbus.h"
 #include "hw/qdev-properties.h"
 #include "hw/qdev-properties-system.h"
@@ -33,6 +34,7 @@
 #include "hw/opentitan/rv_timer_qp_shim.h"
 
 #define OT_RV_TIMER_QP_IRQ_NUM 1u
+#define OT_RV_TIMER_QP_PUMP_HZ 1000u
 
 struct OtRvTimerQpState {
     SysBusDevice parent_obj;
@@ -47,11 +49,43 @@ struct OtRvTimerQpState {
     char * clock_name;
     DeviceState * clock_src;
 
+    /* Virtual-time pump: periodic ptimer that advances the model's
+     * free-running counters (via rv_timer_advance_tick) and
+     * redelivers interrupts, so timer-style devices keep time + fire
+     * autonomously (during CPU wfi, no MMIO). */
+    ptimer_state *qp_pump;
+
     /* Embedded auto-generated device state. */
     rv_timer_state core;
 };
 
 OBJECT_DEFINE_SIMPLE_TYPE(OtRvTimerQpState, ot_rv_timer_qp, OT_RV_TIMER_QP, SYS_BUS_DEVICE)
+
+/* === Interrupt delivery ========================================= */
+static void ot_rv_timer_qp_update_irqs(OtRvTimerQpState *s)
+{
+    /* The IRQ lines reflect the SETTLED device state: an external
+     * stimulus (pin edge, chardev push, SPI byte) may have moved the
+     * model only one clock (synchronizer / edge-detect / INTR_STATE
+     * latch still propagating), and a bus read samples the register
+     * on the request clock.  Let the model reach quiescence first —
+     * cheap when already settled (one tick that changes nothing). */
+    rv_timer_settle(&s->core);
+    uint32_t intr_state  = (uint32_t)rv_timer_read(&s->core, 0x104u, 4);
+    uint32_t intr_enable = (uint32_t)rv_timer_read(&s->core, 0x100u, 4);
+    uint32_t masked = intr_state & intr_enable;
+    for (unsigned i = 0; i < OT_RV_TIMER_QP_IRQ_NUM; i++) {
+        ibex_irq_set(&s->irqs[i], (int)((masked >> i) & 1u));
+    }
+}
+
+/* === Virtual-time pump ========================================== */
+static void ot_rv_timer_qp_pump(void *opaque)
+{
+    OtRvTimerQpState *s = OT_RV_TIMER_QP(opaque);
+    rv_timer_advance_tick(&s->core);
+    ot_rv_timer_qp_update_irqs(s);
+}
 
 static uint64_t ot_rv_timer_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
@@ -64,13 +98,19 @@ static void ot_rv_timer_qp_write(void *opaque, hwaddr addr, uint64_t value,
 {
     OtRvTimerQpState *s = OT_RV_TIMER_QP(opaque);
     rv_timer_write(&s->core, addr, value, size);
+    /* Alert line: a write to ALERT_TEST (IR-derived offset) pulses
+     * the device alert — mirrors upstream ot_rv_timer R_ALERT_TEST. */
+    if (addr == 0x0u) {
+        ibex_irq_set(&s->alert, (int)(value & 1u));
+    }
+    ot_rv_timer_qp_update_irqs(s);
 }
 
 static const MemoryRegionOps ot_rv_timer_qp_ops = {
     .read = ot_rv_timer_qp_read,
     .write = ot_rv_timer_qp_write,
     .endianness = DEVICE_LITTLE_ENDIAN,
-    .impl.min_access_size = 4,
+    .impl.min_access_size = 1,
     .impl.max_access_size = 4,
 };
 
@@ -83,9 +123,18 @@ static const Property ot_rv_timer_qp_properties[] = {
 
 static void ot_rv_timer_qp_realize(DeviceState *dev, Error **errp)
 {
-    /* Backend hookup intentionally absent — frontend-only milestone. */
-    (void)dev;
+    OtRvTimerQpState *s = OT_RV_TIMER_QP(dev);
     (void)errp;
+    /* Arm the virtual-time pump: a free-running periodic ptimer that
+     * advances the model's counters + redelivers interrupts so the
+     * device keeps time and fires autonomously (functional, not
+     * cycle-accurate). */
+    s->qp_pump = ptimer_init(ot_rv_timer_qp_pump, s, PTIMER_POLICY_CONTINUOUS_TRIGGER);
+    ptimer_transaction_begin(s->qp_pump);
+    ptimer_set_freq(s->qp_pump, OT_RV_TIMER_QP_PUMP_HZ);
+    ptimer_set_limit(s->qp_pump, 1, 1);
+    ptimer_run(s->qp_pump, 0);
+    ptimer_transaction_commit(s->qp_pump);
 }
 
 static void ot_rv_timer_qp_init(Object *obj)
@@ -101,9 +150,13 @@ static void ot_rv_timer_qp_init(Object *obj)
                           TYPE_OT_RV_TIMER_QP, 0x1000);
     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->mmio);
 
-    /* Out-of-reset.  Generated model gates writes on `!rst_ni`,
-     * so park rst_ni high or every register stays at its init value. */
-    s->core.rst_ni = 1;
+    /* Pulse reset to commit RESVALs into every prim_subreg.
+     * Pattern in generated code:  q = (~rst_ni) ? RESVAL : keep.
+     * C-init leaves rst_ni at 0, so a settle round with rst
+     * active forces q := RESVAL across every register.  Then
+     * release reset by setting rst_ni high.  Without this pulse,
+     * registers like REGWEN (RESVAL=1) stay at their C init=0. */
+    rv_timer_reset(&s->core);
 }
 
 static void ot_rv_timer_qp_finalize(Object *obj)

@@ -39,6 +39,9 @@ struct OtGpioQpState {
     MemoryRegion mmio;
     IbexIRQ irqs[OT_GPIO_QP_IRQ_NUM];
     IbexIRQ alert;
+    qemu_irq pin_out[32]; /* data-pin output lines */
+    uint64_t pin_out_last; /* last driven output bus (per-bit change dedup) */
+    uint64_t pin_in_shadow; /* current data-pin input bus value */
 
     /* Property fields (mirror upstream ot_gpio_eg.c so SoC-table-injected
      * values are accepted by QOM).  We accept-but-ignore: the
@@ -56,6 +59,63 @@ struct OtGpioQpState {
 
 OBJECT_DEFINE_SIMPLE_TYPE(OtGpioQpState, ot_gpio_qp, OT_GPIO_QP, SYS_BUS_DEVICE)
 
+/* === Interrupt delivery ========================================= */
+static void ot_gpio_qp_update_irqs(OtGpioQpState *s)
+{
+    /* The IRQ lines reflect the SETTLED device state: an external
+     * stimulus (pin edge, chardev push, SPI byte) may have moved the
+     * model only one clock (synchronizer / edge-detect / INTR_STATE
+     * latch still propagating), and a bus read samples the register
+     * on the request clock.  Let the model reach quiescence first —
+     * cheap when already settled (one tick that changes nothing). */
+    gpio_settle(&s->core);
+    uint32_t intr_state  = (uint32_t)gpio_read(&s->core, 0x0u, 4);
+    uint32_t intr_enable = (uint32_t)gpio_read(&s->core, 0x4u, 4);
+    uint32_t masked = intr_state & intr_enable;
+    for (unsigned i = 0; i < OT_GPIO_QP_IRQ_NUM; i++) {
+        ibex_irq_set(&s->irqs[i], (int)((masked >> i) & 1u));
+    }
+}
+
+/* === Pin output export ========================================== */
+static void ot_gpio_qp_update_pins(OtGpioQpState *s)
+{
+    uint64_t data = (uint64_t)s->core.cio_gpio_o;
+    uint64_t oe   = (uint64_t)s->core.cio_gpio_en_o;
+    for (unsigned i = 0; i < 32; i++) {
+        uint64_t bit = 1ull << i;
+        uint64_t level = ((oe & bit) && (data & bit)) ? bit : 0;
+        /* Only pulse lines whose level actually changed — avoids
+         * O(width) redundant sink callbacks (and, under a pin loopback,
+         * a storm of input re-injections + settles) on every write. */
+        if ((s->pin_out_last & bit) != level) {
+            qemu_set_irq(s->pin_out[i], level ? 1 : 0);
+            s->pin_out_last = (s->pin_out_last & ~bit) | level;
+        }
+    }
+}
+
+/* === Pin input path ============================================= */
+static void ot_gpio_qp_set_pin_in(void *opaque, int n, int level)
+{
+    OtGpioQpState *s = OT_GPIO_QP(opaque);
+    if (level)
+        s->pin_in_shadow |= (1ull << n);
+    else
+        s->pin_in_shadow &= ~(1ull << n);
+    if (s->core._qp_busy) {
+        /* Re-entered from our own settle (organ observer reached a
+         * device that called back).  Latch the raw input field —
+         * asynchronous-input semantics — and let the outer settle
+         * loop see it on its next tick.  The outer caller refreshes
+         * IRQs when its access completes. */
+        s->core.cio_gpio_i = s->pin_in_shadow;
+        return;
+    }
+    gpio_set_cio_gpio_i(&s->core, s->pin_in_shadow);
+    ot_gpio_qp_update_irqs(s);
+}
+
 static uint64_t ot_gpio_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtGpioQpState *s = OT_GPIO_QP(opaque);
@@ -67,13 +127,20 @@ static void ot_gpio_qp_write(void *opaque, hwaddr addr, uint64_t value,
 {
     OtGpioQpState *s = OT_GPIO_QP(opaque);
     gpio_write(&s->core, addr, value, size);
+    /* Alert line: a write to ALERT_TEST (IR-derived offset) pulses
+     * the device alert — mirrors upstream ot_gpio R_ALERT_TEST. */
+    if (addr == 0xCu) {
+        ibex_irq_set(&s->alert, (int)(value & 1u));
+    }
+    ot_gpio_qp_update_irqs(s);
+    ot_gpio_qp_update_pins(s);
 }
 
 static const MemoryRegionOps ot_gpio_qp_ops = {
     .read = ot_gpio_qp_read,
     .write = ot_gpio_qp_write,
     .endianness = DEVICE_LITTLE_ENDIAN,
-    .impl.min_access_size = 4,
+    .impl.min_access_size = 1,
     .impl.max_access_size = 4,
 };
 
@@ -106,9 +173,20 @@ static void ot_gpio_qp_init(Object *obj)
                           TYPE_OT_GPIO_QP, 0x1000);
     sysbus_init_mmio(SYS_BUS_DEVICE(obj), &s->mmio);
 
-    /* Out-of-reset.  Generated model gates writes on `!rst_ni`,
-     * so park rst_ni high or every register stays at its init value. */
-    s->core.rst_ni = 1;
+    /* Generic data-pin output lines: firmware drives them by writing
+     * the device's data-output register; update_pins pushes them out. */
+    qdev_init_gpio_out(DEVICE(obj), s->pin_out, 32);
+    /* Generic data-pin input lines: external drivers/testbench toggle
+     * them; the handler injects into the model + refreshes IRQs/pins. */
+    qdev_init_gpio_in(DEVICE(obj), ot_gpio_qp_set_pin_in, 32);
+
+    /* Pulse reset to commit RESVALs into every prim_subreg.
+     * Pattern in generated code:  q = (~rst_ni) ? RESVAL : keep.
+     * C-init leaves rst_ni at 0, so a settle round with rst
+     * active forces q := RESVAL across every register.  Then
+     * release reset by setting rst_ni high.  Without this pulse,
+     * registers like REGWEN (RESVAL=1) stay at their C init=0. */
+    gpio_reset(&s->core);
 }
 
 static void ot_gpio_qp_finalize(Object *obj)

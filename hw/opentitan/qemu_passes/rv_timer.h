@@ -3,7 +3,6 @@
 
 #include "hw/sysbus.h"
 #include "qom/object.h"
-#include "hw/ptimer.h"
 
 #define TYPE_RV_TIMER "rv_timer"
 #define RV_TIMER(obj) OBJECT_CHECK(rv_timer_state, (obj), TYPE_RV_TIMER)
@@ -20,6 +19,7 @@ typedef struct {
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t u_reg_if_wdata_o;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
@@ -32,7 +32,6 @@ typedef struct {
     uint8_t alert_tx_o_0__alert_p;  /* 1-bit */
     uint8_t alerts;  /* 1-bit */
     uint8_t clk_i;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender__unknown_arg0;  /* 3-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_ack_level;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_ack_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_clr;  /* 1-bit */
@@ -111,7 +110,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_pi;  /* 1-bit */
@@ -161,7 +159,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;  /* 2-bit */
@@ -187,7 +184,7 @@ typedef struct {
     uint8_t gen_harts_0_u_core_intr;  /* 1-bit */
     uint64_t gen_harts_0_u_core_mtime;  /* 64-bit */
     uint64_t gen_harts_0_u_core_mtime_d;  /* 64-bit */
-    uint8_t gen_harts_0_u_core_mtimecmp_0_;  /* 1-bit */
+    uint64_t gen_harts_0_u_core_mtimecmp_0_;  /* 64-bit */
     uint16_t gen_harts_0_u_core_prescaler;  /* 12-bit */
     uint8_t gen_harts_0_u_core_rst_ni;  /* 1-bit */
     uint8_t gen_harts_0_u_core_step;  /* 8-bit */
@@ -217,8 +214,14 @@ typedef struct {
     uint64_t mtime_0_;  /* 64-bit */
     uint64_t mtime_d_0_;  /* 64-bit */
     uint8_t mtimecmp_update_0__0_;  /* 1-bit */
-    uint8_t racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t racl_error_o_ctn_uid;  /* 1-bit */
+    uint8_t racl_error_o_overflow;  /* 1-bit */
+    uint8_t racl_error_o_racl_role;  /* 1-bit */
+    uint8_t racl_error_o_read_access;  /* 1-bit */
+    uint32_t racl_error_o_request_address;  /* 32-bit */
+    uint8_t racl_error_o_valid;  /* 1-bit */
+    uint8_t racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t rst_ni;  /* 1-bit */
     uint8_t tick;  /* 1-bit */
     uint32_t tl_i_a_data;  /* 32-bit */
@@ -229,11 +232,20 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
-    uint8_t u_reg__unknown_arg0;  /* 1-bit */
+    uint8_t tl_o_a_ready;  /* 1-bit */
+    uint32_t tl_o_d_data;  /* 32-bit */
+    uint8_t tl_o_d_error;  /* 1-bit */
+    uint8_t tl_o_d_opcode;  /* 3-bit */
+    uint8_t tl_o_d_param;  /* 3-bit */
+    uint8_t tl_o_d_sink;  /* 1-bit */
+    uint8_t tl_o_d_size;  /* 2-bit */
+    uint8_t tl_o_d_source;  /* 8-bit */
+    uint8_t tl_o_d_user_data_intg;  /* 7-bit */
+    uint8_t tl_o_d_user_rsp_intg;  /* 7-bit */
+    uint8_t tl_o_d_valid;  /* 1-bit */
     uint16_t u_reg_addr_hit;  /* 10-bit */
     uint8_t u_reg_alert_test_flds_we;  /* 1-bit */
     uint8_t u_reg_alert_test_we;  /* 1-bit */
@@ -386,16 +398,6 @@ typedef struct {
     uint8_t u_reg_u_chk_tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_chk_tl_i_a_valid;  /* 1-bit */
     uint8_t u_reg_u_chk_tl_i_d_ready;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_chk_data_i;  /* 64-bit */
-    uint64_t u_reg_u_chk_u_chk_data_o;  /* 57-bit */
-    uint8_t u_reg_u_chk_u_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_chk_syndrome_o;  /* 7-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_data_err_o;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_data_intg_i;  /* 39-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_i;  /* 39-bit */
-    uint32_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_o;  /* 32-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_syndrome_o;  /* 7-bit */
     uint8_t u_reg_u_compare_lower0_00_qe_clk_i;  /* 1-bit */
     uint8_t u_reg_u_compare_lower0_00_qe_d_i;  /* 1-bit */
     uint8_t u_reg_u_compare_lower0_00_qe_q_o;  /* 1-bit */
@@ -513,18 +515,6 @@ typedef struct {
     uint8_t u_reg_u_prim_reg_we_check_err_o;  /* 1-bit */
     uint16_t u_reg_u_prim_reg_we_check_oh_i;  /* 10-bit */
     uint8_t u_reg_u_prim_reg_we_check_rst_ni;  /* 1-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_buf_in_i;  /* 10-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_buf_out_o;  /* 10-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_addr_i;  /* 4-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_and_tree;  /* 31-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_clk_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_en_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_o;  /* 1-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_tree;  /* 31-bit */
-    uint16_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_oh_i;  /* 10-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_or_tree;  /* 31-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_rst_ni;  /* 1-bit */
-    uint8_t u_reg_u_reg_if__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_reg_if_a_ack;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_align_err;  /* 1-bit */
     uint16_t u_reg_u_reg_if_addr_o;  /* 9-bit */
@@ -624,6 +614,9 @@ typedef struct {
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_size;  /* 2-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -687,17 +680,36 @@ typedef struct {
     uint8_t u_reg_u_timer_v_upper0_wr_en_data_arb_wr_en;  /* 1-bit */
     uint8_t u_reg_wr_err;  /* 1-bit */
 
-    /* ---- ACCUMULATE counters (ptimer-backed) ---- */
-    /* One ptimer + IRQ line per counter recognised by
-     * DrvClassificationPass as `reg = prb(reg) +/- const`. */
-    ptimer_state *ptimer_gen_harts_0_u_core_tick_count;  /* step=1 */
-    qemu_irq     irq_gen_harts_0_u_core_tick_count;
+    uint8_t _qp_pump;  /* pump pulse: accumulate-ring step enable */
+    void (*_qp_before_tick)(void *ctx);
+    void *_qp_before_tick_ctx;
+    void (*_qp_on_tick)(void *ctx);  /* per-clock observer hook (organs) */
+    void *_qp_on_tick_ctx;
+    uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
+    uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
+    uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
+    uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } rv_timer_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
 uint64_t rv_timer_read(void *opaque, hwaddr addr, unsigned size);
 void     rv_timer_write(void *opaque, hwaddr addr,
                 uint64_t value, unsigned size);
+/* Asserts rst_ni for one settle round, then releases — primes the
+ * model so registers with non-zero RESVALs see their reset value. */
+void rv_timer_reset(rv_timer_state *s);
+/* Run the model to quiescence without a bus access (external event
+ * sources — SPI pumps, pin changes — call this after poking inputs). */
+void rv_timer_settle(rv_timer_state *s);
+
+void rv_timer_step(rv_timer_state *s);
+
+void rv_timer_step_many(rv_timer_state *s, unsigned count);
+
+/* Advance one virtual-time tick: bump free-running counters + settle
+ * one round (counter->tick->writeback).  Driven by the shim pump. */
+void rv_timer_advance_tick(rv_timer_state *s);
 
 /* Phase 2.d input setters — bridge host-side QEMU events into
  * the simulated device.  Each writes one input-port leaf field
@@ -707,5 +719,7 @@ void rv_timer_set_alert_rx_i_0__ping_p(rv_timer_state *s, uint8_t value);
 void rv_timer_set_alert_rx_i_0__ping_n(rv_timer_state *s, uint8_t value);
 void rv_timer_set_alert_rx_i_0__ack_p(rv_timer_state *s, uint8_t value);
 void rv_timer_set_alert_rx_i_0__ack_n(rv_timer_state *s, uint8_t value);
+void rv_timer_set_racl_policies_i_0__write_perm(rv_timer_state *s, uint8_t value);
+void rv_timer_set_racl_policies_i_0__read_perm(rv_timer_state *s, uint8_t value);
 
 #endif /* RV_TIMER_H */

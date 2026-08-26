@@ -37,7 +37,6 @@ typedef struct {
     uint8_t clk_i;  /* 1-bit */
     uint32_t data_in_d;  /* 32-bit */
     uint32_t data_in_q;  /* 32-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender__unknown_arg0;  /* 3-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_ack_level;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_ack_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_alert_clr;  /* 1-bit */
@@ -116,7 +115,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ack_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_clk_i;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_diff_pi;  /* 1-bit */
@@ -166,7 +164,6 @@ typedef struct {
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rise_o;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_rst_ni;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_sigint_o;  /* 1-bit */
-    uint8_t gen_alert_tx_0_u_prim_alert_sender_u_decode_ping_unnamed;  /* 1-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_in_i;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_out_o;  /* 2-bit */
     uint8_t gen_alert_tx_0_u_prim_alert_sender_u_prim_buf_ack_u_secure_anchor_buf_in_i;  /* 2-bit */
@@ -1017,8 +1014,14 @@ typedef struct {
     uint8_t intr_hw_reg2hw_intr_test_qe_i;  /* 1-bit */
     uint8_t intr_hw_rst_ni;  /* 1-bit */
     uint32_t intr_hw_status;  /* 32-bit */
-    uint8_t racl_policies_i__0__read_perm;  /* 2-bit */
-    uint8_t racl_policies_i__0__write_perm;  /* 2-bit */
+    uint8_t racl_error_o_ctn_uid;  /* 1-bit */
+    uint8_t racl_error_o_overflow;  /* 1-bit */
+    uint8_t racl_error_o_racl_role;  /* 1-bit */
+    uint8_t racl_error_o_read_access;  /* 1-bit */
+    uint32_t racl_error_o_request_address;  /* 32-bit */
+    uint8_t racl_error_o_valid;  /* 1-bit */
+    uint8_t racl_policies_i_0__read_perm;  /* 2-bit */
+    uint8_t racl_policies_i_0__write_perm;  /* 2-bit */
     uint8_t reg2hw_alert_test_q;  /* 1-bit */
     uint8_t reg2hw_alert_test_qe;  /* 1-bit */
     uint32_t reg2hw_ctrl_en_input_filter_q;  /* 32-bit */
@@ -1068,7 +1071,17 @@ typedef struct {
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
-    uint8_t u_reg__unknown_arg0;  /* 1-bit */
+    uint8_t tl_o_a_ready;  /* 1-bit */
+    uint32_t tl_o_d_data;  /* 32-bit */
+    uint8_t tl_o_d_error;  /* 1-bit */
+    uint8_t tl_o_d_opcode;  /* 3-bit */
+    uint8_t tl_o_d_param;  /* 3-bit */
+    uint8_t tl_o_d_sink;  /* 1-bit */
+    uint8_t tl_o_d_size;  /* 2-bit */
+    uint8_t tl_o_d_source;  /* 8-bit */
+    uint8_t tl_o_d_user_data_intg;  /* 7-bit */
+    uint8_t tl_o_d_user_rsp_intg;  /* 7-bit */
+    uint8_t tl_o_d_valid;  /* 1-bit */
     uint32_t u_reg_addr_hit;  /* 18-bit */
     uint8_t u_reg_alert_test_flds_we;  /* 1-bit */
     uint8_t u_reg_alert_test_we;  /* 1-bit */
@@ -1231,16 +1244,6 @@ typedef struct {
     uint8_t u_reg_u_chk_tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_chk_tl_i_a_valid;  /* 1-bit */
     uint8_t u_reg_u_chk_tl_i_d_ready;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_chk_data_i;  /* 64-bit */
-    uint64_t u_reg_u_chk_u_chk_data_o;  /* 57-bit */
-    uint8_t u_reg_u_chk_u_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_chk_syndrome_o;  /* 7-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_data_err_o;  /* 1-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_data_intg_i;  /* 39-bit */
-    uint64_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_i;  /* 39-bit */
-    uint32_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_data_o;  /* 32-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_err_o;  /* 2-bit */
-    uint8_t u_reg_u_chk_u_tlul_data_integ_dec_u_data_chk_syndrome_o;  /* 7-bit */
     uint8_t u_reg_u_ctrl_en_input_filter_clk_i;  /* 1-bit */
     uint32_t u_reg_u_ctrl_en_input_filter_d;  /* 32-bit */
     uint8_t u_reg_u_ctrl_en_input_filter_de;  /* 1-bit */
@@ -1535,18 +1538,6 @@ typedef struct {
     uint8_t u_reg_u_prim_reg_we_check_err_o;  /* 1-bit */
     uint32_t u_reg_u_prim_reg_we_check_oh_i;  /* 18-bit */
     uint8_t u_reg_u_prim_reg_we_check_rst_ni;  /* 1-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_buf_in_i;  /* 18-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_buf_out_o;  /* 18-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_addr_i;  /* 5-bit */
-    uint64_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_and_tree;  /* 63-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_clk_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_en_i;  /* 1-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_o;  /* 1-bit */
-    uint64_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_err_tree;  /* 63-bit */
-    uint32_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_oh_i;  /* 18-bit */
-    uint64_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_or_tree;  /* 63-bit */
-    uint8_t u_reg_u_prim_reg_we_check_u_prim_onehot_check_rst_ni;  /* 1-bit */
-    uint8_t u_reg_u_reg_if__unknown_arg0;  /* 1-bit */
     uint8_t u_reg_u_reg_if_a_ack;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_align_err;  /* 1-bit */
     uint8_t u_reg_u_reg_if_addr_o;  /* 7-bit */
@@ -1646,6 +1637,9 @@ typedef struct {
     uint64_t u_reg_u_rsp_intg_gen_gen_data_intg_u_tlul_data_integ_enc_u_data_gen_data_o;  /* 39-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_i;  /* 57-bit */
     uint64_t u_reg_u_rsp_intg_gen_gen_rsp_intg_u_rsp_gen_data_o;  /* 64-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_error;  /* 1-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_opcode;  /* 3-bit */
+    uint8_t u_reg_u_rsp_intg_gen_qpinl5_payload_size;  /* 2-bit */
     uint8_t u_reg_u_rsp_intg_gen_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_i_a_ready;  /* 1-bit */
     uint32_t u_reg_u_rsp_intg_gen_tl_i_d_data;  /* 32-bit */
@@ -1670,12 +1664,33 @@ typedef struct {
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_user_rsp_intg;  /* 7-bit */
     uint8_t u_reg_u_rsp_intg_gen_tl_o_d_valid;  /* 1-bit */
     uint8_t u_reg_wr_err;  /* 1-bit */
+
+    uint8_t _qp_pump;  /* pump pulse: accumulate-ring step enable */
+    void (*_qp_before_tick)(void *ctx);
+    void *_qp_before_tick_ctx;
+    void (*_qp_on_tick)(void *ctx);  /* per-clock observer hook (organs) */
+    void *_qp_on_tick_ctx;
+    uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
+    uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
+    uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
+    uint8_t  _qp_in_request;   /* the bus request clock is being presented (transient inputs) */
 } gpio_state;
 
 /* Public API: bridge entrypoints for embedding in a shim device. */
 uint64_t gpio_read(void *opaque, hwaddr addr, unsigned size);
 void     gpio_write(void *opaque, hwaddr addr,
             uint64_t value, unsigned size);
+/* Asserts rst_ni for one settle round, then releases — primes the
+ * model so registers with non-zero RESVALs see their reset value. */
+void gpio_reset(gpio_state *s);
+/* Run the model to quiescence without a bus access (external event
+ * sources — SPI pumps, pin changes — call this after poking inputs). */
+void gpio_settle(gpio_state *s);
+
+void gpio_step(gpio_state *s);
+
+void gpio_step_many(gpio_state *s, unsigned count);
 
 /* Phase 2.d input setters — bridge host-side QEMU events into
  * the simulated device.  Each writes one input-port leaf field
@@ -1686,6 +1701,8 @@ void gpio_set_alert_rx_i_0__ping_p(gpio_state *s, uint8_t value);
 void gpio_set_alert_rx_i_0__ping_n(gpio_state *s, uint8_t value);
 void gpio_set_alert_rx_i_0__ack_p(gpio_state *s, uint8_t value);
 void gpio_set_alert_rx_i_0__ack_n(gpio_state *s, uint8_t value);
+void gpio_set_racl_policies_i_0__write_perm(gpio_state *s, uint8_t value);
+void gpio_set_racl_policies_i_0__read_perm(gpio_state *s, uint8_t value);
 void gpio_set_cio_gpio_i(gpio_state *s, uint32_t value);
 
 #endif /* GPIO_H */

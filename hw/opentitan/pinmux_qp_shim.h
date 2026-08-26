@@ -1,0 +1,9 @@
+#ifndef HW_OPENTITAN_PINMUX_QP_SHIM_H
+#define HW_OPENTITAN_PINMUX_QP_SHIM_H
+
+#include "qom/object.h"
+
+#define TYPE_OT_PINMUX_QP "ot-pinmux-qp"
+OBJECT_DECLARE_SIMPLE_TYPE(OtPinmuxQpState, OT_PINMUX_QP)
+
+#endif /* HW_OPENTITAN_PINMUX_QP_SHIM_H */
