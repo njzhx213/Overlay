@@ -265,6 +265,18 @@ config OT_AES_QP
     bool
     default y
 
+config OT_ROM_CTRL_QP
+    bool
+    default y
+
+config OT_KEYMGR_QP
+    bool
+    default y
+
+config OT_LC_CTRL_QP
+    bool
+    default y
+
 config OT_KMAC_QP
     bool
     default y

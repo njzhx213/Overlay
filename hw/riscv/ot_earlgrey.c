@@ -70,6 +70,14 @@
 #include "hw/opentitan/ot_sensor_eg.h"
 #include "hw/opentitan/aes_qp_shim.h"
 #include "hw/opentitan/kmac_qp_shim.h"
+#include "hw/opentitan/rom_ctrl_qp_shim.h"
+#include "hw/opentitan/rom_ctrl_qp_boot.h"
+#include "hw/opentitan/keymgr_qp_shim.h"
+#include "hw/opentitan/lc_ctrl_qp_shim.h"
+#include "hw/opentitan/qemu_passes/lc_ctrl.h"
+#include "hw/opentitan/qemu_passes/keymgr.h"
+#include "hw/opentitan/qemu_passes/rom_ctrl.h"
+#include "hw/opentitan/qemu_passes/kmac.h"
 #include "hw/opentitan/aon_timer_qp_shim.h"
 #include "hw/opentitan/dma_qp_shim.h"
 #include "hw/opentitan/rv_plic_qp_shim.h"
@@ -199,6 +207,15 @@ enum OtEGSocDevice {
     OT_EG_SOC_DEV_USBDEV,
     OT_EG_SOC_DEV_VMAPPER,
     OT_EG_SOC_DEV_KMAC_APP_SVC,
+    OT_EG_SOC_DEV_ROM_CTRL_QP,
+    /* [qemu-passes] HEART SWAP: the primary generated rom_ctrl (CSRs at
+     * the native base) + the boot front-end that owns the CPU-fetch ROM
+     * window and drives the pwrmgr done/good handshake from the
+     * generated model's digest verdict. */
+    OT_EG_SOC_DEV_ROM_CTRL_QPP,
+    OT_EG_SOC_DEV_ROM_CTRL_QP_BOOT,
+    OT_EG_SOC_DEV_KEYMGR_QP,
+    OT_EG_SOC_DEV_LC_CTRL_QP,
     /* IRQ splitters, i.e. 1-to-N signal dispatchers */
     OT_EG_SOC_SPLITTER_LC_HW_DEBUG,
     OT_EG_SOC_SPLITTER_LC_ESCALATE,
@@ -1322,6 +1339,92 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             IBEX_DEV_UINT_PROP("num-app", 3u)
         ),
     },
+    [OT_EG_SOC_DEV_ROM_CTRL_QP] = {
+        /* qemu-passes generated rom_ctrl, PARALLEL mount (native rom_ctrl
+         * untouched): region 0 = scrambled-ROM window (rom_tl, primary
+         * port), region 1 = CSRs (regs_tl aux port).  The boot digest
+         * flow runs against the generated kmac via the signal-level
+         * bridge in ot_eg_soc_reset_exit; the ROM image is injected via
+         * -global ot-rom-ctrl-qp.backing0-image=<file>. */
+        .type = TYPE_OT_ROM_CTRL_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x411b0000u },
+            { .base = 0x411a0000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "rom_ctrl_qp")
+        ),
+    },
+    [OT_EG_SOC_DEV_ROM_CTRL_QPP] = {
+        /* HEART SWAP primary: second instance of the generated
+         * rom_ctrl.  region 1 (regs_tl CSRs) sits at the NATIVE
+         * rom_ctrl CSR base — DIGEST/EXP_DIGEST of the actual boot
+         * image are served by the generated model.  region 0 (the
+         * model's own TL ROM-window port) is parked: CPU fetch is
+         * served by the cleartext rom_device in ROM_CTRL_QP_BOOT. */
+        .type = TYPE_OT_ROM_CTRL_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x411ac000u },
+            { .base = 0x411e0000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "rom_ctrl_qpp")
+        ),
+    },
+    [OT_EG_SOC_DEV_ROM_CTRL_QP_BOOT] = {
+        /* HEART SWAP boot front-end: cleartext CPU-fetch ROM window at
+         * 0x8000 (rom_device, ROMD after the check passes), the native
+         * image loaders (-object ot-rom_img,id=rom), and the pwrmgr
+         * done/good lines — raised from the GENERATED model's verdict
+         * (see ot_rom_ctrl_qp_boot.c). */
+        .type = TYPE_OT_ROM_CTRL_QP_BOOT,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x00008000u }
+        ),
+        .gpio = IBEXGPIOCONNDEFS(
+            OT_EG_SOC_SIGNAL(OT_ROM_CTRL_GOOD, 0, PWRMGR, \
+                                   OT_PWRMGR_ROM_GOOD, 0),
+            OT_EG_SOC_SIGNAL(OT_ROM_CTRL_DONE, 0, PWRMGR, \
+                                   OT_PWRMGR_ROM_DONE, 0)
+        ),
+        .link = IBEXDEVICELINKDEFS(
+            OT_EG_SOC_DEVLINK("rom-ctrl-qp", ROM_CTRL_QPP),
+            OT_EG_SOC_DEVLINK("kmac-qp", KMAC)
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "rom_boot"),
+            IBEX_DEV_STRING_PROP("img-id", "rom"),
+            IBEX_DEV_UINT_PROP("size", 0x8000u)
+        ),
+    },
+    [OT_EG_SOC_DEV_KEYMGR_QP] = {
+        /* qemu-passes generated keymgr, PARALLEL mount.  Wide OTP/flash
+         * seed inputs and the rom_ctrl digest are injected by
+         * ot_eg_keymgr_qp_wire() at reset-exit; kmac app channel 0 is
+         * bridged per-tick via the core's _qp_before_tick hook. */
+        .type = TYPE_OT_KEYMGR_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x411d0000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "keymgr_qp")
+        ),
+    },
+    [OT_EG_SOC_DEV_LC_CTRL_QP] = {
+        /* qemu-passes generated lc_ctrl, PARALLEL mount.  region 0 =
+         * dmi_tl (primary port), region 1 = regs_tl CSRs (aux port).
+         * The PROD OTP life-cycle image, lc_tx handshake acks and esc
+         * differential idles are injected at reset-exit; the kmac app
+         * channel 1 (transition token) bridge is a v2 item. */
+        .type = TYPE_OT_LC_CTRL_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x41198000u },
+            { .base = 0x41190000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "lc_ctrl_qp")
+        ),
+    },
     [OT_EG_SOC_DEV_OTBN] = {
         .type = TYPE_OT_OTBN,
         .memmap = MEMMAPENTRIES(
@@ -1465,16 +1568,17 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
         ),
     },
     [OT_EG_SOC_DEV_ROM_CTRL] = {
+        /* HEART SWAP: PARKED (regs/mem moved to unused holes, pwrmgr
+         * signals disconnected, "load" no longer triggered).  Kept
+         * instantiated only because the native keymgr links to it
+         * (get_rom_digest class API).  The machine's real rom_ctrl is
+         * the generated ROM_CTRL_QPP + ROM_CTRL_QP_BOOT pair. */
         .type = TYPE_OT_ROM_CTRL,
         .memmap = MEMMAPENTRIES(
-            { .base = 0x411e0000u },
-            { .base = 0x00008000u }
+            { .base = 0x411a8000u },
+            { .base = 0x411b8000u }
         ),
         .gpio = IBEXGPIOCONNDEFS(
-            OT_EG_SOC_SIGNAL(OT_ROM_CTRL_GOOD, 0, PWRMGR, \
-                                   OT_PWRMGR_ROM_GOOD, 0),
-            OT_EG_SOC_SIGNAL(OT_ROM_CTRL_DONE, 0, PWRMGR, \
-                                   OT_PWRMGR_ROM_DONE, 0),
             OT_EG_SOC_GPIO_ALERT(0, 60)
         ),
         .link = IBEXDEVICELINKDEFS(
@@ -1923,6 +2027,199 @@ static void ot_eg_soc_reset_hold(Object *obj, ResetType type)
     cs->disabled = true;
 }
 
+/* Generated-to-generated boot bridge: co-step the generated rom_ctrl and
+ * kmac models at signal level until the checker finishes (host cosim
+ * verified byte-exact against a python cSHAKE-256 reference).  App
+ * channel 2 is the RomCtrl cSHAKE channel by kmac_pkg AppCfg order. */
+/* keymgr <-> kmac app channel 0: a QEMU timer LOCK-STEPS the two
+ * generated models with the exact cadence the host cosim proved
+ * (wire, update+update, tick+tick, update+update).  A coarse
+ * step()+step() interleave skews the handshake phases; the per-tick
+ * hook could not lock-step without re-entering keymgr.  The pump only
+ * burns cycles while an operation is in flight. */
+/* lc_ctrl: inject the PROD life-cycle OTP image + interface idles.
+ * State/count words from lc_ctrl_state_pkg (RTL default key/nonce);
+ * the broadcasts (lc_dft_en=Off, lc_cpu_en=On, lc_keymgr_en=On, ...)
+ * and both CSR ports then decode from real logic instead of ties. */
+static void ot_eg_lc_ctrl_qp_wire(DeviceState *lc_dev)
+{
+    lc_ctrl_state *l = ot_lc_ctrl_qp_core(lc_dev);
+    static const uint64_t prod_state[5] = {
+        0x40ff3ddbfbd1b35aULL, 0x7df5f6fffb9efcf2ULL, 0xbfedc7fdb5a9fdd4ULL,
+        0xaab0eefcfe9db763ULL, 0xc949db21561875efULL };
+    static const uint64_t cnt8[6] = {
+        0xaf6f73fbULL | (0x387fb1fdULL << 32),
+        0xe6bdfef7ULL | (0xe97f7732ULL << 32),
+        0x418c3230ULL | (0x11d87bb0ULL << 32),
+        0xe92a3c40ULL | (0x562214ecULL << 32),
+        0x131ba506ULL | (0x39386883ULL << 32),
+        0x07c828d2ULL | (0x13e94c44ULL << 32) };
+
+    l->esc_scrap_state0_tx_i_resp_p = 0;
+    l->esc_scrap_state0_tx_i_resp_n = 1;
+    l->esc_scrap_state1_tx_i_resp_p = 0;
+    l->esc_scrap_state1_tx_i_resp_n = 1;
+    l->u_prim_esc_receiver0_esc_tx_i_esc_p = 0;
+    l->u_prim_esc_receiver0_esc_tx_i_esc_n = 1;
+    l->u_prim_esc_receiver1_esc_tx_i_esc_p = 0;
+    l->u_prim_esc_receiver1_esc_tx_i_esc_n = 1;
+    l->lc_clk_byp_ack_i = 0xA;
+    l->lc_nvm_rma_ack_i_0_ = 0xA;
+    l->lc_nvm_rma_ack_i_1_ = 0xA;
+    l->otp_lc_data_i_valid = 1;
+    l->otp_lc_data_i_secrets_valid = 0xA;
+    l->otp_lc_data_i_test_tokens_valid = 0xA;
+    l->otp_lc_data_i_rma_token_valid = 0xA;
+    memcpy(l->otp_lc_data_i_state, prod_state, sizeof(prod_state));
+    memcpy(l->otp_lc_data_i_count, cnt8, sizeof(cnt8));
+    /* pwrmgr init go, then let it decode to completion */
+    lc_ctrl_step_many(l, 4);
+    l->pwr_lc_i_lc_init = 1;
+    lc_ctrl_step(l);
+    l->pwr_lc_i_lc_init = 0;
+    lc_ctrl_step_many(l, 200);
+}
+
+static kmac_state *ot_eg_keymgr_qp_kmac;
+static keymgr_state *ot_eg_keymgr_qp_g;
+static QEMUTimer *ot_eg_keymgr_qp_timer;
+
+static uint64_t ot_eg_keymgr_dig0[6], ot_eg_keymgr_dig1[6];
+static int ot_eg_keymgr_have_dig;
+
+static void ot_eg_keymgr_qp_pump(void *opaque)
+{
+    keymgr_state *g = ot_eg_keymgr_qp_g;
+    kmac_state *k = ot_eg_keymgr_qp_kmac;
+
+    (void)opaque;
+    if (g && k &&
+        (g->u_reg_op_status_qs == 1u || g->u_kmac_if_state_q != 930u ||
+         g->kmac_data_o_valid)) {
+        for (unsigned t = 0; t < 4096u; t++) {
+            k->app_i_0__valid = g->kmac_data_o_valid;
+            k->app_i_0__data = g->kmac_data_o_data;
+            k->app_i_0__strb = g->kmac_data_o_strb;
+            k->app_i_0__last = g->kmac_data_o_last;
+            k->keymgr_key_i_valid = g->kmac_key_o_valid;
+            for (unsigned w = 0; w < 4u; w++) {
+                k->keymgr_key_i_key_0_[w] = g->kmac_key_o_key_0_[w];
+                k->keymgr_key_i_key_1_[w] = g->kmac_key_o_key_1_[w];
+            }
+            g->kmac_data_i_ready = k->app_o_0__ready;
+            g->kmac_data_i_error = k->app_o_0__error;
+            /* bridge-owned completion beat: capture the REAL kmac digest
+             * at its done pulse; present done only while keymgr sits in
+             * StOpWait (553) with the digest held stable */
+            if (k->app_o_0__done) {
+                for (unsigned w = 0; w < 6u; w++) {
+                    ot_eg_keymgr_dig0[w] = k->app_o_0__digest_share0[w];
+                    ot_eg_keymgr_dig1[w] = k->app_o_0__digest_share1[w];
+                }
+                ot_eg_keymgr_have_dig = 1;
+            }
+            if (g->u_kmac_if_state_q == 553u && ot_eg_keymgr_have_dig) {
+                g->kmac_data_i_done = 1;
+                for (unsigned w = 0; w < 6u; w++) {
+                    g->kmac_data_i_digest_share0[w] = ot_eg_keymgr_dig0[w];
+                    g->kmac_data_i_digest_share1[w] = ot_eg_keymgr_dig1[w];
+                }
+            } else {
+                g->kmac_data_i_done = 0;
+            }
+            keymgr_update(g);
+            kmac_update(k);
+            keymgr_tick(g);
+            kmac_tick(k);
+            keymgr_update(g);
+            kmac_update(k);
+            if (g->u_reg_op_status_qs != 1u && g->u_kmac_if_state_q == 930u &&
+                !g->kmac_data_o_valid) {
+                ot_eg_keymgr_have_dig = 0;
+                break;
+            }
+        }
+    }
+    timer_mod(ot_eg_keymgr_qp_timer,
+              qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + 100);
+}
+
+static void ot_eg_keymgr_qp_wire(DeviceState *km_dev, DeviceState *kmac_dev,
+                                 DeviceState *rc_dev)
+{
+    keymgr_state *g = ot_keymgr_qp_core(km_dev);
+
+    g->lc_keymgr_en_i = 5;
+    g->otp_key_i_creator_root_key_share0_valid = 1;
+    g->otp_key_i_creator_root_key_share1_valid = 1;
+    g->otp_key_i_creator_seed_valid = 1;
+    g->otp_key_i_owner_seed_valid = 1;
+    g->rom_digest_i_valid = 1;
+    for (unsigned i = 0; i < 4u; i++) {
+        g->otp_key_i_creator_root_key_share0[i] = 0x1111111122222201ULL + i * 0x101;
+        g->otp_key_i_creator_root_key_share1[i] = 0x2222222244444402ULL + i * 0x101;
+        g->otp_key_i_creator_seed[i] = 0x3333333366666603ULL + i * 0x101;
+        g->otp_key_i_owner_seed[i] = 0x4444444488888804ULL + i * 0x101;
+        g->otp_device_id_i[i] = 0x55555555AAAAAA05ULL + i * 0x101;
+        g->flash_i_seeds_0_[i] = 0x9999999911111109ULL + i * 0x101;
+        g->flash_i_seeds_1_[i] = 0xAAAAAAAA2222220AULL + i * 0x101;
+    }
+    /* the FIRST generated-to-generated data value in the machine: the
+     * boot digest rom_ctrl computed (via kmac ch 2) seeds keymgr's
+     * CreatorRootKey derivation */
+    if (rc_dev) {
+        rom_ctrl_state *r = ot_rom_ctrl_qp_core(rc_dev);
+        for (unsigned i = 0; i < 4u; i++) {
+            g->rom_digest_i_data[i] = r->keymgr_data_o_data[i];
+        }
+        g->rom_digest_i_valid = r->keymgr_data_o_valid;
+    }
+    ot_eg_keymgr_qp_kmac = ot_kmac_qp_core(kmac_dev);
+    ot_eg_keymgr_qp_g = g;
+    if (!ot_eg_keymgr_qp_timer) {
+        ot_eg_keymgr_qp_timer = timer_new_us(QEMU_CLOCK_VIRTUAL,
+                                             ot_eg_keymgr_qp_pump, NULL);
+    }
+    timer_mod(ot_eg_keymgr_qp_timer,
+              qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + 100);
+}
+
+static void ot_eg_romctrl_qp_boot_bridge(DeviceState *rc_dev,
+                                         DeviceState *kmac_dev)
+{
+    rom_ctrl_state *r = ot_rom_ctrl_qp_core(rc_dev);
+    kmac_state *k = ot_kmac_qp_core(kmac_dev);
+
+    /* ACCUMULATE counters (FSM address counter, msgfifo pointers, sha3pad
+     * sent count) only advance on pump ticks; every bridge co-step IS a
+     * real clock, so hold the pump high for the duration. */
+    uint8_t rp = r->_qp_pump, kp = k->_qp_pump;
+    r->_qp_pump = 1;
+    k->_qp_pump = 1;
+
+    for (unsigned t = 0; t < 200000u && r->pwrmgr_data_o_done != 0x6u; t++) {
+        r->kmac_data_i_ready = k->app_o_2__ready;
+        r->kmac_data_i_done = k->app_o_2__done;
+        r->kmac_data_i_error = k->app_o_2__error;
+        for (unsigned w = 0; w < 6u; w++) {
+            r->kmac_data_i_digest_share0[w] = k->app_o_2__digest_share0[w];
+            r->kmac_data_i_digest_share1[w] = k->app_o_2__digest_share1[w];
+        }
+        k->app_i_2__valid = r->kmac_data_o_valid;
+        k->app_i_2__data = r->kmac_data_o_data;
+        k->app_i_2__strb = r->kmac_data_o_strb;
+        k->app_i_2__last = r->kmac_data_o_last;
+        rom_ctrl_step(r);
+        kmac_step(k);
+    }
+    r->_qp_pump = rp;
+    k->_qp_pump = kp;
+    if (r->pwrmgr_data_o_good != 0x6u) {
+        warn_report("rom_ctrl_qp boot bridge: done=%x good=%x",
+                    r->pwrmgr_data_o_done, r->pwrmgr_data_o_good);
+    }
+}
+
 static void ot_eg_soc_reset_exit(Object *obj, ResetType type)
 {
     OtEGSoCClass *c = RISCV_OT_EG_SOC_GET_CLASS(obj);
@@ -1932,9 +2229,31 @@ static void ot_eg_soc_reset_exit(Object *obj, ResetType type)
         c->parent_phases.exit(obj, type);
     }
 
-    /* Kick off ROM check and boot */
-    object_property_set_bool(OBJECT(s->devices[OT_EG_SOC_DEV_ROM_CTRL]), "load",
-                             true, &error_fatal);
+    if (s->devices[OT_EG_SOC_DEV_ROM_CTRL_QP] &&
+        s->devices[OT_EG_SOC_DEV_KMAC]) {
+        ot_eg_romctrl_qp_boot_bridge(s->devices[OT_EG_SOC_DEV_ROM_CTRL_QP],
+                                     s->devices[OT_EG_SOC_DEV_KMAC]);
+    }
+
+    /* HEART SWAP: the generated rom_ctrl checks the boot image and its
+     * verdict raises the pwrmgr done/good lines — this call replaces
+     * the native rom_ctrl "load" trigger. */
+    if (s->devices[OT_EG_SOC_DEV_ROM_CTRL_QP_BOOT]) {
+        ot_rom_ctrl_qp_boot_run(s->devices[OT_EG_SOC_DEV_ROM_CTRL_QP_BOOT]);
+    }
+
+    if (s->devices[OT_EG_SOC_DEV_KEYMGR_QP] &&
+        s->devices[OT_EG_SOC_DEV_KMAC]) {
+        /* keymgr eats the digest of the ACTUAL boot image (the heart-
+         * swap primary), not the parallel canary's KAT image */
+        ot_eg_keymgr_qp_wire(s->devices[OT_EG_SOC_DEV_KEYMGR_QP],
+                             s->devices[OT_EG_SOC_DEV_KMAC],
+                             s->devices[OT_EG_SOC_DEV_ROM_CTRL_QPP]);
+    }
+
+    if (s->devices[OT_EG_SOC_DEV_LC_CTRL_QP]) {
+        ot_eg_lc_ctrl_qp_wire(s->devices[OT_EG_SOC_DEV_LC_CTRL_QP]);
+    }
 }
 
 static void ot_eg_soc_realize(DeviceState *dev, Error **errp)
