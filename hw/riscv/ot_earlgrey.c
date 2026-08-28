@@ -69,6 +69,7 @@
 #include "hw/opentitan/ot_rstmgr.h"
 #include "hw/opentitan/ot_sensor_eg.h"
 #include "hw/opentitan/aes_qp_shim.h"
+#include "hw/opentitan/qemu_passes/aes.h"
 #include "hw/opentitan/kmac_qp_shim.h"
 #include "hw/opentitan/rom_ctrl_qp_shim.h"
 #include "hw/opentitan/rom_ctrl_qp_boot.h"
@@ -2237,6 +2238,8 @@ static void ot_eg_keymgr_qp_wire(DeviceState *km_dev, DeviceState *kmac_dev,
  * handshake can complete inside a later single-model MMIO settle
  * (the beat would evaporate with the partner not stepping). */
 static entropy_src_state *ot_eg_ring_es;
+static aes_state *ot_eg_ring_ae;
+static unsigned ot_eg_ring_aes_cool;
 static csrng_state *ot_eg_ring_cs;
 static edn_state *ot_eg_ring_ed;
 static QEMUTimer *ot_eg_ring_timer;
@@ -2254,7 +2257,31 @@ static void ot_eg_ring_freeze(void)
     ed->csrng_cmd_i_csrng_rsp_ack = 0;
     ed->csrng_cmd_i_genbits_valid = 0;
     es->entropy_src_hw_if_i_es_req = 0;
+    es->entropy_src_rng_valid_i = 0;
+    ed->edn_i_0__edn_req = 0;
+    if (ot_eg_ring_ae) {
+        /* split entropy supply: TRIGGER.prng_reseed transactions are
+         * served by the REAL ring (pump costeps; the aes-edn gate's
+         * assertion) — everything else (the clearing PRNG's demands
+         * that arise INSIDE an MMIO settle, invisible to any pump)
+         * gets a standing larder word parked on the input, restoring
+         * the tie-instant semantics the settle path requires. */
+        static int no_larder = -1;
+        if (no_larder < 0) {
+            no_larder = getenv("OT_AES_NO_LARDER") != NULL;
+        }
+        if (no_larder ||
+            ot_eg_ring_ae->u_aes_core_u_aes_prng_clearing_reseed_req_i) {
+            ot_eg_ring_ae->edn_i_edn_ack = 0;
+        } else {
+            ot_eg_ring_ae->edn_i_edn_ack = 1;
+            ot_eg_ring_ae->edn_i_edn_bus = 0xAAAAAAAAu;
+            ot_eg_ring_ae->edn_i_edn_fips = 1;
+        }
+    }
 }
+
+static uint32_t ot_eg_noise_lfsr = 0x5EEDBA5Eu;
 
 static void ot_eg_ring_costep(void)
 {
@@ -2279,9 +2306,79 @@ static void ot_eg_ring_costep(void)
     }
     cs->entropy_src_hw_if_i_es_fips = es->entropy_src_hw_if_o_es_fips;
 
-    edn_update(ed); csrng_update(cs); entropy_src_update(es);
-    edn_tick(ed); csrng_tick(cs); entropy_src_tick(es);
-    edn_update(ed); csrng_update(cs); entropy_src_update(es);
+    /* noise-pump organ: when the generated entropy_src is collecting
+     * from its REAL rng port (module wants noise, fw_ov insert not
+     * active), feed one deterministic xorshift32 nibble per costep —
+     * the same stream the host KAT and the firmware expect header are
+     * derived from.  rng_valid is a wire input: it is cleared by
+     * ot_eg_ring_freeze before any MMIO settle can run. */
+    if (es->entropy_src_rng_enable_o &&
+        ((es->u_entropy_src_core_es_enable_fo >> 5) & 1u) &&
+        es->u_entropy_src_core_es_delayed_enable &&
+        es->u_entropy_src_core_u_prim_fifo_sync_esrng_wready_o &&
+        /* whole-pipeline-idle throttle: a nibble is fed only when the
+         * previous one has fully drained into the conditioner — the
+         * esbit/postht/distr packers DROP data when they stall against
+         * a busy SHA3, and a dropped-but-counted nibble desyncs the
+         * stream from the python reference */
+        !es->u_entropy_src_core_sfifo_esrng_not_empty &&
+        !es->u_entropy_src_core_pfifo_esbit_not_empty &&
+        !es->u_entropy_src_core_u_prim_packer_fifo_postht_rvalid_o &&
+        !es->u_entropy_src_core_sfifo_distr_not_empty &&
+        !es->u_entropy_src_core_u_enable_delay_sha3_block_busy_i &&
+        !es->u_entropy_src_core_fw_ov_mode_entropy_insert) {
+        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 13;
+        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr >> 17;
+        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 5;
+        es->entropy_src_rng_valid_i = 1;
+        es->entropy_src_rng_bits_i = ot_eg_noise_lfsr & 0xFu;
+    } else {
+        es->entropy_src_rng_valid_i = 0;
+    }
+
+    /* aes leg (endpoint 0): the generated aes rides the ring for REAL
+     * EDN entropy — its shim tie (always-ack) is overridden at wire
+     * time.  The leg only steps while aes wants entropy, an ack is in
+     * flight, or within a short cooldown (the multi-word request
+     * sequence needs a few ticks between words); an idle aes is never
+     * touched, so MMIO-driven aes targets are unaffected. */
+    {
+        aes_state *ae = ot_eg_ring_ae;
+        int aes_leg = 0;
+        if (ae) {
+                    ed->edn_i_0__edn_req = ae->edn_o_edn_req;
+            ae->edn_i_edn_ack = ed->edn_o_0__edn_ack;
+            ae->edn_i_edn_bus = ed->edn_o_0__edn_bus;
+            ae->edn_i_edn_fips = ed->edn_o_0__edn_fips;
+            /* the leg runs for the WHOLE prng-reseed transaction
+             * (reseed_req_i spans the multi-word burst including the
+             * inter-word gaps where edn_req is momentarily low) plus a
+             * short tail so the transaction retires; an aes running
+             * ordinary cipher ops is never ticked. */
+            {
+                static int prev_rr;
+                int rr = ae->u_aes_core_u_aes_prng_clearing_reseed_req_i;
+                if (prev_rr && !rr) {
+                    ot_eg_ring_aes_cool = 16u;   /* transaction tail */
+                }
+                prev_rr = rr;
+                if (rr || ed->edn_o_0__edn_ack) {
+                    ot_eg_ring_aes_cool =
+                        ot_eg_ring_aes_cool > 1u ? ot_eg_ring_aes_cool : 1u;
+                }
+            }
+            aes_leg = ot_eg_ring_aes_cool > 0u;
+            if (ot_eg_ring_aes_cool) {
+                ot_eg_ring_aes_cool--;
+            }
+        }
+        edn_update(ed); csrng_update(cs); entropy_src_update(es);
+        if (aes_leg) aes_update(ae);
+        edn_tick(ed); csrng_tick(cs); entropy_src_tick(es);
+        if (aes_leg) aes_tick(ae);
+        edn_update(ed); csrng_update(cs); entropy_src_update(es);
+        if (aes_leg) aes_update(ae);
+    }
 }
 
 static void ot_eg_ring_pump(void *opaque)
@@ -2298,10 +2395,17 @@ static void ot_eg_ring_pump(void *opaque)
     for (unsigned t = 0; t < 4096u; t++) {
         ot_eg_ring_costep();
 
-        /* quiescent: nothing in flight anywhere on the ring */
+        /* quiescent: nothing in flight anywhere on the ring, and the
+         * noise organ is not mid-collection toward an unread SW seed
+         * (es wants rng noise, insert off, es_entropy_valid intr not
+         * yet pending -> keep the fast cadence until the seed lands) */
         if (!ed->csrng_cmd_o_csrng_req_valid &&
             !cs->csrng_cmd_o_0__genbits_valid &&
             !cs->entropy_src_hw_if_o_es_req &&
+            !(es->entropy_src_rng_enable_o &&
+              !es->u_entropy_src_core_fw_ov_mode_entropy_insert &&
+              !es->u_reg_u_intr_state_es_entropy_valid_q) &&
+            ot_eg_ring_aes_cool == 0u &&
             cs->u_csrng_core_u_csrng_main_sm_state_q == 0x37u /* Idle */) {
             quiesced = true;
             break;
@@ -2317,11 +2421,20 @@ static void ot_eg_ring_pump(void *opaque)
 }
 
 static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
-                                    DeviceState *ed_dev)
+                                    DeviceState *ed_dev, DeviceState *ae_dev)
 {
     entropy_src_state *es = ot_entropy_src_qp_core(es_dev);
     csrng_state *cs = ot_csrng_qp_core(cs_dev);
     edn_state *ed = ot_edn_qp_core(ed_dev);
+    aes_state *ae = ot_aes_qp_core(ae_dev);
+
+    /* replace the aes shim's always-ack EDN binding tie with the REAL
+     * endpoint-0 wiring: from here on, aes entropy comes from the ring
+     * (boot genbits serve its parked initial PRNG request) */
+    ae->edn_i_edn_ack = 0;
+    ae->edn_i_edn_bus = 0;
+    ae->edn_i_edn_fips = 0;
+    ot_eg_ring_ae = getenv("OT_NO_AES_LEG") ? NULL : ae;
 
     /* the host-harness tie set: alert receivers idle, OTP mubi8 gates
      * True, lc debug Off, rng raw inputs silent, pumps held high so
@@ -2360,31 +2473,59 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
      * through the generated csrng to BootDone.  No firmware MMIO can
      * interleave, so no freeze semantics apply — this is exactly the
      * host-proven ring harness cadence. */
+    ot_eg_ring_freeze();
     entropy_src_write(es, 0x20u, 0x00699996u, 4);   /* CONF */
+    ot_eg_ring_freeze();
     entropy_src_write(es, 0x94u, 0x66u, 4);         /* FW_OV_CONTROL */
+    ot_eg_ring_freeze();
     entropy_src_write(es, 0x1cu, 0x6u, 4);          /* MODULE_ENABLE */
+    ot_eg_ring_freeze();
     entropy_src_write(es, 0x98u, 0x6u, 4);          /* SHA3 window open */
     for (unsigned i = 0; i < 64u; i++) {
         unsigned guard = 0;
-        while ((entropy_src_read(es, 0x9cu, 4) & 1u) && guard++ < 1000u) {
+        for (;;) {
+            ot_eg_ring_freeze();
+            if (!(entropy_src_read(es, 0x9cu, 4) & 1u) || guard++ >= 1000u) {
+                break;
+            }
             ot_eg_ring_costep();
         }
+        ot_eg_ring_freeze();
         entropy_src_write(es, 0xa8u, 0x5EED0000u + 0x01010101u * i, 4);
     }
+    ot_eg_ring_freeze();
     entropy_src_write(es, 0x98u, 0x9u, 4);          /* close: pad+squeeze */
+    ot_eg_ring_freeze();
     csrng_write(cs, 0x14u, 0x9666u, 4);             /* csrng CTRL */
+    ot_eg_ring_freeze();
     edn_write(ed, 0x18u, 0x00000901u, 4);           /* BOOT_INS: real entropy */
+    ot_eg_ring_freeze();
     edn_write(ed, 0x1cu, 0x00001903u, 4);           /* BOOT_GEN glen=1 */
+    ot_eg_ring_freeze();
     edn_write(ed, 0x14u, 0x9966u, 4);               /* enable + boot mode */
     for (unsigned t = 0; t < 40000u; t++) {
         ot_eg_ring_costep();
-        if ((edn_read(ed, 0x44u, 4) & 0x1FFu) == 0xF0u) {
+        /* BootDone poll on the INTERNAL state: an edn MMIO settle here
+         * would replay live-wire beats and evaporate the boot genbits */
+        if (ed->u_edn_core_u_edn_main_sm_state_q == 0xF0u) {
             break;
         }
     }
-    if ((edn_read(ed, 0x44u, 4) & 0x1FFu) != 0xF0u) {
+    /* tail flush: the boot handshake's last beats (csrng ack path,
+     * fifo drains) complete a few ticks after BootDone shows */
+    for (unsigned t = 0; t < 200u; t++) {
+        ot_eg_ring_costep();
+    }
+    /* lost-arm workaround: RTL re-initializes the ctr_drbg gen_subcmd
+     * register at every GEN accept (csrng_ctr_drbg.sv Idle arm); the
+     * generated model dropped that arm, so boot residue (UPD_FINAL)
+     * silently kills the next GEN.  Reset to the value every proven
+     * KAT ran with (emitter fix pending). */
+    cs->u_csrng_core_u_csrng_ctr_drbg_gen_subcmd_q = 0;
+    cs->u_csrng_core_u_csrng_ctr_drbg_gen_subcmd_d = 0;
+    if (ed->u_edn_core_u_edn_main_sm_state_q != 0xF0u) {
         warn_report("entropy ring boot bridge: BootDone not reached (sm=%x)",
-                    (unsigned)(edn_read(ed, 0x44u, 4) & 0x1FFu));
+                    (unsigned)ed->u_edn_core_u_edn_main_sm_state_q);
     }
 
     ot_eg_ring_freeze();
@@ -2472,7 +2613,8 @@ static void ot_eg_soc_reset_exit(Object *obj, ResetType type)
         s->devices[OT_EG_SOC_DEV_EDN_QP]) {
         ot_eg_entropy_ring_wire(s->devices[OT_EG_SOC_DEV_ENTROPY_SRC_QP],
                                 s->devices[OT_EG_SOC_DEV_CSRNG_QP],
-                                s->devices[OT_EG_SOC_DEV_EDN_QP]);
+                                s->devices[OT_EG_SOC_DEV_EDN_QP],
+                                s->devices[OT_EG_SOC_DEV_AES]);
     }
 }
 
