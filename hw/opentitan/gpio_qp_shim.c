@@ -116,6 +116,14 @@ static void ot_gpio_qp_set_pin_in(void *opaque, int n, int level)
     ot_gpio_qp_update_irqs(s);
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_gpio_qp_core(DeviceState *dev)
+{
+    return &OT_GPIO_QP(dev)->core;
+}
+
 static uint64_t ot_gpio_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtGpioQpState *s = OT_GPIO_QP(opaque);

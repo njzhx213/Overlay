@@ -706,6 +706,8 @@ void rv_timer_reset(rv_timer_state *s);
 void rv_timer_settle(rv_timer_state *s);
 
 void rv_timer_step(rv_timer_state *s);
+void rv_timer_update(rv_timer_state *s);
+void rv_timer_tick(rv_timer_state *s);
 
 void rv_timer_step_many(rv_timer_state *s, unsigned count);
 

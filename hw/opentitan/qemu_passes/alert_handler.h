@@ -20,6 +20,7 @@ typedef struct {
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
 
     /* ---- Internal state registers ---- */
     __uint128_t alert_integfail;  /* 65-bit */
@@ -7422,7 +7423,6 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -7502,71 +7502,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o_7_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o_8_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o_9_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__10_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__11_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__12_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__13_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__14_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__15_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__16_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__17_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__18_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__19_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__1_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__20_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__21_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__22_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__23_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__24_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__25_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__26_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__27_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__28_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__29_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__2_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__30_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__31_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__32_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__33_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__34_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__35_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__36_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__37_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__38_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__39_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__3_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__40_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__41_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__42_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__43_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__44_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__45_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__46_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__47_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__48_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__49_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__4_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__50_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__51_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__52_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__53_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__54_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__55_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__56_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__57_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__58_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__59_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__5_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__60_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__61_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__62_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__63_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__64_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__6_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__7_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__8_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_alert_init_trig_o__9_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7582,7 +7517,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_0_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7598,7 +7532,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_10_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7614,7 +7547,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_11_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7630,7 +7562,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_12_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7646,7 +7577,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_13_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7662,7 +7592,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_14_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7678,7 +7607,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_15_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7694,7 +7622,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_16_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7710,7 +7637,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_17_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7726,7 +7652,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_18_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7742,7 +7667,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_19_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7758,7 +7682,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_1_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7774,7 +7697,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_20_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7790,7 +7712,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_21_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7806,7 +7727,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_22_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7822,7 +7742,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_23_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7838,7 +7757,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_24_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7854,7 +7772,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_25_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7870,7 +7787,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_26_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7886,7 +7802,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_27_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7902,7 +7817,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_28_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7918,7 +7832,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_29_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7934,7 +7847,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_2_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7950,7 +7862,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_30_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7966,7 +7877,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_31_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7982,7 +7892,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_32_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -7998,7 +7907,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_33_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8014,7 +7922,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_34_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8030,7 +7937,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_35_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8046,7 +7952,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_36_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8062,7 +7967,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_37_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8078,7 +7982,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_38_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8094,7 +7997,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_39_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8110,7 +8012,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_3_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8126,7 +8027,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_40_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8142,7 +8042,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_41_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8158,7 +8057,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_42_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8174,7 +8072,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_43_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8190,7 +8087,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_44_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8206,7 +8102,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_45_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8222,7 +8117,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_46_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8238,7 +8132,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_47_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8254,7 +8147,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_48_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8270,7 +8162,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_49_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8286,7 +8177,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_4_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8302,7 +8192,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_50_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8318,7 +8207,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_51_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8334,7 +8222,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_52_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8350,7 +8237,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_53_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8366,7 +8252,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_54_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8382,7 +8267,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_55_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8398,7 +8282,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_56_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8414,7 +8297,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_57_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8430,7 +8312,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_58_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8446,7 +8327,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_59_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8462,7 +8342,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_5_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8478,7 +8357,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_60_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8494,7 +8372,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_61_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8510,7 +8387,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_62_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8526,7 +8402,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_63_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8542,7 +8417,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_64_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8558,7 +8432,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_6_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8574,7 +8447,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_7_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8590,7 +8462,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_8_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8606,7 +8477,6 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_mubi_i;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_alert_map_9_u_prim_mubi4_sync_lpg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8632,8 +8502,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8659,8 +8529,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_0_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8686,8 +8556,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8713,8 +8583,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_10_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8740,8 +8610,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8767,8 +8637,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_11_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8794,8 +8664,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8821,8 +8691,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_12_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8848,8 +8718,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8875,8 +8745,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_13_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8902,8 +8772,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8929,8 +8799,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_14_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8956,8 +8826,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -8983,8 +8853,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_15_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9010,8 +8880,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9037,8 +8907,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_16_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9064,8 +8934,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9091,8 +8961,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_17_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9118,8 +8988,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9145,8 +9015,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_18_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9172,8 +9042,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9199,8 +9069,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_19_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9226,8 +9096,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9253,8 +9123,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_1_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9280,8 +9150,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9307,8 +9177,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_20_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9334,8 +9204,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9361,8 +9231,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_21_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9388,8 +9258,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9415,8 +9285,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_22_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9442,8 +9312,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9469,8 +9339,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_23_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9496,8 +9366,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9523,8 +9393,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_2_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9550,8 +9420,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9577,8 +9447,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_3_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9604,8 +9474,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9631,8 +9501,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_4_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9658,8 +9528,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9685,8 +9555,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_5_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9712,8 +9582,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9739,8 +9609,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_6_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9766,8 +9636,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9793,8 +9663,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_7_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9820,8 +9690,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9847,8 +9717,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_8_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9874,8 +9744,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_cg_en_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_clk_i;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_gen_buffs_0_gen_bits_0_u_prim_buf_in_i;  /* 1-bit */
@@ -9901,8 +9771,8 @@ typedef struct {
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_q_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_gen_flops_u_prim_flop_2sync_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_mubi_i;  /* 4-bit */
+    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_mubi_o;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_mubi_o_0_;  /* 4-bit */
-    uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_mubi_o__0_;  /* 4-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_lpgs_9_u_prim_mubi4_sync_rst_en_rst_ni;  /* 1-bit */
     uint32_t u_alert_handler_lpg_ctrl_gen_read_unused_lpg_lpg_used;  /* 24-bit */
     uint8_t u_alert_handler_lpg_ctrl_gen_read_unused_lpg_unused_lpg_init_trig;  /* 1-bit */
@@ -27997,6 +27867,8 @@ void alert_handler_reset(alert_handler_state *s);
 void alert_handler_settle(alert_handler_state *s);
 
 void alert_handler_step(alert_handler_state *s);
+void alert_handler_update(alert_handler_state *s);
+void alert_handler_tick(alert_handler_state *s);
 
 void alert_handler_step_many(alert_handler_state *s, unsigned count);
 

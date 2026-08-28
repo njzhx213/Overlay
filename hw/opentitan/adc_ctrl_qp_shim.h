@@ -6,4 +6,8 @@
 #define TYPE_OT_ADC_CTRL_QP "ot-adc-ctrl-qp"
 OBJECT_DECLARE_SIMPLE_TYPE(OtAdcCtrlQpState, OT_ADC_CTRL_QP)
 
+/* Generic core accessor for machine-level device-to-device bridges:
+ * returns the embedded <dev>_state (see qemu_passes/adc_ctrl.h). */
+void *ot_adc_ctrl_qp_core(DeviceState *dev);
+
 #endif /* HW_OPENTITAN_ADC_CTRL_QP_SHIM_H */

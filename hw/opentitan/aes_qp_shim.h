@@ -6,4 +6,8 @@
 #define TYPE_OT_AES_QP "ot-aes-qp"
 OBJECT_DECLARE_SIMPLE_TYPE(OtAesQpState, OT_AES_QP)
 
+/* Generic core accessor for machine-level device-to-device bridges:
+ * returns the embedded <dev>_state (see qemu_passes/aes.h). */
+void *ot_aes_qp_core(DeviceState *dev);
+
 #endif /* HW_OPENTITAN_AES_QP_SHIM_H */

@@ -19,7 +19,6 @@ typedef struct {
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t u_reg_if_wdata_o;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
@@ -197,6 +196,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -1090,6 +1090,8 @@ void pattgen_reset(pattgen_state *s);
 void pattgen_settle(pattgen_state *s);
 
 void pattgen_step(pattgen_state *s);
+void pattgen_update(pattgen_state *s);
+void pattgen_tick(pattgen_state *s);
 
 void pattgen_step_many(pattgen_state *s, unsigned count);
 

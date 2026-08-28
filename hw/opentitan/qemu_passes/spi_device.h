@@ -18,11 +18,12 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint16_t cmd_dp_sel;  /* BIP, 10-bit */
     uint8_t cmd_read_pipeline_sel;  /* BIP, 1-bit */
+    uint32_t hw2reg_upload_addrfifo_d;  /* BIP, 32-bit */
     uint8_t rst_ni;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t tl_sram_d2h_0__d_data;  /* BIP, 32-bit */
     uint32_t unnamed_rdata_0;  /* BIP, 32-bit */
-    __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t _unknown_arg0;  /* 1-bit */
@@ -606,7 +607,6 @@ typedef struct {
     uint8_t hw2reg_tpm_status_cmdaddr_notempty_d;  /* 1-bit */
     uint8_t hw2reg_tpm_status_rdfifo_aborted_d;  /* 1-bit */
     uint8_t hw2reg_tpm_status_wrfifo_pending_d;  /* 1-bit */
-    uint32_t hw2reg_upload_addrfifo_d;  /* 32-bit */
     uint8_t hw2reg_upload_cmdfifo_addr4b_mode_d;  /* 1-bit */
     uint8_t hw2reg_upload_cmdfifo_busy_d;  /* 1-bit */
     uint8_t hw2reg_upload_cmdfifo_data_d;  /* 8-bit */
@@ -1556,7 +1556,6 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -4680,32 +4679,6 @@ typedef struct {
     uint8_t u_reg_tl_win_o_1__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_tl_win_o_1__a_valid;  /* 1-bit */
     uint8_t u_reg_tl_win_o_1__d_ready;  /* 1-bit */
-    uint32_t u_reg_tl_win_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_tl_win_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_tl_win_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_tl_win_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_tl_win_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_tl_win_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_tl_win_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_tl_win_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_tl_win_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_tl_win_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_tl_win_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_tl_win_o__1__d_ready;  /* 1-bit */
     uint8_t u_reg_tpm_access_0_access_0_qs;  /* 8-bit */
     uint8_t u_reg_tpm_access_0_access_1_qs;  /* 8-bit */
     uint8_t u_reg_tpm_access_0_access_2_qs;  /* 8-bit */
@@ -17245,45 +17218,6 @@ typedef struct {
     uint8_t u_reg_u_socket_tl_d_o_2__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_socket_tl_d_o_2__a_valid;  /* 1-bit */
     uint8_t u_reg_u_socket_tl_d_o_2__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__2__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__2__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__d_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_address;  /* 32-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_data;  /* 32-bit */
     uint8_t u_reg_u_socket_tl_h_i_a_mask;  /* 4-bit */
@@ -18168,11 +18102,6 @@ typedef struct {
     uint8_t u_scanmode_sync_mubi_o_2_;  /* 4-bit */
     uint8_t u_scanmode_sync_mubi_o_3_;  /* 4-bit */
     uint8_t u_scanmode_sync_mubi_o_4_;  /* 4-bit */
-    uint8_t u_scanmode_sync_mubi_o__0_;  /* 4-bit */
-    uint8_t u_scanmode_sync_mubi_o__1_;  /* 4-bit */
-    uint8_t u_scanmode_sync_mubi_o__2_;  /* 4-bit */
-    uint8_t u_scanmode_sync_mubi_o__3_;  /* 4-bit */
-    uint8_t u_scanmode_sync_mubi_o__4_;  /* 4-bit */
     uint8_t u_scanmode_sync_rst_ni;  /* 1-bit */
     uint32_t u_spi_tpm_addr;  /* 24-bit */
     uint8_t u_spi_tpm_cfg_tpm_en_i;  /* 1-bit */
@@ -18379,12 +18308,8 @@ typedef struct {
     uint8_t u_spi_tpm_u_arbiter_req_write_i;  /* 2-bit */
     uint8_t u_spi_tpm_u_arbiter_rsp_error_o_0_;  /* 2-bit */
     uint8_t u_spi_tpm_u_arbiter_rsp_error_o_1_;  /* 2-bit */
-    uint8_t u_spi_tpm_u_arbiter_rsp_error_o__0_;  /* 2-bit */
-    uint8_t u_spi_tpm_u_arbiter_rsp_error_o__1_;  /* 2-bit */
     uint32_t u_spi_tpm_u_arbiter_rsp_rdata_o_0_;  /* 32-bit */
     uint32_t u_spi_tpm_u_arbiter_rsp_rdata_o_1_;  /* 32-bit */
-    uint32_t u_spi_tpm_u_arbiter_rsp_rdata_o__0_;  /* 32-bit */
-    uint32_t u_spi_tpm_u_arbiter_rsp_rdata_o__1_;  /* 32-bit */
     uint8_t u_spi_tpm_u_arbiter_rsp_rvalid_o;  /* 2-bit */
     uint8_t u_spi_tpm_u_arbiter_rst_ni;  /* 1-bit */
     uint16_t u_spi_tpm_u_arbiter_sram_addr_o;  /* 10-bit */
@@ -19086,26 +19011,16 @@ typedef struct {
     uint32_t u_sys_sram_arbiter_req_wmask_i_3_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_req_wmask_i_4_;  /* 32-bit */
     uint8_t u_sys_sram_arbiter_req_write_i;  /* 5-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o_0_;  /* 1-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o_1_;  /* 1-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o_2_;  /* 1-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o_3_;  /* 1-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o_4_;  /* 1-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o__0_;  /* 2-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o__1_;  /* 2-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o__2_;  /* 2-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o__3_;  /* 2-bit */
-    uint8_t u_sys_sram_arbiter_rsp_error_o__4_;  /* 2-bit */
+    uint8_t u_sys_sram_arbiter_rsp_error_o_0_;  /* 2-bit */
+    uint8_t u_sys_sram_arbiter_rsp_error_o_1_;  /* 2-bit */
+    uint8_t u_sys_sram_arbiter_rsp_error_o_2_;  /* 2-bit */
+    uint8_t u_sys_sram_arbiter_rsp_error_o_3_;  /* 2-bit */
+    uint8_t u_sys_sram_arbiter_rsp_error_o_4_;  /* 2-bit */
     uint32_t u_sys_sram_arbiter_rsp_rdata_o_0_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_rsp_rdata_o_1_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_rsp_rdata_o_2_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_rsp_rdata_o_3_;  /* 32-bit */
     uint32_t u_sys_sram_arbiter_rsp_rdata_o_4_;  /* 32-bit */
-    uint32_t u_sys_sram_arbiter_rsp_rdata_o__0_;  /* 32-bit */
-    uint32_t u_sys_sram_arbiter_rsp_rdata_o__1_;  /* 32-bit */
-    uint32_t u_sys_sram_arbiter_rsp_rdata_o__2_;  /* 32-bit */
-    uint32_t u_sys_sram_arbiter_rsp_rdata_o__3_;  /* 32-bit */
-    uint32_t u_sys_sram_arbiter_rsp_rdata_o__4_;  /* 32-bit */
     uint8_t u_sys_sram_arbiter_rsp_rvalid_o;  /* 5-bit */
     uint8_t u_sys_sram_arbiter_rst_ni;  /* 1-bit */
     uint16_t u_sys_sram_arbiter_sram_addr_o;  /* 10-bit */
@@ -20161,15 +20076,9 @@ typedef struct {
     uint8_t u_upload_u_arbiter_rsp_error_o_0_;  /* 2-bit */
     uint8_t u_upload_u_arbiter_rsp_error_o_1_;  /* 2-bit */
     uint8_t u_upload_u_arbiter_rsp_error_o_2_;  /* 2-bit */
-    uint8_t u_upload_u_arbiter_rsp_error_o__0_;  /* 2-bit */
-    uint8_t u_upload_u_arbiter_rsp_error_o__1_;  /* 2-bit */
-    uint8_t u_upload_u_arbiter_rsp_error_o__2_;  /* 2-bit */
     uint32_t u_upload_u_arbiter_rsp_rdata_o_0_;  /* 32-bit */
     uint32_t u_upload_u_arbiter_rsp_rdata_o_1_;  /* 32-bit */
     uint32_t u_upload_u_arbiter_rsp_rdata_o_2_;  /* 32-bit */
-    uint32_t u_upload_u_arbiter_rsp_rdata_o__0_;  /* 32-bit */
-    uint32_t u_upload_u_arbiter_rsp_rdata_o__1_;  /* 32-bit */
-    uint32_t u_upload_u_arbiter_rsp_rdata_o__2_;  /* 32-bit */
     uint8_t u_upload_u_arbiter_rsp_rvalid_o;  /* 3-bit */
     uint8_t u_upload_u_arbiter_rst_ni;  /* 1-bit */
     uint16_t u_upload_u_arbiter_sram_addr_o;  /* 10-bit */
@@ -20356,6 +20265,8 @@ void spi_device_reset(spi_device_state *s);
 void spi_device_settle(spi_device_state *s);
 
 void spi_device_step(spi_device_state *s);
+void spi_device_update(spi_device_state *s);
+void spi_device_tick(spi_device_state *s);
 
 void spi_device_step_many(spi_device_state *s, unsigned count);
 

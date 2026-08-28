@@ -64,6 +64,16 @@ static inline void qpw_wide_insert(uint64_t *arr, unsigned nWords,
     }
 }
 
+/* Low 128 bits of a wide uint64_t arr[nWords] as a scalar (65..128-bit
+ * expression contexts reading a wide field whole). */
+static inline __uint128_t qpw_wide_read128(const uint64_t *arr,
+                                           unsigned nWords)
+{
+    __uint128_t v = arr[0];
+    if (nWords > 1) v |= ((__uint128_t)arr[1]) << 64;
+    return v;
+}
+
 static void update_state_once(rv_timer_state *s);
 typedef struct QPSettleFingerprint {
     uint64_t first;
@@ -520,7 +530,7 @@ static void update_state_once(rv_timer_state *s)
     s->u_reg_u_intr_state0_wr_en_data_arb_q = (s->u_reg_u_intr_state0_wr_en_data_arb_q) & ((1ULL << 1) - 1);
     s->u_reg_u_intr_state0_qs = (s->u_reg_u_intr_state0_qs) & ((1ULL << 1) - 1);
     s->u_reg_intr_state0_qs = (s->u_reg_u_intr_state0_qs) & ((1ULL << 1) - 1);
-    s->u_reg_reg_rdata_next = (((((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))) || ((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1)))) || ((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1)))) ? ((s->u_reg_reg_rdata_next & ~0x1ULL) | ((((((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))) ? (s->u_reg_intr_state0_qs) : ((((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))) ? (s->u_reg_intr_enable0_qs) : (s->u_reg_ctrl_qs))))) & 0x1ULL) << 0)) : s->u_reg_reg_rdata_next);
+    s->u_reg_reg_rdata_next = ((((((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))) || ((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1)))) || ((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1)))) && ((((((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) && ((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1)))) || (((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && ((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) || ((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && ((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1)))))) ? ((s->u_reg_reg_rdata_next & ~0x1ULL) | ((((((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))) ? (s->u_reg_intr_state0_qs) : ((((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))) ? (s->u_reg_intr_enable0_qs) : (s->u_reg_ctrl_qs))))) & 0x1ULL) << 0)) : s->u_reg_reg_rdata_next);
     s->u_reg_u_intr_test0_re = (0) & ((1ULL << 1) - 1);
     s->u_reg_u_intr_test0_we = (s->u_reg_intr_test0_we) & ((1ULL << 1) - 1);
     s->u_reg_u_intr_test0_wd = ((((s->u_reg_u_reg_if_wdata_o) >> 0) & 0x1)) & ((1ULL << 1) - 1);
@@ -680,7 +690,7 @@ static void update_state_once(rv_timer_state *s)
     s->u_reg_u_compare_upper0_0_wr_en_data_arb_q = s->u_reg_u_compare_upper0_0_q;
     s->u_reg_u_compare_upper0_0_qs = s->u_reg_u_compare_upper0_0_qs;
     s->u_reg_compare_upper0_0_qs = s->u_reg_u_compare_upper0_0_qs;
-    s->u_reg_reg_rdata_next = ((((((((((s->u_reg_racl_addr_hit_read) >> 9) & 0x1)) == (1))) || ((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1)))) || ((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1)))) || ((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1)))) ? ((((((((s->u_reg_racl_addr_hit_read) >> 9) & 0x1)) == (1))) ? (s->u_reg_compare_upper0_0_qs) : ((((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1))) ? (s->u_reg_compare_lower0_0_qs) : ((((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1))) ? (s->u_reg_timer_v_upper0_qs) : (s->u_reg_timer_v_lower0_qs))))))) : s->u_reg_reg_rdata_next);
+    s->u_reg_reg_rdata_next = (((((((((((s->u_reg_racl_addr_hit_read) >> 9) & 0x1)) == (1))) || ((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1)))) || ((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1)))) || ((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1)))) && (((((((((((((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 4) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 5) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1))))) && ((((((s->u_reg_racl_addr_hit_read) >> 9) & 0x1)) == (1)))) || (((((((((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 4) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 5) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1))))) && ((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1))))) || ((((((((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 4) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 5) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1))))) && ((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1))))) || (((((((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 4) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 5) & 0x1)) == (1))))) && ((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1)))))) ? ((((((((s->u_reg_racl_addr_hit_read) >> 9) & 0x1)) == (1))) ? (s->u_reg_compare_upper0_0_qs) : ((((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1))) ? (s->u_reg_compare_lower0_0_qs) : ((((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1))) ? (s->u_reg_timer_v_upper0_qs) : (s->u_reg_timer_v_lower0_qs))))))) : s->u_reg_reg_rdata_next);
     s->u_reg_reg_rdata_next = (((((((((((!(((((s->u_reg_racl_addr_hit_read) & 1)) == (1)))) && (!((((((s->u_reg_racl_addr_hit_read) >> 1) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 2) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 3) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 4) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 5) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 6) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 7) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 8) & 0x1)) == (1))))) && (!((((((s->u_reg_racl_addr_hit_read) >> 9) & 0x1)) == (1))))) ? (-1) : s->u_reg_reg_rdata_next);
     s->u_reg_u_reg_if_rdata_i = s->u_reg_reg_rdata_next;
     s->u_reg_u_reg_if_rdata_i = s->u_reg_u_reg_if_rdata_i;
@@ -698,22 +708,19 @@ static void update_state_once(rv_timer_state *s)
     s->u_reg_tl_o_a_ready = (s->u_reg_u_rsp_intg_gen_tl_o_a_ready) & ((1ULL << 1) - 1);
     s->u_reg_reg2hw_alert_test_q = (s->u_reg_reg2hw_alert_test_q) & ((1ULL << 1) - 1);
     s->u_reg_reg2hw_alert_test_qe = (s->u_reg_reg2hw_alert_test_qe) & ((1ULL << 1) - 1);
-    s->u_reg_reg2hw_ctrl_0__q = (((((uint64_t)(s->u_reg_reg2hw_ctrl_0__q)) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
+    s->u_reg_reg2hw_ctrl_0__q = (((((uint64_t)(s->u_reg_reg2hw_ctrl_0__q)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
     s->active = (s->u_reg_reg2hw_ctrl_0__q) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_core_active = (s->active) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_core_active = (s->gen_harts_0_u_core_active) & ((1ULL << 1) - 1);
-    s->u_reg_reg2hw_intr_enable0_0__q = (((((uint64_t)(s->u_reg_reg2hw_intr_enable0_0__q)) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
+    s->u_reg_reg2hw_intr_enable0_0__q = (((((uint64_t)(s->u_reg_reg2hw_intr_enable0_0__q)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_intr_hw_reg2hw_intr_enable_q_i = (s->u_reg_reg2hw_intr_enable0_0__q) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_intr_hw_reg2hw_intr_enable_q_i = (s->gen_harts_0_u_intr_hw_reg2hw_intr_enable_q_i) & ((1ULL << 1) - 1);
-    s->u_reg_reg2hw_intr_state0_0__q = (((((uint64_t)(s->u_reg_reg2hw_intr_state0_0__q)) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
+    s->u_reg_reg2hw_intr_state0_0__q = (((((uint64_t)(s->u_reg_reg2hw_intr_state0_0__q)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_intr_hw_reg2hw_intr_state_q_i = (s->u_reg_reg2hw_intr_state0_0__q) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_intr_hw_status = (s->gen_harts_0_u_intr_hw_reg2hw_intr_state_q_i) & ((1ULL << 1) - 1);
-    /* comb SCC 693: 2 assignment(s), local fixed point */
-    for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
-    s->u_reg_reg2hw_intr_test0_0__q = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_intr_test0_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_intr_test0_0__q)) << 1)))) >> 1) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
-    s->u_reg_reg2hw_intr_test0_0__qe = (((((uint64_t)(((((uint64_t)(s->u_reg_reg2hw_intr_test0_0__qe)) << 0) | (((uint64_t)(s->u_reg_reg2hw_intr_test0_0__q)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
-    }
+    s->u_reg_reg2hw_intr_test0_0__q = (((((uint64_t)(s->u_reg_reg2hw_intr_test0_0__q)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_intr_hw_reg2hw_intr_test_q_i = (s->u_reg_reg2hw_intr_test0_0__q) & ((1ULL << 1) - 1);
+    s->u_reg_reg2hw_intr_test0_0__qe = (((((uint64_t)(s->u_reg_reg2hw_intr_test0_0__qe)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
     s->gen_harts_0_u_intr_hw_reg2hw_intr_test_qe_i = (s->u_reg_reg2hw_intr_test0_0__qe) & ((1ULL << 1) - 1);
     s->u_reg_reg2hw_cfg0_step_q = s->u_reg_reg2hw_cfg0_step_q;
     s->gen_harts_0_u_core_step = s->u_reg_reg2hw_cfg0_step_q;
@@ -771,8 +778,8 @@ static void update_state_once(rv_timer_state *s)
     s->mtimecmp_update_0__0_ = ((s->u_reg_reg2hw_compare_upper0_0_qe) | (s->u_reg_reg2hw_compare_lower0_0_qe)) & ((1ULL << 1) - 1);
     s->hw2reg_intr_state0_0__de = ((s->gen_harts_0_u_intr_hw_hw2reg_intr_state_de_o) | (s->mtimecmp_update_0__0_)) & ((1ULL << 1) - 1);
     s->hw2reg_intr_state0_0__d = ((s->intr_timer_state_d) & (((s->mtimecmp_update_0__0_) ^ 1))) & ((1ULL << 1) - 1);
-    s->u_reg_hw2reg_intr_state0_0__d = (((((uint64_t)(((((uint64_t)(s->hw2reg_intr_state0_0__de)) << 0) | (((uint64_t)(s->hw2reg_intr_state0_0__d)) << 1)))) >> 1) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
-    s->u_reg_hw2reg_intr_state0_0__de = (((((uint64_t)(((((uint64_t)(s->hw2reg_intr_state0_0__de)) << 0) | (((uint64_t)(s->hw2reg_intr_state0_0__d)) << 1)))) >> 0) & ((1ULL << 1) - 1))) & ((1ULL << 1) - 1);
+    s->u_reg_hw2reg_intr_state0_0__d = (((((uint64_t)(s->hw2reg_intr_state0_0__d)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
+    s->u_reg_hw2reg_intr_state0_0__de = (((((uint64_t)(s->hw2reg_intr_state0_0__de)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
     s->u_reg_u_intr_state0_de = (s->u_reg_hw2reg_intr_state0_0__de) & ((1ULL << 1) - 1);
     s->u_reg_u_intr_state0_d = (s->u_reg_hw2reg_intr_state0_0__d) & ((1ULL << 1) - 1);
     s->u_reg_u_intr_state0_wr_en_data_arb_de = (s->u_reg_u_intr_state0_de) & ((1ULL << 1) - 1);
@@ -980,7 +987,7 @@ static void update_state_once(rv_timer_state *s)
     s->gen_alert_tx_0_u_prim_alert_sender_state_d = ((((((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0))) && ((s->gen_alert_tx_0_u_prim_alert_sender_alert_trigger) | (s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger))) ? (((((uint64_t)(0)) << 2) | (((uint64_t)(((s->gen_alert_tx_0_u_prim_alert_sender_alert_trigger) ^ 1))) << 1) | ((uint64_t)(1)))) : s->gen_alert_tx_0_u_prim_alert_sender_state_d)) & ((1ULL << 3) - 1);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_pd = ((((((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0))) && ((s->gen_alert_tx_0_u_prim_alert_sender_alert_trigger) | (s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger))) ? (-1) : s->gen_alert_tx_0_u_prim_alert_sender_alert_pd)) & ((1ULL << 1) - 1);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_nd = ((((((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0))) && ((s->gen_alert_tx_0_u_prim_alert_sender_alert_trigger) | (s->gen_alert_tx_0_u_prim_alert_sender_ping_trigger))) ? (0) : s->gen_alert_tx_0_u_prim_alert_sender_alert_nd)) & ((1ULL << 1) - 1);
-    s->gen_alert_tx_0_u_prim_alert_sender_state_d = ((((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (4))))) || ((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) || ((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (s->gen_alert_tx_0_u_prim_alert_sender_ack_level))) ? (((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (4))))) ? (((((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (5))) ? (6) : (0))) : ((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) ? (4) : (2))))) : s->gen_alert_tx_0_u_prim_alert_sender_state_d)) & ((1ULL << 3) - 1);
+    s->gen_alert_tx_0_u_prim_alert_sender_state_d = (((((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (4))))) || ((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) || ((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (s->gen_alert_tx_0_u_prim_alert_sender_ack_level))) && (((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (4))))) || (((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) && (s->gen_alert_tx_0_u_prim_alert_sender_ack_level))) || (((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1)))) && (s->gen_alert_tx_0_u_prim_alert_sender_ack_level)))) ? (((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (4))))) ? (((((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (5))) ? (6) : (0))) : ((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) ? (4) : (2))))) : s->gen_alert_tx_0_u_prim_alert_sender_state_d)) & ((1ULL << 3) - 1);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_pd = ((((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) && (!(s->gen_alert_tx_0_u_prim_alert_sender_ack_level))) || (((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1)))) && (!(s->gen_alert_tx_0_u_prim_alert_sender_ack_level)))) ? (-1) : s->gen_alert_tx_0_u_prim_alert_sender_alert_pd)) & ((1ULL << 1) - 1);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_nd = ((((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (3)))) && (!(s->gen_alert_tx_0_u_prim_alert_sender_ack_level))) || (((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1)))) && (!(s->gen_alert_tx_0_u_prim_alert_sender_ack_level)))) ? (0) : s->gen_alert_tx_0_u_prim_alert_sender_alert_nd)) & ((1ULL << 1) - 1);
     s->gen_alert_tx_0_u_prim_alert_sender_state_d = ((((((!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (0)))) && (!(((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (1))))) && (((s->gen_alert_tx_0_u_prim_alert_sender_state_q) == (2)))) && (((s->gen_alert_tx_0_u_prim_alert_sender_ack_level) ^ 1))) ? (-3) : s->gen_alert_tx_0_u_prim_alert_sender_state_d)) & ((1ULL << 3) - 1);
@@ -1006,6 +1013,25 @@ static void update_state_once(rv_timer_state *s)
     s->alert_tx_o_0__alert_p = (s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_p) & ((1ULL << 1) - 1);
     s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n = (s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n) & ((1ULL << 1) - 1);
     s->alert_tx_o_0__alert_n = (s->gen_alert_tx_0_u_prim_alert_sender_alert_tx_o_alert_n) & ((1ULL << 1) - 1);
+    s->tl_o_d_valid = (s->u_reg_tl_o_d_valid) & ((1ULL << 1) - 1);
+    s->tl_o_d_opcode = (s->u_reg_tl_o_d_opcode) & ((1ULL << 3) - 1);
+    s->tl_o_d_param = (s->u_reg_tl_o_d_param) & ((1ULL << 3) - 1);
+    s->tl_o_d_size = (s->u_reg_tl_o_d_size) & ((1ULL << 2) - 1);
+    s->tl_o_d_source = s->u_reg_tl_o_d_source;
+    s->tl_o_d_sink = (s->u_reg_tl_o_d_sink) & ((1ULL << 1) - 1);
+    s->tl_o_d_data = s->u_reg_tl_o_d_data;
+    s->tl_o_d_user_rsp_intg = (s->u_reg_tl_o_d_user_rsp_intg) & ((1ULL << 7) - 1);
+    s->tl_o_d_user_data_intg = (s->u_reg_tl_o_d_user_data_intg) & ((1ULL << 7) - 1);
+    s->tl_o_d_error = (s->u_reg_tl_o_d_error) & ((1ULL << 1) - 1);
+    s->tl_o_a_ready = (s->u_reg_tl_o_a_ready) & ((1ULL << 1) - 1);
+    s->alert_tx_o_0__alert_p = (((((uint64_t)(s->alert_tx_o_0__alert_p)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
+    s->alert_tx_o_0__alert_n = (((((uint64_t)(s->alert_tx_o_0__alert_n)) & ((1ULL << 1) - 1)))) & ((1ULL << 1) - 1);
+    s->racl_error_o_valid = (s->u_reg_racl_error_o_valid) & ((1ULL << 1) - 1);
+    s->racl_error_o_overflow = (s->u_reg_racl_error_o_overflow) & ((1ULL << 1) - 1);
+    s->racl_error_o_racl_role = (s->u_reg_racl_error_o_racl_role) & ((1ULL << 1) - 1);
+    s->racl_error_o_ctn_uid = (s->u_reg_racl_error_o_ctn_uid) & ((1ULL << 1) - 1);
+    s->racl_error_o_read_access = (s->u_reg_racl_error_o_read_access) & ((1ULL << 1) - 1);
+    s->racl_error_o_request_address = s->u_reg_racl_error_o_request_address;
     s->intr_timer_expired_hart0_timer0_o = (s->intr_out) & ((1ULL << 1) - 1);
 }
 
@@ -1070,8 +1096,8 @@ static bool tick(rv_timer_state *s)
     _qp_next_gen_harts_0_u_intr_hw_intr_o = (((!(((s->gen_harts_0_u_intr_hw_rst_ni) ^ 1))) ? ((s->gen_harts_0_u_intr_hw_status) & (s->gen_harts_0_u_intr_hw_reg2hw_intr_enable_q_i)) : _qp_next_gen_harts_0_u_intr_hw_intr_o)) & ((1ULL << 1) - 1);
     _qp_next_gen_harts_0_u_core_tick_count = ((((((((!(((s->gen_harts_0_u_core_rst_ni) ^ 1))) && (!(((s->gen_harts_0_u_core_active) ^ 1)))) && (((s->gen_harts_0_u_core_tick_count) == (s->gen_harts_0_u_core_prescaler)))) || ((!(((s->gen_harts_0_u_core_rst_ni) ^ 1))) && (((s->gen_harts_0_u_core_active) ^ 1)))) || (((s->gen_harts_0_u_core_rst_ni) ^ 1))) && (s->_qp_pump)) ? (0) : _qp_next_gen_harts_0_u_core_tick_count)) & ((1ULL << 12) - 1);
     _qp_next_gen_harts_0_u_core_tick_count = ((((((!(((s->gen_harts_0_u_core_rst_ni) ^ 1))) && (!(((s->gen_harts_0_u_core_active) ^ 1)))) && (!(((s->gen_harts_0_u_core_tick_count) == (s->gen_harts_0_u_core_prescaler))))) && (s->_qp_pump)) ? (s->gen_harts_0_u_core_tick_count + 1) : _qp_next_gen_harts_0_u_core_tick_count)) & ((1ULL << 12) - 1);
-    _qp_next_u_reg_err_q = (((((!(((s->u_reg_rst_ni) ^ 1))) && ((s->u_reg_intg_err) | (s->u_reg_reg_we_err))) || (((s->u_reg_rst_ni) ^ 1))) ? ((((!(((s->u_reg_rst_ni) ^ 1))) && ((s->u_reg_intg_err) | (s->u_reg_reg_we_err))) ? (1) : (0))) : _qp_next_u_reg_err_q)) & ((1ULL << 1) - 1);
-    _qp_next_u_reg_u_reg_if_outstanding_q = (((((((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (!(s->u_reg_u_reg_if_a_ack))) && (s->u_reg_u_reg_if_d_ack)) || ((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (s->u_reg_u_reg_if_a_ack))) || (((s->u_reg_u_reg_if_rst_ni) ^ 1))) ? ((((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (s->u_reg_u_reg_if_a_ack)) ? (1) : (0))) : _qp_next_u_reg_u_reg_if_outstanding_q)) & ((1ULL << 1) - 1);
+    _qp_next_u_reg_err_q = ((((((!(((s->u_reg_rst_ni) ^ 1))) && ((s->u_reg_intg_err) | (s->u_reg_reg_we_err))) || (((s->u_reg_rst_ni) ^ 1))) && (((!(((s->u_reg_rst_ni) ^ 1))) && ((s->u_reg_intg_err) | (s->u_reg_reg_we_err))) || (((s->u_reg_rst_ni) ^ 1)))) ? ((((!(((s->u_reg_rst_ni) ^ 1))) && ((s->u_reg_intg_err) | (s->u_reg_reg_we_err))) ? (1) : (0))) : _qp_next_u_reg_err_q)) & ((1ULL << 1) - 1);
+    _qp_next_u_reg_u_reg_if_outstanding_q = ((((((((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (!(s->u_reg_u_reg_if_a_ack))) && (s->u_reg_u_reg_if_d_ack)) || ((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (s->u_reg_u_reg_if_a_ack))) || (((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (((((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (!(s->u_reg_u_reg_if_a_ack))) && (s->u_reg_u_reg_if_d_ack)) || ((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (s->u_reg_u_reg_if_a_ack))) || (((s->u_reg_u_reg_if_rst_ni) ^ 1)))) ? ((((!(((s->u_reg_u_reg_if_rst_ni) ^ 1))) && (s->u_reg_u_reg_if_a_ack)) ? (1) : (0))) : _qp_next_u_reg_u_reg_if_outstanding_q)) & ((1ULL << 1) - 1);
     _qp_next_u_reg_u_reg_if_reqid_q = ((((s->u_reg_u_reg_if_rst_ni) ^ 1)) ? (0) : _qp_next_u_reg_u_reg_if_reqid_q);
     _qp_next_u_reg_u_reg_if_reqsz_q = (((((s->u_reg_u_reg_if_rst_ni) ^ 1)) ? (0) : _qp_next_u_reg_u_reg_if_reqsz_q)) & ((1ULL << 2) - 1);
     _qp_next_u_reg_u_reg_if_rspop_q = (((((s->u_reg_u_reg_if_rst_ni) ^ 1)) ? (0) : _qp_next_u_reg_u_reg_if_rspop_q)) & ((1ULL << 3) - 1);
@@ -1338,6 +1364,22 @@ void rv_timer_step(rv_timer_state *s)
     update_state(s);
     qp_tick(s);
     update_state(s);
+}
+
+/* Fine-grained co-step primitives: a machine-level bridge that
+ * LOCK-STEPS two generated models (device-to-device signal links)
+ * must interleave update/tick across the pair — a coarse
+ * step()+step() sequence skews the handshake phases (the keymgr x
+ * kmac app channel only converges under update-update, tick-tick,
+ * update-update ordering). */
+void rv_timer_update(rv_timer_state *s)
+{
+    update_state(s);
+}
+
+void rv_timer_tick(rv_timer_state *s)
+{
+    qp_tick(s);
 }
 
 void rv_timer_step_many(rv_timer_state *s, unsigned count)

@@ -88,6 +88,14 @@ static void ot_aon_timer_qp_pump(void *opaque)
     ot_aon_timer_qp_update_irqs(s);
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_aon_timer_qp_core(DeviceState *dev)
+{
+    return &OT_AON_TIMER_QP(dev)->core;
+}
+
 static uint64_t ot_aon_timer_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtAonTimerQpState *s = OT_AON_TIMER_QP(opaque);

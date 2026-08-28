@@ -51,6 +51,14 @@ struct OtKmacQpState {
 
 OBJECT_DEFINE_SIMPLE_TYPE(OtKmacQpState, ot_kmac_qp, OT_KMAC_QP, SYS_BUS_DEVICE)
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_kmac_qp_core(DeviceState *dev)
+{
+    return &OT_KMAC_QP(dev)->core;
+}
+
 static uint64_t ot_kmac_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtKmacQpState *s = OT_KMAC_QP(opaque);

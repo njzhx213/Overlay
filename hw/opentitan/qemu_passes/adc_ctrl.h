@@ -253,22 +253,6 @@ typedef struct {
     uint8_t u_adc_ctrl_core_adc_chn_val_o_1__adc_chn_value_intr_de;  /* 1-bit */
     uint8_t u_adc_ctrl_core_adc_chn_val_o_1__adc_chn_value_intr_ext_d;  /* 2-bit */
     uint8_t u_adc_ctrl_core_adc_chn_val_o_1__adc_chn_value_intr_ext_de;  /* 1-bit */
-    uint16_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_d;  /* 10-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_de;  /* 1-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_ext_d;  /* 2-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_ext_de;  /* 1-bit */
-    uint16_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_intr_d;  /* 10-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_intr_de;  /* 1-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_intr_ext_d;  /* 2-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__0__adc_chn_value_intr_ext_de;  /* 1-bit */
-    uint16_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_d;  /* 10-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_de;  /* 1-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_ext_d;  /* 2-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_ext_de;  /* 1-bit */
-    uint16_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_intr_d;  /* 10-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_intr_de;  /* 1-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_intr_ext_d;  /* 2-bit */
-    uint8_t u_adc_ctrl_core_adc_chn_val_o__1__adc_chn_value_intr_ext_de;  /* 1-bit */
     uint16_t u_adc_ctrl_core_adc_i_data;  /* 10-bit */
     uint8_t u_adc_ctrl_core_adc_i_data_valid;  /* 1-bit */
     uint8_t u_adc_ctrl_core_adc_intr_status_o_match_d;  /* 8-bit */
@@ -3385,6 +3369,8 @@ void adc_ctrl_reset(adc_ctrl_state *s);
 void adc_ctrl_settle(adc_ctrl_state *s);
 
 void adc_ctrl_step(adc_ctrl_state *s);
+void adc_ctrl_update(adc_ctrl_state *s);
+void adc_ctrl_tick(adc_ctrl_state *s);
 
 void adc_ctrl_step_many(adc_ctrl_state *s, unsigned count);
 

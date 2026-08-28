@@ -19,6 +19,7 @@ typedef struct {
     uint64_t app_i_0__data;  /* BIP, 64-bit */
     uint8_t app_id_eq_0;  /* BIP, 1-bit */
     uint8_t app_kmac_en;  /* BIP, 1-bit */
+    uint32_t hw2reg_err_code_d;  /* BIP, 32-bit */
     uint8_t kmac_st;  /* BIP, 6-bit */
     uint16_t st;  /* BIP, 10-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
@@ -387,7 +388,6 @@ typedef struct {
     uint8_t hw2reg_cfg_regwen_d;  /* 1-bit */
     uint16_t hw2reg_entropy_refresh_hash_cnt_d;  /* 10-bit */
     uint8_t hw2reg_entropy_refresh_hash_cnt_de;  /* 1-bit */
-    uint32_t hw2reg_err_code_d;  /* 32-bit */
     uint8_t hw2reg_err_code_de;  /* 1-bit */
     uint8_t hw2reg_intr_state_fifo_empty_d;  /* 1-bit */
     uint8_t hw2reg_intr_state_fifo_empty_de;  /* 1-bit */
@@ -660,7 +660,6 @@ typedef struct {
     uint8_t tl_win_d2h_1__d_user_rsp_intg;  /* 7-bit */
     uint8_t tl_win_d2h_1__d_valid;  /* 1-bit */
     uint64_t u_app_intf__148[8];  /* 512-bit (wide-array) */
-    uint64_t u_app_intf__unknown_arg0[6];  /* 352-bit (wide-array) */
     uint8_t u_app_intf_absorbed_i;  /* 4-bit */
     uint8_t u_app_intf_absorbed_o;  /* 4-bit */
     uint8_t u_app_intf_app_active_o;  /* 1-bit */
@@ -697,21 +696,6 @@ typedef struct {
     uint8_t u_app_intf_app_o_2__done;  /* 1-bit */
     uint8_t u_app_intf_app_o_2__error;  /* 1-bit */
     uint8_t u_app_intf_app_o_2__ready;  /* 1-bit */
-    uint64_t u_app_intf_app_o__0__digest_share0[6];  /* 384-bit (wide-array) */
-    uint64_t u_app_intf_app_o__0__digest_share1[6];  /* 384-bit (wide-array) */
-    uint8_t u_app_intf_app_o__0__done;  /* 1-bit */
-    uint8_t u_app_intf_app_o__0__error;  /* 1-bit */
-    uint8_t u_app_intf_app_o__0__ready;  /* 1-bit */
-    uint64_t u_app_intf_app_o__1__digest_share0[6];  /* 384-bit (wide-array) */
-    uint64_t u_app_intf_app_o__1__digest_share1[6];  /* 384-bit (wide-array) */
-    uint8_t u_app_intf_app_o__1__done;  /* 1-bit */
-    uint8_t u_app_intf_app_o__1__error;  /* 1-bit */
-    uint8_t u_app_intf_app_o__1__ready;  /* 1-bit */
-    uint64_t u_app_intf_app_o__2__digest_share0[6];  /* 384-bit (wide-array) */
-    uint64_t u_app_intf_app_o__2__digest_share1[6];  /* 384-bit (wide-array) */
-    uint8_t u_app_intf_app_o__2__done;  /* 1-bit */
-    uint8_t u_app_intf_app_o__2__error;  /* 1-bit */
-    uint8_t u_app_intf_app_o__2__ready;  /* 1-bit */
     uint8_t u_app_intf_app_reqs;  /* 3-bit */
     uint8_t u_app_intf_arb_idx;  /* 2-bit */
     uint8_t u_app_intf_arb_valid;  /* 1-bit */
@@ -738,8 +722,8 @@ typedef struct {
     uint64_t u_app_intf_keccak_state_i_0_[25];  /* 1600-bit (wide-array) */
     uint8_t u_app_intf_keccak_state_valid_i;  /* 1-bit */
     uint8_t u_app_intf_keccak_strength_o;  /* 3-bit */
+    uint64_t u_app_intf_key_data_o[8];  /* 512-bit (wide-array) */
     uint64_t u_app_intf_key_data_o_0_[8];  /* 512-bit (wide-array) */
-    uint64_t u_app_intf_key_data_o__0_[8];  /* 512-bit (wide-array) */
     uint8_t u_app_intf_key_len_o;  /* 3-bit */
     uint8_t u_app_intf_key_valid_o;  /* 1-bit */
     uint64_t u_app_intf_keymgr_key_0_[8];  /* 512-bit (wide-array) */
@@ -767,8 +751,8 @@ typedef struct {
     uint8_t u_app_intf_reg_kmac_en_i;  /* 1-bit */
     uint64_t u_app_intf_reg_prefix_i[6];  /* 352-bit (wide-array) */
     uint8_t u_app_intf_reg_sha3_mode_i;  /* 2-bit */
+    uint64_t u_app_intf_reg_state_o[25];  /* 1600-bit (wide-array) */
     uint64_t u_app_intf_reg_state_o_0_[25];  /* 1600-bit (wide-array) */
-    uint64_t u_app_intf_reg_state_o__0_[25];  /* 1600-bit (wide-array) */
     uint8_t u_app_intf_reg_state_valid;  /* 1-bit */
     uint8_t u_app_intf_reg_state_valid_o;  /* 1-bit */
     uint8_t u_app_intf_rst_ni;  /* 1-bit */
@@ -908,8 +892,8 @@ typedef struct {
     uint8_t u_kmac_core_kmac_valid;  /* 1-bit */
     uint8_t u_kmac_core_lc_escalate_en_i;  /* 4-bit */
     uint8_t u_kmac_core_mode_i;  /* 2-bit */
+    uint64_t u_kmac_core_msg_data_o;  /* 64-bit */
     uint64_t u_kmac_core_msg_data_o_0_;  /* 64-bit */
-    uint64_t u_kmac_core_msg_data_o__0_;  /* 64-bit */
     uint8_t u_kmac_core_msg_ready_i;  /* 1-bit */
     uint8_t u_kmac_core_msg_strb_o;  /* 8-bit */
     uint8_t u_kmac_core_msg_valid_o;  /* 1-bit */
@@ -1075,12 +1059,6 @@ typedef struct {
     uint8_t u_prim_lc_sync_lc_en_o_3_;  /* 4-bit */
     uint8_t u_prim_lc_sync_lc_en_o_4_;  /* 4-bit */
     uint8_t u_prim_lc_sync_lc_en_o_5_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__0_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__1_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__2_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__3_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__4_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__5_;  /* 4-bit */
     uint8_t u_prim_lc_sync_rst_ni;  /* 1-bit */
     uint64_t u_reg_addr_hit;  /* 57-bit */
     uint8_t u_reg_alert_test_flds_we;  /* 2-bit */
@@ -1483,32 +1461,6 @@ typedef struct {
     uint8_t u_reg_tl_win_o_1__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_tl_win_o_1__a_valid;  /* 1-bit */
     uint8_t u_reg_tl_win_o_1__d_ready;  /* 1-bit */
-    uint32_t u_reg_tl_win_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_tl_win_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_tl_win_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_tl_win_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_tl_win_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_tl_win_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_tl_win_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_tl_win_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_tl_win_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_tl_win_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_tl_win_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_tl_win_o__1__d_ready;  /* 1-bit */
     uint8_t u_reg_u_alert_test_fatal_fault_err_d;  /* 1-bit */
     uint8_t u_reg_u_alert_test_fatal_fault_err_ds;  /* 1-bit */
     uint8_t u_reg_u_alert_test_fatal_fault_err_q;  /* 1-bit */
@@ -3736,45 +3688,6 @@ typedef struct {
     uint8_t u_reg_u_socket_tl_d_o_2__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_socket_tl_d_o_2__a_valid;  /* 1-bit */
     uint8_t u_reg_u_socket_tl_d_o_2__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__2__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__2__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__d_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_address;  /* 32-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_data;  /* 32-bit */
     uint8_t u_reg_u_socket_tl_h_i_a_mask;  /* 4-bit */
@@ -4058,8 +3971,8 @@ typedef struct {
     uint8_t u_sha3_start_i;  /* 1-bit */
     uint64_t u_sha3_state_0_[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_state_guarded_0_[25];  /* 1600-bit (wide-array) */
+    uint64_t u_sha3_state_o[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_state_o_0_[25];  /* 1600-bit (wide-array) */
-    uint64_t u_sha3_state_o__0_[25];  /* 1600-bit (wide-array) */
     uint8_t u_sha3_state_valid;  /* 1-bit */
     uint8_t u_sha3_state_valid_o;  /* 1-bit */
     uint8_t u_sha3_strength_i;  /* 3-bit */
@@ -4102,8 +4015,8 @@ typedef struct {
     uint8_t u_sha3_u_keccak_rst_storage_error_o;  /* 1-bit */
     uint8_t u_sha3_u_keccak_run_i;  /* 1-bit */
     uint8_t u_sha3_u_keccak_sparse_fsm_error_o;  /* 1-bit */
+    uint64_t u_sha3_u_keccak_state_o[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_u_keccak_state_o_0_[25];  /* 1600-bit (wide-array) */
-    uint64_t u_sha3_u_keccak_state_o__0_[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_u_keccak_storage_0_[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_u_keccak_storage_d_0_[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_u_keccak_u_keccak_p_chi_data_0__0__0_;  /* 64-bit */
@@ -4378,8 +4291,8 @@ typedef struct {
     uint8_t u_sha3_u_keccak_u_keccak_p_rnd_i;  /* 5-bit */
     uint8_t u_sha3_u_keccak_u_keccak_p_rst_ni;  /* 1-bit */
     uint64_t u_sha3_u_keccak_u_keccak_p_s_i_0_[25];  /* 1600-bit (wide-array) */
+    uint64_t u_sha3_u_keccak_u_keccak_p_s_o[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_u_keccak_u_keccak_p_s_o_0_[25];  /* 1600-bit (wide-array) */
-    uint64_t u_sha3_u_keccak_u_keccak_p_s_o__0_[25];  /* 1600-bit (wide-array) */
     uint64_t u_sha3_u_keccak_u_keccak_p_state_in_0__0__0_;  /* 64-bit */
     uint64_t u_sha3_u_keccak_u_keccak_p_state_in_0__0__1_;  /* 64-bit */
     uint64_t u_sha3_u_keccak_u_keccak_p_state_in_0__0__2_;  /* 64-bit */
@@ -4501,8 +4414,8 @@ typedef struct {
     uint8_t u_sha3_u_pad_keccak_ack;  /* 1-bit */
     uint8_t u_sha3_u_pad_keccak_addr_o;  /* 5-bit */
     uint8_t u_sha3_u_pad_keccak_complete_i;  /* 1-bit */
+    uint64_t u_sha3_u_pad_keccak_data_o;  /* 64-bit */
     uint64_t u_sha3_u_pad_keccak_data_o_0_;  /* 64-bit */
-    uint64_t u_sha3_u_pad_keccak_data_o__0_;  /* 64-bit */
     uint8_t u_sha3_u_pad_keccak_ready_i;  /* 1-bit */
     uint8_t u_sha3_u_pad_keccak_run_o;  /* 1-bit */
     uint8_t u_sha3_u_pad_keccak_valid_o;  /* 1-bit */
@@ -5161,6 +5074,8 @@ void kmac_reset(kmac_state *s);
 void kmac_settle(kmac_state *s);
 
 void kmac_step(kmac_state *s);
+void kmac_update(kmac_state *s);
+void kmac_tick(kmac_state *s);
 
 void kmac_step_many(kmac_state *s, unsigned count);
 

@@ -308,6 +308,14 @@ static void ot_i2c_qp_i2cw_timer(void *opaque)
     if (s->i2cw_kick_ticks) timer_mod(s->i2cw_timer, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL) + 1);
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_i2c_qp_core(DeviceState *dev)
+{
+    return &OT_I2C_QP(dev)->core;
+}
+
 static uint64_t ot_i2c_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtI2CQpState *s = OT_I2C_QP(opaque);

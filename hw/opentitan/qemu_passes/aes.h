@@ -983,35 +983,7 @@ typedef struct {
     uint8_t u_aes_core_keymgr_key_i_valid;  /* 1-bit */
     uint8_t u_aes_core_lc_escalate_en_i;  /* 4-bit */
     __uint128_t u_aes_core_prd_clearing_128_0_;  /* 128-bit */
-    uint32_t u_aes_core_prd_clearing_128_0__0_;  /* 32-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__0__3_;  /* 8-bit */
-    uint32_t u_aes_core_prd_clearing_128_0__1_;  /* 32-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__1__3_;  /* 8-bit */
-    uint32_t u_aes_core_prd_clearing_128_0__2_;  /* 32-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__2__3_;  /* 8-bit */
-    uint32_t u_aes_core_prd_clearing_128_0__3_;  /* 32-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_prd_clearing_128_0__3__3_;  /* 8-bit */
     uint64_t u_aes_core_prd_clearing_256_0_[4];  /* 256-bit (wide-array) */
-    uint32_t u_aes_core_prd_clearing_256_0__0_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__1_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__2_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__3_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__4_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__5_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__6_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_256_0__7_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_data_0_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_data_1_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_data_2_;  /* 32-bit */
@@ -1025,23 +997,7 @@ typedef struct {
     uint32_t u_aes_core_prd_clearing_key_0__6_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_key_0__7_;  /* 32-bit */
     uint64_t u_aes_core_prd_clearing_key_init_0_[4];  /* 256-bit (wide-array) */
-    uint32_t u_aes_core_prd_clearing_key_init_0__0_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__1_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__2_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__3_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__4_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__5_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__6_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_0__7_;  /* 32-bit */
     uint64_t u_aes_core_prd_clearing_key_init_1_[4];  /* 256-bit (wide-array) */
-    uint32_t u_aes_core_prd_clearing_key_init_1__0_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__1_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__2_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__3_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__4_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__5_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__6_;  /* 32-bit */
-    uint32_t u_aes_core_prd_clearing_key_init_1__7_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_key_init_c_0__0_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_key_init_c_0__1_;  /* 32-bit */
     uint32_t u_aes_core_prd_clearing_key_init_c_0__2_;  /* 32-bit */
@@ -1503,22 +1459,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o_3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o_3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o_3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_data_in_mask_o__3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_data_out_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_cipher_core_data_out_clear_o;  /* 1-bit */
     uint8_t u_aes_core_u_aes_cipher_core_dec_key_gen_i;  /* 3-bit */
@@ -1589,22 +1529,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o_3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o_3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o_3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o__3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o_transposed_0__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o_transposed_0__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_data_o_transposed_0__2_;  /* 8-bit */
@@ -1629,10 +1553,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_0_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1667,10 +1587,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_1_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1705,10 +1621,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_2_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1743,10 +1655,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_round_key_0_u_aes_key_mix_columns_gen_mix_column_3_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1838,22 +1746,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o_3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o_3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o_3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o__3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o_transposed_0__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o_transposed_0__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_data_o_transposed_0__2_;  /* 8-bit */
@@ -1878,10 +1770,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_0_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1916,10 +1804,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_1_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1954,10 +1838,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_2_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -1992,10 +1872,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o_2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o_3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_data_o__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_qpinl22_out;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_mix_columns_gen_mix_column_3_u_aes_mix_column_i_qpinl23_out;  /* 8-bit */
@@ -2087,22 +1963,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o_3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o_3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o_3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_data_o__3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_gen_shares_shift_mix_0_u_aes_shift_rows_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_in_ready_o;  /* 3-bit */
     uint8_t u_aes_core_u_aes_cipher_core_in_valid_i;  /* 3-bit */
@@ -2369,38 +2229,38 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_state_init_i_0__3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_init_i_0__3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_init_i_0__3__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_0__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__0__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__0__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__0__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__0__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_0__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__1__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__1__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__1__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__1__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_0__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__2__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__2__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__2__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__2__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_0__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__3__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_o_0__3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_state_o__0__3__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_1__0_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_1__1_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_1__2_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_1__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_2__0_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_2__1_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_2__2_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_2__3_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_3__0_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_3__1_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_3__2_;  /* 8-bit */
+    uint8_t u_aes_core_u_aes_cipher_core_state_o_3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_q_0__0__0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_q_0__0__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_state_q_0__0__2_;  /* 8-bit */
@@ -3111,6 +2971,7 @@ typedef struct {
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_i_0__6_;  /* 32-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_i_0__7_;  /* 32-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_len_i;  /* 3-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0_;  /* 32-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0__0_;  /* 32-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0__1_;  /* 32-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0__2_;  /* 32-bit */
@@ -3119,14 +2980,13 @@ typedef struct {
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0__5_;  /* 32-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0__6_;  /* 32-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_0__7_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__0_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__1_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__2_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__3_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__4_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__5_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__6_;  /* 32-bit */
-    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o__0__7_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_1_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_2_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_3_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_4_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_5_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_6_;  /* 32-bit */
+    uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_key_o_7_;  /* 32-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_out_ack_i;  /* 3-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_key_expand_out_prd_0_;  /* 20-bit */
@@ -3255,22 +3115,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o_3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o_3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o_3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_data_o__3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_en_i;  /* 3-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_err_o;  /* 1-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_gen_sbox_j_0_gen_sbox_i_0_u_aes_sbox_ij_clk_i;  /* 1-bit */
@@ -3561,22 +3405,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o_3__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o_3__2_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o_3__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__0__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__0__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__0__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__0__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__1__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__1__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__1__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__1__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__2__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__2__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__2__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__2__3_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__3__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__3__1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__3__2_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_mask_o__3__3_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_op_i;  /* 2-bit */
     uint8_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_out_ack_i;  /* 3-bit */
     uint32_t u_aes_core_u_aes_cipher_core_u_aes_sub_bytes_out_prd_0__0_;  /* 20-bit */
@@ -3754,8 +3582,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_init_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o_1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_iv_data_in_clear_we_o;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_key_sideload_valid_i;  /* 1-bit */
@@ -3897,8 +3723,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o_1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_we;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_we_o;  /* 1-bit */
@@ -4068,8 +3892,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_init_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o_1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_init_we_o__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_iv_data_in_clear_we_o;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_key_sideload_valid_i;  /* 1-bit */
@@ -4211,8 +4033,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o_1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_we;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_we_o;  /* 1-bit */
@@ -4382,8 +4202,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_init_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_init_we_no_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_init_we_no_1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_init_we_no__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_init_we_no__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_iv_data_in_clear_we_o;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_key_sideload_valid_i;  /* 1-bit */
@@ -4525,8 +4343,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_init_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o_1_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o__0_;  /* 8-bit */
-    uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_init_we_o__1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_we;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_u_aes_control_fsm_key_iv_data_in_clear_we_o;  /* 1-bit */
@@ -4790,14 +4606,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_iv_we_o_5_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_control_iv_we_o_6_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_control_iv_we_o_7_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__0_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__1_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__2_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__3_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__4_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__5_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__6_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_iv_we_o__7_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_control_key_init_qe_i_0_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_key_init_qe_i_1_;  /* 8-bit */
     uint8_t u_aes_core_u_aes_control_key_init_sel_o;  /* 5-bit */
@@ -4817,22 +4625,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_control_key_init_we_o_1__5_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_control_key_init_we_o_1__6_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_control_key_init_we_o_1__7_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__0_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__1_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__2_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__3_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__4_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__5_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__6_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__0__7_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__0_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__1_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__2_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__3_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__4_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__5_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__6_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_control_key_init_we_o__1__7_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_control_key_iv_data_in_clear_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_key_iv_data_in_clear_o;  /* 1-bit */
     uint8_t u_aes_core_u_aes_control_key_iv_data_in_clear_we_o;  /* 1-bit */
@@ -5034,14 +4826,6 @@ typedef struct {
     uint16_t u_aes_core_u_aes_ctr_ctr_o_5_;  /* 16-bit */
     uint16_t u_aes_core_u_aes_ctr_ctr_o_6_;  /* 16-bit */
     uint16_t u_aes_core_u_aes_ctr_ctr_o_7_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__0_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__1_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__2_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__3_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__4_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__5_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__6_;  /* 16-bit */
-    uint16_t u_aes_core_u_aes_ctr_ctr_o__7_;  /* 16-bit */
     uint16_t u_aes_core_u_aes_ctr_ctr_o_rev_0_;  /* 16-bit */
     uint16_t u_aes_core_u_aes_ctr_ctr_o_rev_1_;  /* 16-bit */
     uint16_t u_aes_core_u_aes_ctr_ctr_o_rev_2_;  /* 16-bit */
@@ -5061,14 +4845,6 @@ typedef struct {
     uint8_t u_aes_core_u_aes_ctr_ctr_we_o_5_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_ctr_ctr_we_o_6_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_ctr_ctr_we_o_7_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__0_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__1_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__2_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__3_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__4_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__5_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__6_;  /* 3-bit */
-    uint8_t u_aes_core_u_aes_ctr_ctr_we_o__7_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_ctr_ctr_we_o_rev_0_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_ctr_ctr_we_o_rev_1_;  /* 3-bit */
     uint8_t u_aes_core_u_aes_ctr_ctr_we_o_rev_2_;  /* 3-bit */
@@ -5320,10 +5096,8 @@ typedef struct {
     uint8_t u_aes_core_u_aes_key_init_sel_buf_chk_sel_i;  /* 5-bit */
     uint8_t u_aes_core_u_aes_key_init_sel_buf_chk_sel_o;  /* 5-bit */
     uint8_t u_aes_core_u_aes_prng_clearing_clk_i;  /* 1-bit */
-    uint64_t u_aes_core_u_aes_prng_clearing_data_o_0_[4];  /* 256-bit (wide-array) */
-    __uint128_t u_aes_core_u_aes_prng_clearing_data_o_1_;  /* 128-bit */
-    uint64_t u_aes_core_u_aes_prng_clearing_data_o__0_;  /* 64-bit */
-    uint64_t u_aes_core_u_aes_prng_clearing_data_o__1_;  /* 64-bit */
+    uint64_t u_aes_core_u_aes_prng_clearing_data_o_0_;  /* 64-bit */
+    uint64_t u_aes_core_u_aes_prng_clearing_data_o_1_;  /* 64-bit */
     uint8_t u_aes_core_u_aes_prng_clearing_data_update_i;  /* 1-bit */
     uint8_t u_aes_core_u_aes_prng_clearing_entropy_ack_i;  /* 1-bit */
     uint32_t u_aes_core_u_aes_prng_clearing_entropy_i;  /* 32-bit */
@@ -6016,8 +5790,8 @@ typedef struct {
     uint32_t u_aes_core_unused_data_out_q_3_;  /* 32-bit */
     uint8_t u_prim_lc_sync_clk_i;  /* 1-bit */
     uint8_t u_prim_lc_sync_lc_en_i;  /* 4-bit */
+    uint8_t u_prim_lc_sync_lc_en_o;  /* 4-bit */
     uint8_t u_prim_lc_sync_lc_en_o_0_;  /* 4-bit */
-    uint8_t u_prim_lc_sync_lc_en_o__0_;  /* 4-bit */
     uint8_t u_prim_lc_sync_rst_ni;  /* 1-bit */
     uint8_t u_prim_sync_reqack_data_clk_dst_i;  /* 1-bit */
     uint8_t u_prim_sync_reqack_data_clk_src_i;  /* 1-bit */
@@ -7267,6 +7041,8 @@ void aes_reset(aes_state *s);
 void aes_settle(aes_state *s);
 
 void aes_step(aes_state *s);
+void aes_update(aes_state *s);
+void aes_tick(aes_state *s);
 
 void aes_step_many(aes_state *s, unsigned count);
 

@@ -75,6 +75,12 @@
 #include "hw/opentitan/keymgr_qp_shim.h"
 #include "hw/opentitan/lc_ctrl_qp_shim.h"
 #include "hw/opentitan/qemu_passes/lc_ctrl.h"
+#include "hw/opentitan/csrng_qp_shim.h"
+#include "hw/opentitan/qemu_passes/csrng.h"
+#include "hw/opentitan/entropy_src_qp_shim.h"
+#include "hw/opentitan/qemu_passes/entropy_src.h"
+#include "hw/opentitan/edn_qp_shim.h"
+#include "hw/opentitan/qemu_passes/edn.h"
 #include "hw/opentitan/qemu_passes/keymgr.h"
 #include "hw/opentitan/qemu_passes/rom_ctrl.h"
 #include "hw/opentitan/qemu_passes/kmac.h"
@@ -216,6 +222,13 @@ enum OtEGSocDevice {
     OT_EG_SOC_DEV_ROM_CTRL_QP_BOOT,
     OT_EG_SOC_DEV_KEYMGR_QP,
     OT_EG_SOC_DEV_LC_CTRL_QP,
+    /* [qemu-passes] the entropy ring, PARALLEL mounts (natives
+     * untouched): entropy_src (fw_ov -> SHA3-384 conditioner), csrng
+     * (CTR_DRBG), edn (SW command port + endpoints).  Signal-level
+     * ring bridge in ot_eg_entropy_ring_pump(). */
+    OT_EG_SOC_DEV_ENTROPY_SRC_QP,
+    OT_EG_SOC_DEV_CSRNG_QP,
+    OT_EG_SOC_DEV_EDN_QP,
     /* IRQ splitters, i.e. 1-to-N signal dispatchers */
     OT_EG_SOC_SPLITTER_LC_HW_DEBUG,
     OT_EG_SOC_SPLITTER_LC_ESCALATE,
@@ -1425,6 +1438,40 @@ static const IbexDeviceDef ot_eg_soc_devices[] = {
             IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "lc_ctrl_qp")
         ),
     },
+    [OT_EG_SOC_DEV_ENTROPY_SRC_QP] = {
+        /* qemu-passes generated entropy_src, PARALLEL mount.  fw_ov
+         * insert -> SHA3-384 conditioner; seed leaves over the es hw
+         * wire in the ring pump. */
+        .type = TYPE_OT_ENTROPY_SRC_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x411a4000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "entropy_src_qp")
+        ),
+    },
+    [OT_EG_SOC_DEV_CSRNG_QP] = {
+        /* qemu-passes generated csrng (CTR_DRBG with the real AES
+         * cipher core), PARALLEL mount. */
+        .type = TYPE_OT_CSRNG_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x411a5000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "csrng_qp")
+        ),
+    },
+    [OT_EG_SOC_DEV_EDN_QP] = {
+        /* qemu-passes generated edn, PARALLEL mount.  SW command port
+         * drives the generated csrng over the ring bridge. */
+        .type = TYPE_OT_EDN_QP,
+        .memmap = MEMMAPENTRIES(
+            { .base = 0x411a6000u }
+        ),
+        .prop = IBEXDEVICEPROPDEFS(
+            IBEX_DEV_STRING_PROP(OT_COMMON_DEV_ID, "edn_qp")
+        ),
+    },
     [OT_EG_SOC_DEV_OTBN] = {
         .type = TYPE_OT_OTBN,
         .memmap = MEMMAPENTRIES(
@@ -2184,6 +2231,171 @@ static void ot_eg_keymgr_qp_wire(DeviceState *km_dev, DeviceState *kmac_dev,
               qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + 100);
 }
 
+/* Entropy ring: lock-step the generated entropy_src, csrng and edn at
+ * signal level (the host-cosim-proven cadence: wire, update x3,
+ * tick x3, update x3), then FREEZE every cross-model wire input so no
+ * handshake can complete inside a later single-model MMIO settle
+ * (the beat would evaporate with the partner not stepping). */
+static entropy_src_state *ot_eg_ring_es;
+static csrng_state *ot_eg_ring_cs;
+static edn_state *ot_eg_ring_ed;
+static QEMUTimer *ot_eg_ring_timer;
+
+static void ot_eg_ring_freeze(void)
+{
+    csrng_state *cs = ot_eg_ring_cs;
+    edn_state *ed = ot_eg_ring_ed;
+    entropy_src_state *es = ot_eg_ring_es;
+
+    cs->csrng_cmd_i_0__csrng_req_valid = 0;
+    cs->csrng_cmd_i_0__genbits_ready = 0;
+    cs->entropy_src_hw_if_i_es_ack = 0;
+    ed->csrng_cmd_i_csrng_req_ready = 0;
+    ed->csrng_cmd_i_csrng_rsp_ack = 0;
+    ed->csrng_cmd_i_genbits_valid = 0;
+    es->entropy_src_hw_if_i_es_req = 0;
+}
+
+static void ot_eg_ring_costep(void)
+{
+    csrng_state *cs = ot_eg_ring_cs;
+    edn_state *ed = ot_eg_ring_ed;
+    entropy_src_state *es = ot_eg_ring_es;
+
+    cs->csrng_cmd_i_0__csrng_req_valid = ed->csrng_cmd_o_csrng_req_valid;
+    cs->csrng_cmd_i_0__csrng_req_bus = ed->csrng_cmd_o_csrng_req_bus;
+    cs->csrng_cmd_i_0__genbits_ready = ed->csrng_cmd_o_genbits_ready;
+    ed->csrng_cmd_i_csrng_req_ready = cs->csrng_cmd_o_0__csrng_req_ready;
+    ed->csrng_cmd_i_csrng_rsp_ack = cs->csrng_cmd_o_0__csrng_rsp_ack;
+    ed->csrng_cmd_i_csrng_rsp_sts = cs->csrng_cmd_o_0__csrng_rsp_sts;
+    ed->csrng_cmd_i_genbits_valid = cs->csrng_cmd_o_0__genbits_valid;
+    ed->csrng_cmd_i_genbits_fips = cs->csrng_cmd_o_0__genbits_fips;
+    ed->csrng_cmd_i_genbits_bus = cs->csrng_cmd_o_0__genbits_bus;
+    es->entropy_src_hw_if_i_es_req = cs->entropy_src_hw_if_o_es_req;
+    cs->entropy_src_hw_if_i_es_ack = es->entropy_src_hw_if_o_es_ack;
+    for (unsigned w = 0; w < 6u; w++) {
+        cs->entropy_src_hw_if_i_es_bits[w] =
+            es->entropy_src_hw_if_o_es_bits[w];
+    }
+    cs->entropy_src_hw_if_i_es_fips = es->entropy_src_hw_if_o_es_fips;
+
+    edn_update(ed); csrng_update(cs); entropy_src_update(es);
+    edn_tick(ed); csrng_tick(cs); entropy_src_tick(es);
+    edn_update(ed); csrng_update(cs); entropy_src_update(es);
+}
+
+static void ot_eg_ring_pump(void *opaque)
+{
+    csrng_state *cs = ot_eg_ring_cs;
+    edn_state *ed = ot_eg_ring_ed;
+    entropy_src_state *es = ot_eg_ring_ed ? ot_eg_ring_es : NULL;
+    bool quiesced = false;
+    (void)opaque;
+    cs->_qp_pump = 1;
+    ed->_qp_pump = 1;
+    es->_qp_pump = 1;
+
+    for (unsigned t = 0; t < 4096u; t++) {
+        ot_eg_ring_costep();
+
+        /* quiescent: nothing in flight anywhere on the ring */
+        if (!ed->csrng_cmd_o_csrng_req_valid &&
+            !cs->csrng_cmd_o_0__genbits_valid &&
+            !cs->entropy_src_hw_if_o_es_req &&
+            cs->u_csrng_core_u_csrng_main_sm_state_q == 0x37u /* Idle */) {
+            quiesced = true;
+            break;
+        }
+    }
+    ot_eg_ring_freeze();
+    /* adaptive cadence: tight while beats are in flight (a wire beat
+     * costs one fire), relaxed when the ring is quiet — csrng's
+     * update_state is enormous and an always-hot 1us pump starves the
+     * vCPU. */
+    timer_mod(ot_eg_ring_timer,
+              qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + (quiesced ? 200 : 2));
+}
+
+static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
+                                    DeviceState *ed_dev)
+{
+    entropy_src_state *es = ot_entropy_src_qp_core(es_dev);
+    csrng_state *cs = ot_csrng_qp_core(cs_dev);
+    edn_state *ed = ot_edn_qp_core(ed_dev);
+
+    /* the host-harness tie set: alert receivers idle, OTP mubi8 gates
+     * True, lc debug Off, rng raw inputs silent, pumps held high so
+     * ACCUMULATE counters (v_ctr, sha3 pad counts) run per co-step */
+    cs->alert_rx_i_0__ack_p = 0; cs->alert_rx_i_0__ack_n = 1;
+    cs->alert_rx_i_0__ping_p = 0; cs->alert_rx_i_0__ping_n = 1;
+    cs->alert_rx_i_1__ack_p = 0; cs->alert_rx_i_1__ack_n = 1;
+    cs->alert_rx_i_1__ping_p = 0; cs->alert_rx_i_1__ping_n = 1;
+    cs->lc_hw_debug_en_i = 0xA;
+    cs->otp_en_csrng_sw_app_read_i = 0x96;
+    cs->_qp_pump = 1;
+
+    ed->alert_rx_i_0__ack_p = 0; ed->alert_rx_i_0__ack_n = 1;
+    ed->alert_rx_i_0__ping_p = 0; ed->alert_rx_i_0__ping_n = 1;
+    ed->alert_rx_i_1__ack_p = 0; ed->alert_rx_i_1__ack_n = 1;
+    ed->alert_rx_i_1__ping_p = 0; ed->alert_rx_i_1__ping_n = 1;
+    ed->_qp_pump = 1;
+
+    es->alert_rx_i_0__ack_p = 0; es->alert_rx_i_0__ack_n = 1;
+    es->alert_rx_i_0__ping_p = 0; es->alert_rx_i_0__ping_n = 1;
+    es->alert_rx_i_1__ack_p = 0; es->alert_rx_i_1__ack_n = 1;
+    es->alert_rx_i_1__ping_p = 0; es->alert_rx_i_1__ping_n = 1;
+    es->otp_en_entropy_src_fw_over_i = 0x96;
+    es->otp_en_entropy_src_fw_read_i = 0x96;
+    es->entropy_src_rng_valid_i = 0;
+    es->entropy_src_rng_bits_i = 0;
+    es->_qp_pump = 1;
+
+    ot_eg_ring_es = es;
+    ot_eg_ring_cs = cs;
+    ot_eg_ring_ed = ed;
+
+    /* THE BOOT RING runs right here, uninterrupted (the rom_ctrl boot
+     * bridge precedent): fw_ov window 1 -> SHA3-384 seed, then EDN
+     * boot mode drives INS (REAL entropy over the es wire) + GEN
+     * through the generated csrng to BootDone.  No firmware MMIO can
+     * interleave, so no freeze semantics apply — this is exactly the
+     * host-proven ring harness cadence. */
+    entropy_src_write(es, 0x20u, 0x00699996u, 4);   /* CONF */
+    entropy_src_write(es, 0x94u, 0x66u, 4);         /* FW_OV_CONTROL */
+    entropy_src_write(es, 0x1cu, 0x6u, 4);          /* MODULE_ENABLE */
+    entropy_src_write(es, 0x98u, 0x6u, 4);          /* SHA3 window open */
+    for (unsigned i = 0; i < 64u; i++) {
+        unsigned guard = 0;
+        while ((entropy_src_read(es, 0x9cu, 4) & 1u) && guard++ < 1000u) {
+            ot_eg_ring_costep();
+        }
+        entropy_src_write(es, 0xa8u, 0x5EED0000u + 0x01010101u * i, 4);
+    }
+    entropy_src_write(es, 0x98u, 0x9u, 4);          /* close: pad+squeeze */
+    csrng_write(cs, 0x14u, 0x9666u, 4);             /* csrng CTRL */
+    edn_write(ed, 0x18u, 0x00000901u, 4);           /* BOOT_INS: real entropy */
+    edn_write(ed, 0x1cu, 0x00001903u, 4);           /* BOOT_GEN glen=1 */
+    edn_write(ed, 0x14u, 0x9966u, 4);               /* enable + boot mode */
+    for (unsigned t = 0; t < 40000u; t++) {
+        ot_eg_ring_costep();
+        if ((edn_read(ed, 0x44u, 4) & 0x1FFu) == 0xF0u) {
+            break;
+        }
+    }
+    if ((edn_read(ed, 0x44u, 4) & 0x1FFu) != 0xF0u) {
+        warn_report("entropy ring boot bridge: BootDone not reached (sm=%x)",
+                    (unsigned)(edn_read(ed, 0x44u, 4) & 0x1FFu));
+    }
+
+    ot_eg_ring_freeze();
+    if (!ot_eg_ring_timer) {
+        ot_eg_ring_timer = timer_new_us(QEMU_CLOCK_VIRTUAL,
+                                        ot_eg_ring_pump, NULL);
+    }
+    timer_mod(ot_eg_ring_timer,
+              qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + 1);
+}
+
 static void ot_eg_romctrl_qp_boot_bridge(DeviceState *rc_dev,
                                          DeviceState *kmac_dev)
 {
@@ -2253,6 +2465,14 @@ static void ot_eg_soc_reset_exit(Object *obj, ResetType type)
 
     if (s->devices[OT_EG_SOC_DEV_LC_CTRL_QP]) {
         ot_eg_lc_ctrl_qp_wire(s->devices[OT_EG_SOC_DEV_LC_CTRL_QP]);
+    }
+
+    if (s->devices[OT_EG_SOC_DEV_ENTROPY_SRC_QP] &&
+        s->devices[OT_EG_SOC_DEV_CSRNG_QP] &&
+        s->devices[OT_EG_SOC_DEV_EDN_QP]) {
+        ot_eg_entropy_ring_wire(s->devices[OT_EG_SOC_DEV_ENTROPY_SRC_QP],
+                                s->devices[OT_EG_SOC_DEV_CSRNG_QP],
+                                s->devices[OT_EG_SOC_DEV_EDN_QP]);
     }
 }
 

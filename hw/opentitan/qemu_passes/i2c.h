@@ -21,7 +21,6 @@ typedef struct {
     uint16_t rdata_o;  /* BIP, 13-bit */
     uint8_t state_q;  /* BIP, 5-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
@@ -716,7 +715,7 @@ typedef struct {
     uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__rf_cfg_cfg_en;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_cfg_i_0__rf_cfg_test;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_cfg_rsp_o_0__done;  /* 1-bit */
-    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_rsp_o__0__done;  /* 1-bit */
+    uint8_t i2c_core_u_fifos_u_ram_1p_cfg_rsp_o_done;  /* 1-bit */
     uint8_t i2c_core_u_fifos_u_ram_1p_clk_i;  /* 1-bit */
     uint64_t i2c_core_u_fifos_u_ram_1p_mem[95];  /* 6032-bit (wide-array) */
     uint16_t i2c_core_u_fifos_u_ram_1p_rdata_o;  /* 13-bit */
@@ -1078,6 +1077,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -3635,6 +3635,8 @@ void i2c_reset(i2c_state *s);
 void i2c_settle(i2c_state *s);
 
 void i2c_step(i2c_state *s);
+void i2c_update(i2c_state *s);
+void i2c_tick(i2c_state *s);
 
 void i2c_step_many(i2c_state *s, unsigned count);
 

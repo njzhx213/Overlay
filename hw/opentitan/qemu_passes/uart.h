@@ -19,6 +19,7 @@ typedef struct {
     uint8_t reg2hw_rdata_q;  /* BIP, 8-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t u_reg_if_wdata_o;  /* BIP, 32-bit */
 
     /* ---- Internal state registers ---- */
@@ -207,7 +208,6 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -1959,6 +1959,8 @@ void uart_reset(uart_state *s);
 void uart_settle(uart_state *s);
 
 void uart_step(uart_state *s);
+void uart_update(uart_state *s);
+void uart_tick(uart_state *s);
 
 void uart_step_many(uart_state *s, unsigned count);
 

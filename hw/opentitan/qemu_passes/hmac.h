@@ -16,14 +16,13 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint64_t digest_i_2_;  /* BIP, 64-bit */
+    uint64_t digest_i_7_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint8_t digest_swap;  /* BIP, 1-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t hw2reg_key_11__d;  /* BIP, 32-bit */
+    uint32_t hw2reg_key_13__d;  /* BIP, 32-bit */
     uint8_t key_length_supplied;  /* BIP, 6-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint8_t unnamed_enable_0;  /* BIP, 1-bit */
 
     /* ---- Internal state registers ---- */
@@ -274,8 +273,8 @@ typedef struct {
     uint8_t hw2reg_intr_state_hmac_err_de;  /* 1-bit */
     uint32_t hw2reg_key_0__d;  /* 32-bit */
     uint32_t hw2reg_key_10__d;  /* 32-bit */
+    uint32_t hw2reg_key_11__d;  /* 32-bit */
     uint32_t hw2reg_key_12__d;  /* 32-bit */
-    uint32_t hw2reg_key_13__d;  /* 32-bit */
     uint32_t hw2reg_key_14__d;  /* 32-bit */
     uint32_t hw2reg_key_15__d;  /* 32-bit */
     uint32_t hw2reg_key_16__d;  /* 32-bit */
@@ -530,6 +529,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -710,14 +710,6 @@ typedef struct {
     uint64_t u_prim_sha2_512_digest_o_5_;  /* 64-bit */
     uint64_t u_prim_sha2_512_digest_o_6_;  /* 64-bit */
     uint64_t u_prim_sha2_512_digest_o_7_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__0_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__1_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__2_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__3_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__4_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__5_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__6_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_digest_o__7_;  /* 64-bit */
     uint8_t u_prim_sha2_512_digest_on_blk_o;  /* 1-bit */
     uint8_t u_prim_sha2_512_digest_we_i;  /* 8-bit */
     uint32_t u_prim_sha2_512_fifo_rdata_i_data;  /* 32-bit */
@@ -754,14 +746,6 @@ typedef struct {
     uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o_5_;  /* 64-bit */
     uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o_6_;  /* 64-bit */
     uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o_7_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__0_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__1_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__2_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__3_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__4_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__5_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__6_;  /* 64-bit */
-    uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_o__7_;  /* 64-bit */
     uint8_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_on_blk_o;  /* 1-bit */
     uint8_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_digest_we_i;  /* 8-bit */
     uint64_t u_prim_sha2_512_gen_multimode_logic_u_prim_sha2_multimode_fifo_rdata_i_data;  /* 64-bit */
@@ -2622,32 +2606,6 @@ typedef struct {
     uint8_t u_reg_u_socket_tl_d_o_1__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_socket_tl_d_o_1__a_valid;  /* 1-bit */
     uint8_t u_reg_u_socket_tl_d_o_1__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__d_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_address;  /* 32-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_data;  /* 32-bit */
     uint8_t u_reg_u_socket_tl_h_i_a_mask;  /* 4-bit */
@@ -3107,6 +3065,8 @@ void hmac_reset(hmac_state *s);
 void hmac_settle(hmac_state *s);
 
 void hmac_step(hmac_state *s);
+void hmac_update(hmac_state *s);
+void hmac_tick(hmac_state *s);
 
 void hmac_step_many(hmac_state *s, unsigned count);
 

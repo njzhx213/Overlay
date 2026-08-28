@@ -89,6 +89,14 @@ static void ot_pattgen_qp_update_pins(OtPattgenQpState *s)
     }
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_pattgen_qp_core(DeviceState *dev)
+{
+    return &OT_PATTGEN_QP(dev)->core;
+}
+
 static uint64_t ot_pattgen_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtPattgenQpState *s = OT_PATTGEN_QP(opaque);

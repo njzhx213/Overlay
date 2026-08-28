@@ -269,6 +269,18 @@ config OT_ROM_CTRL_QP
     bool
     default y
 
+config OT_CSRNG_QP
+    bool
+    default y
+
+config OT_ENTROPY_SRC_QP
+    bool
+    default y
+
+config OT_EDN_QP
+    bool
+    default y
+
 config OT_KEYMGR_QP
     bool
     default y

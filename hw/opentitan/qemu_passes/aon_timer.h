@@ -311,9 +311,6 @@ typedef struct {
     uint8_t u_lc_sync_escalate_en_lc_en_o_0_;  /* 4-bit */
     uint8_t u_lc_sync_escalate_en_lc_en_o_1_;  /* 4-bit */
     uint8_t u_lc_sync_escalate_en_lc_en_o_2_;  /* 4-bit */
-    uint8_t u_lc_sync_escalate_en_lc_en_o__0_;  /* 4-bit */
-    uint8_t u_lc_sync_escalate_en_lc_en_o__1_;  /* 4-bit */
-    uint8_t u_lc_sync_escalate_en_lc_en_o__2_;  /* 4-bit */
     uint8_t u_lc_sync_escalate_en_rst_ni;  /* 1-bit */
     uint16_t u_reg_addr_hit;  /* 14-bit */
     uint8_t u_reg_alert_test_flds_we;  /* 1-bit */
@@ -1144,6 +1141,8 @@ void aon_timer_reset(aon_timer_state *s);
 void aon_timer_settle(aon_timer_state *s);
 
 void aon_timer_step(aon_timer_state *s);
+void aon_timer_update(aon_timer_state *s);
+void aon_timer_tick(aon_timer_state *s);
 
 void aon_timer_step_many(aon_timer_state *s, unsigned count);
 

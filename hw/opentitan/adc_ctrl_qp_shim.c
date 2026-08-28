@@ -69,6 +69,14 @@ static void ot_adc_ctrl_qp_update_irqs(OtAdcCtrlQpState *s)
     }
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_adc_ctrl_qp_core(DeviceState *dev)
+{
+    return &OT_ADC_CTRL_QP(dev)->core;
+}
+
 static uint64_t ot_adc_ctrl_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtAdcCtrlQpState *s = OT_ADC_CTRL_QP(opaque);

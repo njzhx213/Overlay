@@ -71,6 +71,14 @@ static void ot_pwm_qp_update_pins(OtPwmQpState *s)
     }
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_pwm_qp_core(DeviceState *dev)
+{
+    return &OT_PWM_QP(dev)->core;
+}
+
 static uint64_t ot_pwm_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtPwmQpState *s = OT_PWM_QP(opaque);

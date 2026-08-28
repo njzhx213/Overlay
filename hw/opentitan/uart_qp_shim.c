@@ -118,6 +118,14 @@ static void ot_uart_qp_chr_receive(void *opaque, const uint8_t *buf, int size)
     ot_uart_qp_update_irqs(s);
 }
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_uart_qp_core(DeviceState *dev)
+{
+    return &OT_UART_QP(dev)->core;
+}
+
 static uint64_t ot_uart_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtUARTQpState *s = OT_UART_QP(opaque);

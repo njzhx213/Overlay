@@ -17,10 +17,10 @@ typedef struct {
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
+    uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
     uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t unnamed_addr_0;  /* BIP, 32-bit */
-    uint8_t unnamed_enable_0_ugt_35_and_unnamed_enable_0_ult_40;  /* BIP, 1-bit */
     __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
@@ -937,32 +937,6 @@ typedef struct {
     uint8_t u_reg_tl_win_o_1__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_tl_win_o_1__a_valid;  /* 1-bit */
     uint8_t u_reg_tl_win_o_1__d_ready;  /* 1-bit */
-    uint32_t u_reg_tl_win_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_tl_win_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_tl_win_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_tl_win_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_tl_win_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_tl_win_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_tl_win_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_tl_win_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_tl_win_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_tl_win_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_tl_win_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_tl_win_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_tl_win_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_tl_win_o__1__d_ready;  /* 1-bit */
     uint8_t u_reg_u_alert_test_d;  /* 1-bit */
     uint8_t u_reg_u_alert_test_ds;  /* 1-bit */
     uint8_t u_reg_u_alert_test_q;  /* 1-bit */
@@ -2406,45 +2380,6 @@ typedef struct {
     uint8_t u_reg_u_socket_tl_d_o_2__a_user_rsvd;  /* 5-bit */
     uint8_t u_reg_u_socket_tl_d_o_2__a_valid;  /* 1-bit */
     uint8_t u_reg_u_socket_tl_d_o_2__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__0__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__0__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__1__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__1__d_ready;  /* 1-bit */
-    uint32_t u_reg_u_socket_tl_d_o__2__a_address;  /* 32-bit */
-    uint32_t u_reg_u_socket_tl_d_o__2__a_data;  /* 32-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_mask;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_opcode;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_param;  /* 3-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_size;  /* 2-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_source;  /* 8-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_cmd_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_data_intg;  /* 7-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_instr_type;  /* 4-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_user_rsvd;  /* 5-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__a_valid;  /* 1-bit */
-    uint8_t u_reg_u_socket_tl_d_o__2__d_ready;  /* 1-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_address;  /* 32-bit */
     uint32_t u_reg_u_socket_tl_h_i_a_data;  /* 32-bit */
     uint8_t u_reg_u_socket_tl_h_i_a_mask;  /* 4-bit */
@@ -3709,6 +3644,8 @@ void spi_host_reset(spi_host_state *s);
 void spi_host_settle(spi_host_state *s);
 
 void spi_host_step(spi_host_state *s);
+void spi_host_update(spi_host_state *s);
+void spi_host_tick(spi_host_state *s);
 
 void spi_host_step_many(spi_host_state *s, unsigned count);
 

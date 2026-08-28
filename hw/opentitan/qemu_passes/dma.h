@@ -16,9 +16,8 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint8_t control_q_cfg_digest_swap;  /* BIP, 1-bit */
     uint8_t ctrl_state_q;  /* BIP, 8-bit */
-    uint64_t digest_i_4_;  /* BIP, 64-bit */
+    uint64_t digest_i_6_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
     uint32_t reg2hw_intr_src_addr_3__q;  /* BIP, 32-bit */
@@ -123,6 +122,7 @@ typedef struct {
     uint32_t control_d_enabled_memory_range_limit;  /* 32-bit */
     uint8_t control_d_opcode;  /* 4-bit */
     uint8_t control_d_range_valid;  /* 1-bit */
+    uint8_t control_q_cfg_digest_swap;  /* 1-bit */
     uint8_t control_q_cfg_handshake_en;  /* 1-bit */
     uint32_t control_q_enabled_memory_range_base;  /* 32-bit */
     uint32_t control_q_enabled_memory_range_limit;  /* 32-bit */
@@ -3044,14 +3044,6 @@ typedef struct {
     uint64_t u_sha2_digest_o_5_;  /* 64-bit */
     uint64_t u_sha2_digest_o_6_;  /* 64-bit */
     uint64_t u_sha2_digest_o_7_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__0_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__1_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__2_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__3_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__4_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__5_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__6_;  /* 64-bit */
-    uint64_t u_sha2_digest_o__7_;  /* 64-bit */
     uint8_t u_sha2_digest_on_blk_o;  /* 1-bit */
     uint8_t u_sha2_digest_we_i;  /* 8-bit */
     uint32_t u_sha2_fifo_rdata_i_data;  /* 32-bit */
@@ -3088,14 +3080,6 @@ typedef struct {
     uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o_5_;  /* 64-bit */
     uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o_6_;  /* 64-bit */
     uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o_7_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__0_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__1_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__2_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__3_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__4_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__5_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__6_;  /* 64-bit */
-    uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_o__7_;  /* 64-bit */
     uint8_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_on_blk_o;  /* 1-bit */
     uint8_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_digest_we_i;  /* 8-bit */
     uint64_t u_sha2_gen_multimode_logic_u_prim_sha2_multimode_fifo_rdata_i_data;  /* 64-bit */
@@ -3404,6 +3388,8 @@ void dma_reset(dma_state *s);
 void dma_settle(dma_state *s);
 
 void dma_step(dma_state *s);
+void dma_update(dma_state *s);
+void dma_tick(dma_state *s);
 
 void dma_step_many(dma_state *s, unsigned count);
 

@@ -55,6 +55,14 @@ OBJECT_DEFINE_SIMPLE_TYPE_WITH_INTERFACES(OtAesQpState, ot_aes_qp,
                                           { TYPE_OT_KEY_SINK_IF },
                                           { NULL })
 
+/* Generic core accessor: SoC-integration bridges (device-to-device
+ * signal links wired in the machine file) reach the generated state
+ * through this + the <dev>.h field API. */
+void *ot_aes_qp_core(DeviceState *dev)
+{
+    return &OT_AES_QP(dev)->core;
+}
+
 static uint64_t ot_aes_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtAesQpState *s = OT_AES_QP(opaque);

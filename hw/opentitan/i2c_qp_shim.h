@@ -6,4 +6,8 @@
 #define TYPE_OT_I2C_QP "ot-i2c-qp"
 OBJECT_DECLARE_SIMPLE_TYPE(OtI2CQpState, OT_I2C_QP)
 
+/* Generic core accessor for machine-level device-to-device bridges:
+ * returns the embedded <dev>_state (see qemu_passes/i2c.h). */
+void *ot_i2c_qp_core(DeviceState *dev);
+
 #endif /* HW_OPENTITAN_I2C_QP_SHIM_H */
