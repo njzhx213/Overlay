@@ -3266,11 +3266,18 @@ uint64_t rom_ctrl_regs_tl_read(void *opaque, hwaddr addr, unsigned size)
             if (!s->_qp_rd_cap && s->regs_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->regs_tl_o_d_data; }
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
-        while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
+        bool _qp_ext = false;
+        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+            /* settle hook: let the machine co-step the OTHER ring
+             * members (this model is _qp_busy and is skipped there)
+             * so a cross-model dependency arising INSIDE this settle
+             * is serviced instead of deadlocking the blind spot. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
-            if (!_qp_ch)
+            if (!_qp_ch && !_qp_ext)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
@@ -3283,7 +3290,7 @@ uint64_t rom_ctrl_regs_tl_read(void *opaque, hwaddr addr, unsigned size)
             ++_qp_lam;
             if (_qp_now.first == _qp_base.first &&
                 _qp_now.second == _qp_base.second &&
-                !s->_qp_hold_settle)
+                !s->_qp_hold_settle && !_qp_ext)
                 break;  /* state revisited: periodic, no fixed point exists */
             if (_qp_lam == _qp_pow) {  /* Brent: move camera, double the wait */
                 _qp_base = _qp_now; _qp_lam = 0;
@@ -3327,11 +3334,18 @@ void rom_ctrl_regs_tl_write(void *opaque, hwaddr addr, uint64_t value, unsigned 
         update_state(s);
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
-        while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
+        bool _qp_ext = false;
+        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+            /* settle hook: let the machine co-step the OTHER ring
+             * members (this model is _qp_busy and is skipped there)
+             * so a cross-model dependency arising INSIDE this settle
+             * is serviced instead of deadlocking the blind spot. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
-            if (!_qp_ch)
+            if (!_qp_ch && !_qp_ext)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
@@ -3343,7 +3357,7 @@ void rom_ctrl_regs_tl_write(void *opaque, hwaddr addr, uint64_t value, unsigned 
             ++_qp_lam;
             if (_qp_now.first == _qp_base.first &&
                 _qp_now.second == _qp_base.second &&
-                !s->_qp_hold_settle)
+                !s->_qp_hold_settle && !_qp_ext)
                 break;  /* state revisited: periodic, no fixed point exists */
             if (_qp_lam == _qp_pow) {  /* Brent: move camera, double the wait */
                 _qp_base = _qp_now; _qp_lam = 0;
@@ -3382,11 +3396,18 @@ void rom_ctrl_settle(rom_ctrl_state *s)
         update_state(s);
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
-        while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
+        bool _qp_ext = false;
+        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+            /* settle hook: let the machine co-step the OTHER ring
+             * members (this model is _qp_busy and is skipped there)
+             * so a cross-model dependency arising INSIDE this settle
+             * is serviced instead of deadlocking the blind spot. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
-            if (!_qp_ch)
+            if (!_qp_ch && !_qp_ext)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
@@ -3398,7 +3419,7 @@ void rom_ctrl_settle(rom_ctrl_state *s)
             ++_qp_lam;
             if (_qp_now.first == _qp_base.first &&
                 _qp_now.second == _qp_base.second &&
-                !s->_qp_hold_settle)
+                !s->_qp_hold_settle && !_qp_ext)
                 break;  /* state revisited: periodic, no fixed point exists */
             if (_qp_lam == _qp_pow) {  /* Brent: move camera, double the wait */
                 _qp_base = _qp_now; _qp_lam = 0;
@@ -3508,11 +3529,18 @@ uint64_t rom_ctrl_read(void *opaque, hwaddr addr, unsigned size)
             if (!s->_qp_rd_cap && s->u_tl_adapter_rom_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_tl_adapter_rom_tl_o_d_data; }
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
-        while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
+        bool _qp_ext = false;
+        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+            /* settle hook: let the machine co-step the OTHER ring
+             * members (this model is _qp_busy and is skipped there)
+             * so a cross-model dependency arising INSIDE this settle
+             * is serviced instead of deadlocking the blind spot. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
-            if (!_qp_ch)
+            if (!_qp_ch && !_qp_ext)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
@@ -3525,7 +3553,7 @@ uint64_t rom_ctrl_read(void *opaque, hwaddr addr, unsigned size)
             ++_qp_lam;
             if (_qp_now.first == _qp_base.first &&
                 _qp_now.second == _qp_base.second &&
-                !s->_qp_hold_settle)
+                !s->_qp_hold_settle && !_qp_ext)
                 break;  /* state revisited: periodic, no fixed point exists */
             if (_qp_lam == _qp_pow) {  /* Brent: move camera, double the wait */
                 _qp_base = _qp_now; _qp_lam = 0;
@@ -3609,11 +3637,18 @@ void rom_ctrl_write(void *opaque, hwaddr addr,
         update_state(s);
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
-        while (_qp_ticks < (s->_qp_hold_settle ? QP_SETTLE_BUDGET : 256u)) {
+        bool _qp_ext = false;
+        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+            /* settle hook: let the machine co-step the OTHER ring
+             * members (this model is _qp_busy and is skipped there)
+             * so a cross-model dependency arising INSIDE this settle
+             * is serviced instead of deadlocking the blind spot. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
-            if (!_qp_ch)
+            if (!_qp_ch && !_qp_ext)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
@@ -3625,7 +3660,7 @@ void rom_ctrl_write(void *opaque, hwaddr addr,
             ++_qp_lam;
             if (_qp_now.first == _qp_base.first &&
                 _qp_now.second == _qp_base.second &&
-                !s->_qp_hold_settle)
+                !s->_qp_hold_settle && !_qp_ext)
                 break;  /* state revisited: periodic, no fixed point exists */
             if (_qp_lam == _qp_pow) {  /* Brent: move camera, double the wait */
                 _qp_base = _qp_now; _qp_lam = 0;

@@ -18,11 +18,11 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint64_t app_i_0__data;  /* BIP, 64-bit */
     uint8_t app_id_eq_0;  /* BIP, 1-bit */
-    uint8_t app_kmac_en;  /* BIP, 1-bit */
-    uint32_t hw2reg_err_code_d;  /* BIP, 32-bit */
     uint8_t kmac_st;  /* BIP, 6-bit */
+    uint8_t reg_state_valid;  /* BIP, 1-bit */
     uint16_t st;  /* BIP, 10-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint32_t tl_win_d2h_0__d_data;  /* BIP, 32-bit */
     uint64_t unnamed_rdata_0[6];  /* BIP, 352-bit (wide-array) */
 
@@ -57,6 +57,7 @@ typedef struct {
     uint8_t app_i_2__last;  /* 1-bit */
     uint8_t app_i_2__strb;  /* 8-bit */
     uint8_t app_i_2__valid;  /* 1-bit */
+    uint8_t app_kmac_en;  /* 1-bit */
     uint64_t app_o_0__digest_share0[6];  /* 384-bit (wide-array) */
     uint64_t app_o_0__digest_share1[6];  /* 384-bit (wide-array) */
     uint8_t app_o_0__done;  /* 1-bit */
@@ -388,6 +389,7 @@ typedef struct {
     uint8_t hw2reg_cfg_regwen_d;  /* 1-bit */
     uint16_t hw2reg_entropy_refresh_hash_cnt_d;  /* 10-bit */
     uint8_t hw2reg_entropy_refresh_hash_cnt_de;  /* 1-bit */
+    uint32_t hw2reg_err_code_d;  /* 32-bit */
     uint8_t hw2reg_err_code_de;  /* 1-bit */
     uint8_t hw2reg_intr_state_fifo_empty_d;  /* 1-bit */
     uint8_t hw2reg_intr_state_fifo_empty_de;  /* 1-bit */
@@ -598,7 +600,6 @@ typedef struct {
     uint64_t reg_ns_prefix[6];  /* 352-bit (wide-array) */
     uint64_t reg_state_0_[25];  /* 1600-bit (wide-array) */
     uint64_t reg_state_tl_0_[25];  /* 1600-bit (wide-array) */
-    uint8_t reg_state_valid;  /* 1-bit */
     uint8_t rst_edn_ni;  /* 1-bit */
     uint8_t rst_ni;  /* 1-bit */
     uint8_t rst_shadowed_ni;  /* 1-bit */
@@ -623,7 +624,6 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -5056,6 +5056,12 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    int (*_qp_settle_hook)(void *ctx);  /* machine co-step escape hatch:
+     * called once per settle iteration; return nonzero while a
+     * cross-model transaction involving this model is in flight
+     * (keeps the loop alive past a local fixed point and widens
+     * the budget).  NULL (the calloc default) = old semantics. */
+    void *_qp_settle_hook_ctx;
     uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
     uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */

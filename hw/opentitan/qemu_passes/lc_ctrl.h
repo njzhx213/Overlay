@@ -3215,6 +3215,12 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    int (*_qp_settle_hook)(void *ctx);  /* machine co-step escape hatch:
+     * called once per settle iteration; return nonzero while a
+     * cross-model transaction involving this model is in flight
+     * (keeps the loop alive past a local fixed point and widens
+     * the budget).  NULL (the calloc default) = old semantics. */
+    void *_qp_settle_hook_ctx;
     uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
     uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */

@@ -2260,24 +2260,12 @@ static void ot_eg_ring_freeze(void)
     es->entropy_src_rng_valid_i = 0;
     ed->edn_i_0__edn_req = 0;
     if (ot_eg_ring_ae) {
-        /* split entropy supply: TRIGGER.prng_reseed transactions are
-         * served by the REAL ring (pump costeps; the aes-edn gate's
-         * assertion) — everything else (the clearing PRNG's demands
-         * that arise INSIDE an MMIO settle, invisible to any pump)
-         * gets a standing larder word parked on the input, restoring
-         * the tie-instant semantics the settle path requires. */
-        static int no_larder = -1;
-        if (no_larder < 0) {
-            no_larder = getenv("OT_AES_NO_LARDER") != NULL;
-        }
-        if (no_larder ||
-            ot_eg_ring_ae->u_aes_core_u_aes_prng_clearing_reseed_req_i) {
-            ot_eg_ring_ae->edn_i_edn_ack = 0;
-        } else {
-            ot_eg_ring_ae->edn_i_edn_ack = 1;
-            ot_eg_ring_ae->edn_i_edn_bus = 0xAAAAAAAAu;
-            ot_eg_ring_ae->edn_i_edn_fips = 1;
-        }
+        /* every aes entropy demand — the firmware-paced reseed AND the
+         * clearing PRNG's intra-settle requests — is served over the
+         * REAL ring: the settle hook co-steps the partners while aes
+         * settles, so the old blind spot (and the larder that papered
+         * over it) is gone. */
+        ot_eg_ring_ae->edn_i_edn_ack = 0;
     }
 }
 
@@ -2372,13 +2360,59 @@ static void ot_eg_ring_costep(void)
                 ot_eg_ring_aes_cool--;
             }
         }
-        edn_update(ed); csrng_update(cs); entropy_src_update(es);
-        if (aes_leg) aes_update(ae);
-        edn_tick(ed); csrng_tick(cs); entropy_src_tick(es);
-        if (aes_leg) aes_tick(ae);
-        edn_update(ed); csrng_update(cs); entropy_src_update(es);
-        if (aes_leg) aes_update(ae);
+        /* _qp_busy skip: when this costep runs from inside a member's
+         * settle (the settle hook), that member's ticks come from its
+         * own settle loop — stepping it here would double-tick it. */
+        if (!ed->_qp_busy) edn_update(ed);
+        if (!cs->_qp_busy) csrng_update(cs);
+        if (!es->_qp_busy) entropy_src_update(es);
+        if (aes_leg && !ae->_qp_busy) aes_update(ae);
+        if (!ed->_qp_busy) edn_tick(ed);
+        if (!cs->_qp_busy) csrng_tick(cs);
+        if (!es->_qp_busy) entropy_src_tick(es);
+        if (aes_leg && !ae->_qp_busy) aes_tick(ae);
+        if (!ed->_qp_busy) edn_update(ed);
+        if (!cs->_qp_busy) csrng_update(cs);
+        if (!es->_qp_busy) entropy_src_update(es);
+        if (aes_leg && !ae->_qp_busy) aes_update(ae);
     }
+}
+
+/* THE SETTLE HOOK — the generic cure for the settle blind spot: while
+ * one ring member settles (an MMIO access), this runs once per settle
+ * iteration and co-steps the OTHER members, so a cross-model
+ * dependency arising INSIDE the settle (an aes PRNG demand, a csrng
+ * command mid-flight) is serviced live instead of deadlocking against
+ * frozen partners.  Returns nonzero while ring work is in flight —
+ * the settle loop then stays alive past a local fixed point.  The
+ * quiescence short-circuit keeps idle-ring MMIO at old-world cost. */
+static int ot_eg_ring_settle_hook(void *opaque)
+{
+    csrng_state *cs = ot_eg_ring_cs;
+    edn_state *ed = ot_eg_ring_ed;
+    entropy_src_state *es = ot_eg_ring_es;
+    aes_state *ae = ot_eg_ring_ae;
+    (void)opaque;
+
+    /* v1 scope: fire ONLY for the aes blind-spot (a PRNG demand that
+     * arises inside an aes/any settle).  The other ring flows (csrng
+     * SW lane, es noise collection) are pump-paced under the frozen-
+     * settle semantics their KATs were proven in — migrating them to
+     * the live-settle world is a per-flow follow-up with its own
+     * re-verification, not a side effect. */
+    (void)es; (void)ed;
+    if (cs->u_csrng_core_u_csrng_main_sm_state_q == 0x37u /* Idle */ &&
+        ot_eg_ring_aes_cool == 0u &&
+        !(ae && ae->edn_o_edn_req)) {
+        return 0;
+    }
+    if (!(ae && (ae->edn_o_edn_req ||
+                 ae->u_aes_core_u_aes_prng_clearing_reseed_req_i ||
+                 ot_eg_ring_aes_cool))) {
+        return 0;
+    }
+    ot_eg_ring_costep();
+    return 1;
 }
 
 static void ot_eg_ring_pump(void *opaque)
@@ -2529,6 +2563,13 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
     }
 
     ot_eg_ring_freeze();
+    /* arm the settle hook on every ring member: from here on, an MMIO
+     * settle on one member co-steps the others (see the hook above) */
+    es->_qp_settle_hook = ot_eg_ring_settle_hook;
+    cs->_qp_settle_hook = ot_eg_ring_settle_hook;
+    ed->_qp_settle_hook = ot_eg_ring_settle_hook;
+    ae->_qp_settle_hook = ot_eg_ring_settle_hook;
+
     if (!ot_eg_ring_timer) {
         ot_eg_ring_timer = timer_new_us(QEMU_CLOCK_VIRTUAL,
                                         ot_eg_ring_pump, NULL);

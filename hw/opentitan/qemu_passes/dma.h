@@ -17,10 +17,10 @@ typedef struct {
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
     uint8_t ctrl_state_q;  /* BIP, 8-bit */
-    uint64_t digest_i_6_;  /* BIP, 64-bit */
+    uint64_t digest_i_1_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t reg2hw_intr_src_addr_3__q;  /* BIP, 32-bit */
+    uint32_t reg2hw_intr_src_addr_1__q;  /* BIP, 32-bit */
     uint32_t sys_resp_q_read_data;  /* BIP, 32-bit */
     uint8_t unnamed_enable_0;  /* BIP, 1-bit */
 
@@ -499,8 +499,8 @@ typedef struct {
     uint8_t reg2hw_intr_enable_dma_error_q;  /* 1-bit */
     uint32_t reg2hw_intr_src_addr_0__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_10__q;  /* 32-bit */
-    uint32_t reg2hw_intr_src_addr_1__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_2__q;  /* 32-bit */
+    uint32_t reg2hw_intr_src_addr_3__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_4__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_5__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_6__q;  /* 32-bit */
@@ -3370,6 +3370,12 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    int (*_qp_settle_hook)(void *ctx);  /* machine co-step escape hatch:
+     * called once per settle iteration; return nonzero while a
+     * cross-model transaction involving this model is in flight
+     * (keeps the loop alive past a local fixed point and widens
+     * the budget).  NULL (the calloc default) = old semantics. */
+    void *_qp_settle_hook_ctx;
     uint8_t  _qp_rd_cap;       /* read: response captured on its d_valid tick */
     uint32_t _qp_rd_capv;
     uint32_t _qp_access_gen;   /* bumped by every MMIO entry (snapshot validity) */
