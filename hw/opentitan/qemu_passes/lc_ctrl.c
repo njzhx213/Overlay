@@ -6535,11 +6535,3 @@ void lc_ctrl_set_otp_device_id_i(lc_ctrl_state *s, const uint64_t value[4])
     update_state(s);
 }
 
-void lc_ctrl_set_otp_manuf_state_i(lc_ctrl_state *s, const uint64_t value[4])
-{
-    memcpy(s->otp_manuf_state_i, value, sizeof(s->otp_manuf_state_i));
-    update_state(s);
-    qp_tick(s);
-    update_state(s);
-}
-

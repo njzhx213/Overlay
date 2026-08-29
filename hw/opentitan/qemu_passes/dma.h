@@ -21,7 +21,7 @@ typedef struct {
     uint64_t digest_i_3_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t reg2hw_intr_src_addr_0__q;  /* BIP, 32-bit */
+    uint32_t reg2hw_intr_src_addr_2__q;  /* BIP, 32-bit */
     uint32_t sys_resp_q_read_data;  /* BIP, 32-bit */
     uint8_t unnamed_enable_0;  /* BIP, 1-bit */
 
@@ -497,9 +497,9 @@ typedef struct {
     uint8_t reg2hw_intr_enable_dma_chunk_done_q;  /* 1-bit */
     uint8_t reg2hw_intr_enable_dma_done_q;  /* 1-bit */
     uint8_t reg2hw_intr_enable_dma_error_q;  /* 1-bit */
+    uint32_t reg2hw_intr_src_addr_0__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_10__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_1__q;  /* 32-bit */
-    uint32_t reg2hw_intr_src_addr_2__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_3__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_4__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_5__q;  /* 32-bit */

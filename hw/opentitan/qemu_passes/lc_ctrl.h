@@ -18,11 +18,11 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint64_t addr_hit;  /* BIP, 35-bit */
     uint8_t clk_i;  /* BIP, 1-bit */
+    uint64_t otp_manuf_state_i[4];  /* BIP, 256-bit (wide-array) */
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t regs_tl_i_a_address;  /* BIP, 32-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    __uint128_t transition_token_q;  /* BIP, 128-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
@@ -643,7 +643,6 @@ typedef struct {
     uint8_t otp_lc_data_i_test_tokens_valid;  /* 4-bit */
     __uint128_t otp_lc_data_i_test_unlock_token;  /* 128-bit */
     uint8_t otp_lc_data_i_valid;  /* 1-bit */
-    uint64_t otp_manuf_state_i[4];  /* 256-bit (wide-array) */
     uint8_t otp_part_error_q;  /* 1-bit */
     uint8_t otp_prog_error_d;  /* 1-bit */
     uint32_t otp_vendor_test_ctrl_d;  /* 32-bit */
@@ -805,6 +804,7 @@ typedef struct {
     uint8_t transition_target_q_4_;  /* 5-bit */
     uint8_t transition_target_q_5_;  /* 5-bit */
     __uint128_t transition_token_d;  /* 128-bit */
+    __uint128_t transition_token_q;  /* 128-bit */
     uint64_t u_hw_rev_const_out_o;  /* 64-bit */
     uint8_t u_lc_ctrl_fsm_clk_i;  /* 1-bit */
     uint8_t u_lc_ctrl_fsm_dec_lc_cnt_o;  /* 5-bit */
@@ -3315,6 +3315,5 @@ void lc_ctrl_set_lc_clk_byp_ack_i(lc_ctrl_state *s, uint8_t value);
 void lc_ctrl_set_lc_nvm_rma_ack_i_0_(lc_ctrl_state *s, uint8_t value);
 void lc_ctrl_set_lc_nvm_rma_ack_i_1_(lc_ctrl_state *s, uint8_t value);
 void lc_ctrl_set_otp_device_id_i(lc_ctrl_state *s, const uint64_t value[4]);
-void lc_ctrl_set_otp_manuf_state_i(lc_ctrl_state *s, const uint64_t value[4]);
 
 #endif /* LC_CTRL_H */

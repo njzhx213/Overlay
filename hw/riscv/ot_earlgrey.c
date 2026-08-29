@@ -2708,13 +2708,6 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
     for (unsigned t = 0; t < 200u; t++) {
         ot_eg_ring_costep();
     }
-    /* lost-arm workaround: RTL re-initializes the ctr_drbg gen_subcmd
-     * register at every GEN accept (csrng_ctr_drbg.sv Idle arm); the
-     * generated model dropped that arm, so boot residue (UPD_FINAL)
-     * silently kills the next GEN.  Reset to the value every proven
-     * KAT ran with (emitter fix pending). */
-    cs->u_csrng_core_u_csrng_ctr_drbg_gen_subcmd_q = 0;
-    cs->u_csrng_core_u_csrng_ctr_drbg_gen_subcmd_d = 0;
     if (ed->u_edn_core_u_edn_main_sm_state_q != 0xF0u) {
         warn_report("entropy ring boot bridge: BootDone not reached (sm=%x)",
                     (unsigned)ed->u_edn_core_u_edn_main_sm_state_q);
