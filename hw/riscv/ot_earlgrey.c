@@ -2474,7 +2474,9 @@ static void ot_eg_ring_pump(void *opaque)
             break;
         }
     }
-    ot_eg_ring_freeze();
+    /* pump-exit freeze retired: every hooked member's settle re-freezes
+     * on its quiet path, so the frozen-world invariant is re-established
+     * at the door of every MMIO access that could care. */
     /* adaptive cadence: tight while beats are in flight (a wire beat
      * costs one fire), relaxed when the ring is quiet — csrng's
      * update_state is enormous and an always-hot 1us pump starves the
