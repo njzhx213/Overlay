@@ -77,6 +77,12 @@ void *ot_csrng_qp_core(DeviceState *dev)
     return &OT_CSRNG_QP(dev)->core;
 }
 
+void ot_csrng_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx)
+{
+    OT_CSRNG_QP(dev)->core._qp_settle_hook = fn;
+    OT_CSRNG_QP(dev)->core._qp_settle_hook_ctx = ctx;
+}
+
 static uint64_t ot_csrng_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtCsrngQpState *s = OT_CSRNG_QP(opaque);

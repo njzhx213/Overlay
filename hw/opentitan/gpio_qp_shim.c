@@ -124,6 +124,12 @@ void *ot_gpio_qp_core(DeviceState *dev)
     return &OT_GPIO_QP(dev)->core;
 }
 
+void ot_gpio_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx)
+{
+    OT_GPIO_QP(dev)->core._qp_settle_hook = fn;
+    OT_GPIO_QP(dev)->core._qp_settle_hook_ctx = ctx;
+}
+
 static uint64_t ot_gpio_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtGpioQpState *s = OT_GPIO_QP(opaque);

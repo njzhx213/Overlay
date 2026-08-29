@@ -61,6 +61,12 @@ void *ot_rom_ctrl_qp_core(DeviceState *dev)
     return &OT_ROM_CTRL_QP(dev)->core;
 }
 
+void ot_rom_ctrl_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx)
+{
+    OT_ROM_CTRL_QP(dev)->core._qp_settle_hook = fn;
+    OT_ROM_CTRL_QP(dev)->core._qp_settle_hook_ctx = ctx;
+}
+
 static uint64_t ot_rom_ctrl_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtRomCtrlQpState *s = OT_ROM_CTRL_QP(opaque);

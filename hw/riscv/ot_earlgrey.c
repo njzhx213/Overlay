@@ -2135,55 +2135,122 @@ static QEMUTimer *ot_eg_keymgr_qp_timer;
 static uint64_t ot_eg_keymgr_dig0[6], ot_eg_keymgr_dig1[6];
 static int ot_eg_keymgr_have_dig;
 
-static void ot_eg_keymgr_qp_pump(void *opaque)
+static bool ot_eg_km_inflight(void)
+{
+    keymgr_state *g = ot_eg_keymgr_qp_g;
+
+    return g && (g->u_reg_op_status_qs == 1u ||
+                 g->u_kmac_if_state_q != 930u || g->kmac_data_o_valid);
+}
+
+/* one keymgr<->kmac co-step: app-channel wire + the bridge-owned
+ * completion beat (capture the REAL kmac digest at its done pulse,
+ * present done while keymgr sits in StOpWait) + lockstep update/tick.
+ * _qp_busy skips make it settle-hook safe: the settling member is
+ * ticked by its own loop. */
+static void ot_eg_km_costep(void)
+{
+    keymgr_state *g = ot_eg_keymgr_qp_g;
+    kmac_state *k = ot_eg_keymgr_qp_kmac;
+
+    k->app_i_0__valid = g->kmac_data_o_valid;
+    k->app_i_0__data = g->kmac_data_o_data;
+    k->app_i_0__strb = g->kmac_data_o_strb;
+    k->app_i_0__last = g->kmac_data_o_last;
+    k->keymgr_key_i_valid = g->kmac_key_o_valid;
+    for (unsigned w = 0; w < 4u; w++) {
+        k->keymgr_key_i_key_0_[w] = g->kmac_key_o_key_0_[w];
+        k->keymgr_key_i_key_1_[w] = g->kmac_key_o_key_1_[w];
+    }
+    g->kmac_data_i_ready = k->app_o_0__ready;
+    g->kmac_data_i_error = k->app_o_0__error;
+    if (k->app_o_0__done) {
+        for (unsigned w = 0; w < 6u; w++) {
+            ot_eg_keymgr_dig0[w] = k->app_o_0__digest_share0[w];
+            ot_eg_keymgr_dig1[w] = k->app_o_0__digest_share1[w];
+        }
+        ot_eg_keymgr_have_dig = 1;
+    }
+    if (g->u_kmac_if_state_q == 553u && ot_eg_keymgr_have_dig) {
+        g->kmac_data_i_done = 1;
+        for (unsigned w = 0; w < 6u; w++) {
+            g->kmac_data_i_digest_share0[w] = ot_eg_keymgr_dig0[w];
+            g->kmac_data_i_digest_share1[w] = ot_eg_keymgr_dig1[w];
+        }
+    } else {
+        g->kmac_data_i_done = 0;
+    }
+    if (!g->_qp_busy) keymgr_update(g);
+    if (!k->_qp_busy) kmac_update(k);
+    if (!g->_qp_busy) keymgr_tick(g);
+    if (!k->_qp_busy) kmac_tick(k);
+    if (!g->_qp_busy) keymgr_update(g);
+    if (!k->_qp_busy) kmac_update(k);
+    if (!ot_eg_km_inflight()) {
+        ot_eg_keymgr_have_dig = 0;
+    }
+}
+
+/* settle hook for the keymgr<->kmac pair — the second ring on the
+ * generic hook mechanism (this pair's hand-tuned lockstep pump was the
+ * gravestone of the original per-tick hook attempt; the phase triad
+ * revives it).  SW kmac operations leave keymgr idle, so the quiet
+ * path keeps the kmac KAT targets untouched. */
+static int ot_eg_km_settle_hook(void *opaque);
+static int ot_eg_ring_settle_hook(void *opaque);
+
+/* THE RING TABLE — soc_glue's generation target: one row per ring
+ * member (device slot, its generated arming call, the ring's hook).
+ * Adding a device to a ring = adding a row. */
+static const struct ot_eg_ring_row {
+    int dev;
+    void (*arm)(DeviceState *, int (*)(void *), void *);
+    int (*hook)(void *);
+} ot_eg_ring_table[] = {
+    { OT_EG_SOC_DEV_ENTROPY_SRC_QP, ot_entropy_src_qp_set_settle_hook,
+      ot_eg_ring_settle_hook },
+    { OT_EG_SOC_DEV_CSRNG_QP, ot_csrng_qp_set_settle_hook,
+      ot_eg_ring_settle_hook },
+    { OT_EG_SOC_DEV_EDN_QP, ot_edn_qp_set_settle_hook,
+      ot_eg_ring_settle_hook },
+    { OT_EG_SOC_DEV_AES, ot_aes_qp_set_settle_hook,
+      ot_eg_ring_settle_hook },
+    { OT_EG_SOC_DEV_KEYMGR_QP, ot_keymgr_qp_set_settle_hook,
+      ot_eg_km_settle_hook },
+    { OT_EG_SOC_DEV_KMAC, ot_kmac_qp_set_settle_hook,
+      ot_eg_km_settle_hook },
+};
+
+static void ot_eg_arm_ring_hooks(DeviceState **devices)
+{
+    for (unsigned i = 0; i < ARRAY_SIZE(ot_eg_ring_table); i++) {
+        const struct ot_eg_ring_row *r = &ot_eg_ring_table[i];
+        r->arm(devices[r->dev], r->hook, NULL);
+    }
+}
+
+static int ot_eg_km_settle_hook(void *opaque)
 {
     keymgr_state *g = ot_eg_keymgr_qp_g;
     kmac_state *k = ot_eg_keymgr_qp_kmac;
 
     (void)opaque;
-    if (g && k &&
-        (g->u_reg_op_status_qs == 1u || g->u_kmac_if_state_q != 930u ||
-         g->kmac_data_o_valid)) {
+    if (!ot_eg_km_inflight()) {
+        k->app_i_0__valid = 0;
+        g->kmac_data_i_done = 0;
+        return 0;
+    }
+    ot_eg_km_costep();
+    return 1;
+}
+
+static void ot_eg_keymgr_qp_pump(void *opaque)
+{
+    (void)opaque;
+    if (ot_eg_km_inflight()) {
         for (unsigned t = 0; t < 4096u; t++) {
-            k->app_i_0__valid = g->kmac_data_o_valid;
-            k->app_i_0__data = g->kmac_data_o_data;
-            k->app_i_0__strb = g->kmac_data_o_strb;
-            k->app_i_0__last = g->kmac_data_o_last;
-            k->keymgr_key_i_valid = g->kmac_key_o_valid;
-            for (unsigned w = 0; w < 4u; w++) {
-                k->keymgr_key_i_key_0_[w] = g->kmac_key_o_key_0_[w];
-                k->keymgr_key_i_key_1_[w] = g->kmac_key_o_key_1_[w];
-            }
-            g->kmac_data_i_ready = k->app_o_0__ready;
-            g->kmac_data_i_error = k->app_o_0__error;
-            /* bridge-owned completion beat: capture the REAL kmac digest
-             * at its done pulse; present done only while keymgr sits in
-             * StOpWait (553) with the digest held stable */
-            if (k->app_o_0__done) {
-                for (unsigned w = 0; w < 6u; w++) {
-                    ot_eg_keymgr_dig0[w] = k->app_o_0__digest_share0[w];
-                    ot_eg_keymgr_dig1[w] = k->app_o_0__digest_share1[w];
-                }
-                ot_eg_keymgr_have_dig = 1;
-            }
-            if (g->u_kmac_if_state_q == 553u && ot_eg_keymgr_have_dig) {
-                g->kmac_data_i_done = 1;
-                for (unsigned w = 0; w < 6u; w++) {
-                    g->kmac_data_i_digest_share0[w] = ot_eg_keymgr_dig0[w];
-                    g->kmac_data_i_digest_share1[w] = ot_eg_keymgr_dig1[w];
-                }
-            } else {
-                g->kmac_data_i_done = 0;
-            }
-            keymgr_update(g);
-            kmac_update(k);
-            keymgr_tick(g);
-            kmac_tick(k);
-            keymgr_update(g);
-            kmac_update(k);
-            if (g->u_reg_op_status_qs != 1u && g->u_kmac_if_state_q == 930u &&
-                !g->kmac_data_o_valid) {
-                ot_eg_keymgr_have_dig = 0;
+            ot_eg_km_costep();
+            if (!ot_eg_km_inflight()) {
                 break;
             }
         }
@@ -2538,16 +2605,6 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
      * through the generated csrng to BootDone.  No firmware MMIO can
      * interleave, so no freeze semantics apply — this is exactly the
      * host-proven ring harness cadence. */
-    /* arm the settle hook BEFORE the boot bridge: the whole boot ring
-     * runs in the live-settle world (per-MMIO freezes retired — the
-     * hook's quiet path re-freezes, its active path co-steps).  Host
-     * phase5_repro proves this end to end: INS and GEN delivered
-     * exactly once, BootDone reached, seeds byte-exact. */
-    es->_qp_settle_hook = ot_eg_ring_settle_hook;
-    cs->_qp_settle_hook = ot_eg_ring_settle_hook;
-    ed->_qp_settle_hook = ot_eg_ring_settle_hook;
-    ae->_qp_settle_hook = ot_eg_ring_settle_hook;
-
     entropy_src_write(es, 0x20u, 0x00699996u, 4);   /* CONF */
     entropy_src_write(es, 0x94u, 0x66u, 4);         /* FW_OV_CONTROL */
     entropy_src_write(es, 0x1cu, 0x6u, 4);          /* MODULE_ENABLE */
@@ -2662,6 +2719,9 @@ static void ot_eg_soc_reset_exit(Object *obj, ResetType type)
         s->devices[OT_EG_SOC_DEV_KMAC]) {
         /* keymgr eats the digest of the ACTUAL boot image (the heart-
          * swap primary), not the parallel canary's KAT image */
+        /* arm every ring hook from THE TABLE before any bridge runs:
+         * the boot flows live in the live-settle world (v4-full). */
+        ot_eg_arm_ring_hooks(s->devices);
         ot_eg_keymgr_qp_wire(s->devices[OT_EG_SOC_DEV_KEYMGR_QP],
                              s->devices[OT_EG_SOC_DEV_KMAC],
                              s->devices[OT_EG_SOC_DEV_ROM_CTRL_QPP]);

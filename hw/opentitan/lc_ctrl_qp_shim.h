@@ -10,4 +10,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(OtLcCtrlQpState, OT_LC_CTRL_QP)
  * returns the embedded <dev>_state (see qemu_passes/lc_ctrl.h). */
 void *ot_lc_ctrl_qp_core(DeviceState *dev);
 
+/* Settle-hook arming (ring-table form: soc_glue arms members by
+ * name, one call per ring member). */
+void ot_lc_ctrl_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx);
+
 #endif /* HW_OPENTITAN_LC_CTRL_QP_SHIM_H */

@@ -59,6 +59,12 @@ void *ot_keymgr_qp_core(DeviceState *dev)
     return &OT_KEYMGR_QP(dev)->core;
 }
 
+void ot_keymgr_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx)
+{
+    OT_KEYMGR_QP(dev)->core._qp_settle_hook = fn;
+    OT_KEYMGR_QP(dev)->core._qp_settle_hook_ctx = ctx;
+}
+
 static uint64_t ot_keymgr_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtKeymgrQpState *s = OT_KEYMGR_QP(opaque);

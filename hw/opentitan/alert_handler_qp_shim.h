@@ -10,4 +10,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(OtAlertHandlerQpState, OT_ALERT_HANDLER_QP)
  * returns the embedded <dev>_state (see qemu_passes/alert_handler.h). */
 void *ot_alert_handler_qp_core(DeviceState *dev);
 
+/* Settle-hook arming (ring-table form: soc_glue arms members by
+ * name, one call per ring member). */
+void ot_alert_handler_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx);
+
 #endif /* HW_OPENTITAN_ALERT_HANDLER_QP_SHIM_H */

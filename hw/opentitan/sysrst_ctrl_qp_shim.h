@@ -10,4 +10,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(OtSysrstCtrlQpState, OT_SYSRST_CTRL_QP)
  * returns the embedded <dev>_state (see qemu_passes/sysrst_ctrl.h). */
 void *ot_sysrst_ctrl_qp_core(DeviceState *dev);
 
+/* Settle-hook arming (ring-table form: soc_glue arms members by
+ * name, one call per ring member). */
+void ot_sysrst_ctrl_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx);
+
 #endif /* HW_OPENTITAN_SYSRST_CTRL_QP_SHIM_H */

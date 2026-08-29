@@ -10,4 +10,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(OtSPIDeviceQpState, OT_SPI_DEVICE_QP)
  * returns the embedded <dev>_state (see qemu_passes/spi_device.h). */
 void *ot_spi_device_qp_core(DeviceState *dev);
 
+/* Settle-hook arming (ring-table form: soc_glue arms members by
+ * name, one call per ring member). */
+void ot_spi_device_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx);
+
 #endif /* HW_OPENTITAN_SPI_DEVICE_QP_SHIM_H */

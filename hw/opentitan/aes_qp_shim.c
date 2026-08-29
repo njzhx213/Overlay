@@ -63,6 +63,12 @@ void *ot_aes_qp_core(DeviceState *dev)
     return &OT_AES_QP(dev)->core;
 }
 
+void ot_aes_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx)
+{
+    OT_AES_QP(dev)->core._qp_settle_hook = fn;
+    OT_AES_QP(dev)->core._qp_settle_hook_ctx = ctx;
+}
+
 static uint64_t ot_aes_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtAesQpState *s = OT_AES_QP(opaque);

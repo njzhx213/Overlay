@@ -10,4 +10,8 @@ OBJECT_DECLARE_SIMPLE_TYPE(OtPwmQpState, OT_PWM_QP)
  * returns the embedded <dev>_state (see qemu_passes/pwm.h). */
 void *ot_pwm_qp_core(DeviceState *dev);
 
+/* Settle-hook arming (ring-table form: soc_glue arms members by
+ * name, one call per ring member). */
+void ot_pwm_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx);
+
 #endif /* HW_OPENTITAN_PWM_QP_SHIM_H */

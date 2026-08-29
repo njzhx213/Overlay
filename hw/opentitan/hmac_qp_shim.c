@@ -59,6 +59,12 @@ void *ot_hmac_qp_core(DeviceState *dev)
     return &OT_HMAC_QP(dev)->core;
 }
 
+void ot_hmac_qp_set_settle_hook(DeviceState *dev, int (*fn)(void *), void *ctx)
+{
+    OT_HMAC_QP(dev)->core._qp_settle_hook = fn;
+    OT_HMAC_QP(dev)->core._qp_settle_hook_ctx = ctx;
+}
+
 static uint64_t ot_hmac_qp_read(void *opaque, hwaddr addr, unsigned size)
 {
     OtHmacQpState *s = OT_HMAC_QP(opaque);
