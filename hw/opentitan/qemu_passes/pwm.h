@@ -18,7 +18,7 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint16_t blink_param_x_i;  /* BIP, 16-bit */
     uint8_t blink_y_phase_q_or_htbt_en_i;  /* BIP, 1-bit */
-    uint16_t phase_delay_i_and_unnamed_addr_1_xor_unnamed_addr_1;  /* BIP, 16-bit */
+    uint16_t phase_delay_i_and_unnamed_addr_0_xor_unnamed_addr_0;  /* BIP, 16-bit */
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
 

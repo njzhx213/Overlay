@@ -6527,9 +6527,9 @@ void lc_ctrl_set_lc_nvm_rma_ack_i_1_(lc_ctrl_state *s, uint8_t value)
     update_state(s);
 }
 
-void lc_ctrl_set_otp_device_id_i(lc_ctrl_state *s, const uint64_t value[4])
+void lc_ctrl_set_otp_manuf_state_i(lc_ctrl_state *s, const uint64_t value[4])
 {
-    memcpy(s->otp_device_id_i, value, sizeof(s->otp_device_id_i));
+    memcpy(s->otp_manuf_state_i, value, sizeof(s->otp_manuf_state_i));
     update_state(s);
     qp_tick(s);
     update_state(s);

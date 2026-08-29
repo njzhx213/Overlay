@@ -16,7 +16,7 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint64_t digest_i_4_;  /* BIP, 64-bit */
+    uint64_t digest_i_0_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint8_t digest_swap;  /* BIP, 1-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */

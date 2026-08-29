@@ -1926,6 +1926,22 @@ static void update_state_once(aes_state *s)
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_1__13_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl0_out_13_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_1__14_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl0_out_14_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_1__15_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl0_out_15_) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__0_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__15_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__1_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__14_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__2_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__13_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__3_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__12_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__4_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__11_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__5_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__10_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__6_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__9_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__7_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__8_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__8_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__7_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__9_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__6_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__10_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__5_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__11_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__4_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__12_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__3_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__13_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__2_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__14_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__1_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__15_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_2__0_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_1_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_3__0_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_2_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_3__1_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_3_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_3__2_) & ((1ULL << 6) - 1);
@@ -1942,6 +1958,22 @@ static void update_state_once(aes_state *s)
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_14_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_3__13_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_15_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_3__14_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_0_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_indices_3__15_) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__0_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_15_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__1_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_14_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__2_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_13_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__3_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_12_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__4_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_11_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__5_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_10_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__6_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_9_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__7_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_8_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__8_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_7_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__9_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_6_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__10_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_5_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__11_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_4_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__12_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_3_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__13_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_2_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__14_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_1_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
+    s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_3__15_ = ((((((uint64_t)(s->u_aes_core_u_aes_prng_clearing_u_lfsr_qpinl1_out_0_)) << 0)) & 0x3F)) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_sbox_in_indices_0_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_0__0_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_sbox_in_indices_1_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_1__0_) & ((1ULL << 6) - 1);
     s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_sbox_in_indices_2_ = (s->u_aes_core_u_aes_prng_clearing_u_lfsr_gen_out_non_linear_matrix_rotrev_indices_2__0_) & ((1ULL << 6) - 1);
@@ -4759,7 +4791,7 @@ static void update_state_once(aes_state *s)
     s->u_aes_core_u_aes_control_gen_fsm_0_gen_fsm_p_u_aes_control_fsm_i_ghash_out_valid_i = ((((s->u_aes_core_u_aes_control_sp2v_sig_chk_5_) >> 0) & 0x1)) & ((1ULL << 1) - 1);
     s->u_aes_core_u_aes_control_gen_fsm_1_gen_fsm_p_u_aes_control_fsm_i_ghash_out_valid_i = ((((s->u_aes_core_u_aes_control_sp2v_sig_chk_5_) >> 1) & 0x1)) & ((1ULL << 1) - 1);
     s->u_aes_core_u_aes_control_gen_fsm_2_gen_fsm_n_u_aes_control_fsm_i_ghash_out_valid_ni = ((((s->u_aes_core_u_aes_control_sp2v_sig_chk_5_) >> 2) & 0x1)) & ((1ULL << 1) - 1);
-    /* comb SCC 4885: 1599 assignment(s), local fixed point */
+    /* comb SCC 4917: 1599 assignment(s), local fixed point */
     for (unsigned _qp_scc = 0; _qp_scc < 8u; ++_qp_scc) {
     s->u_aes_core_entropy_clearing_ack_i = (((s->u_aes_core_entropy_clearing_req_o) & (s->u_prim_sync_reqack_data_src_ack_o))) & ((1ULL << 1) - 1);
     s->u_aes_core_alert_fatal_o = (((s->u_aes_core_ctrl_err_storage_d) | (s->u_aes_core_ctrl_err_storage_q)) | (s->u_aes_core_u_aes_ctr_alert_o) | (s->u_aes_core_u_aes_cipher_core_alert_o) | (s->u_aes_core_u_aes_control_alert_o) | (s->u_aes_core_intg_err_alert_i)) & ((1ULL << 1) - 1);
