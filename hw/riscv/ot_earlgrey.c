@@ -2538,35 +2538,34 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
      * through the generated csrng to BootDone.  No firmware MMIO can
      * interleave, so no freeze semantics apply — this is exactly the
      * host-proven ring harness cadence. */
-    ot_eg_ring_freeze();
+    /* arm the settle hook BEFORE the boot bridge: the whole boot ring
+     * runs in the live-settle world (per-MMIO freezes retired — the
+     * hook's quiet path re-freezes, its active path co-steps).  Host
+     * phase5_repro proves this end to end: INS and GEN delivered
+     * exactly once, BootDone reached, seeds byte-exact. */
+    es->_qp_settle_hook = ot_eg_ring_settle_hook;
+    cs->_qp_settle_hook = ot_eg_ring_settle_hook;
+    ed->_qp_settle_hook = ot_eg_ring_settle_hook;
+    ae->_qp_settle_hook = ot_eg_ring_settle_hook;
+
     entropy_src_write(es, 0x20u, 0x00699996u, 4);   /* CONF */
-    ot_eg_ring_freeze();
     entropy_src_write(es, 0x94u, 0x66u, 4);         /* FW_OV_CONTROL */
-    ot_eg_ring_freeze();
     entropy_src_write(es, 0x1cu, 0x6u, 4);          /* MODULE_ENABLE */
-    ot_eg_ring_freeze();
     entropy_src_write(es, 0x98u, 0x6u, 4);          /* SHA3 window open */
     for (unsigned i = 0; i < 64u; i++) {
         unsigned guard = 0;
         for (;;) {
-            ot_eg_ring_freeze();
-            if (!(entropy_src_read(es, 0x9cu, 4) & 1u) || guard++ >= 1000u) {
+                    if (!(entropy_src_read(es, 0x9cu, 4) & 1u) || guard++ >= 1000u) {
                 break;
             }
             ot_eg_ring_costep();
         }
-        ot_eg_ring_freeze();
-        entropy_src_write(es, 0xa8u, 0x5EED0000u + 0x01010101u * i, 4);
+            entropy_src_write(es, 0xa8u, 0x5EED0000u + 0x01010101u * i, 4);
     }
-    ot_eg_ring_freeze();
     entropy_src_write(es, 0x98u, 0x9u, 4);          /* close: pad+squeeze */
-    ot_eg_ring_freeze();
     csrng_write(cs, 0x14u, 0x9666u, 4);             /* csrng CTRL */
-    ot_eg_ring_freeze();
     edn_write(ed, 0x18u, 0x00000901u, 4);           /* BOOT_INS: real entropy */
-    ot_eg_ring_freeze();
     edn_write(ed, 0x1cu, 0x00001903u, 4);           /* BOOT_GEN glen=1 */
-    ot_eg_ring_freeze();
     edn_write(ed, 0x14u, 0x9966u, 4);               /* enable + boot mode */
     for (unsigned t = 0; t < 40000u; t++) {
         ot_eg_ring_costep();
@@ -2592,14 +2591,6 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
         warn_report("entropy ring boot bridge: BootDone not reached (sm=%x)",
                     (unsigned)ed->u_edn_core_u_edn_main_sm_state_q);
     }
-
-    ot_eg_ring_freeze();
-    /* arm the settle hook on every ring member: from here on, an MMIO
-     * settle on one member co-steps the others (see the hook above) */
-    es->_qp_settle_hook = ot_eg_ring_settle_hook;
-    cs->_qp_settle_hook = ot_eg_ring_settle_hook;
-    ed->_qp_settle_hook = ot_eg_ring_settle_hook;
-    ae->_qp_settle_hook = ot_eg_ring_settle_hook;
 
     if (!ot_eg_ring_timer) {
         ot_eg_ring_timer = timer_new_us(QEMU_CLOCK_VIRTUAL,

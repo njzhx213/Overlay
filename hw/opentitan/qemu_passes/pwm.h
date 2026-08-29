@@ -21,7 +21,6 @@ typedef struct {
     uint16_t phase_delay_i_and_unnamed_addr_0_xor_unnamed_addr_0;  /* BIP, 16-bit */
     uint32_t reg_rdata_next;  /* BIP, 32-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t alert_rx_i_0__ack_n;  /* 1-bit */
@@ -200,6 +199,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */

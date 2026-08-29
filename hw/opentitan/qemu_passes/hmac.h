@@ -16,14 +16,13 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
-    uint64_t digest_i_1_;  /* BIP, 64-bit */
+    uint64_t digest_i_6_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint8_t digest_swap;  /* BIP, 1-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t hw2reg_digest_15__d;  /* BIP, 32-bit */
+    uint32_t hw2reg_key_30__d;  /* BIP, 32-bit */
     uint8_t key_length_supplied;  /* BIP, 6-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint8_t unnamed_enable_0;  /* BIP, 1-bit */
 
     /* ---- Internal state registers ---- */
@@ -254,6 +253,7 @@ typedef struct {
     uint32_t hw2reg_digest_12__d;  /* 32-bit */
     uint32_t hw2reg_digest_13__d;  /* 32-bit */
     uint32_t hw2reg_digest_14__d;  /* 32-bit */
+    uint32_t hw2reg_digest_15__d;  /* 32-bit */
     uint32_t hw2reg_digest_1__d;  /* 32-bit */
     uint32_t hw2reg_digest_2__d;  /* 32-bit */
     uint32_t hw2reg_digest_3__d;  /* 32-bit */
@@ -294,7 +294,6 @@ typedef struct {
     uint32_t hw2reg_key_28__d;  /* 32-bit */
     uint32_t hw2reg_key_29__d;  /* 32-bit */
     uint32_t hw2reg_key_2__d;  /* 32-bit */
-    uint32_t hw2reg_key_30__d;  /* 32-bit */
     uint32_t hw2reg_key_31__d;  /* 32-bit */
     uint32_t hw2reg_key_3__d;  /* 32-bit */
     uint32_t hw2reg_key_4__d;  /* 32-bit */
@@ -530,6 +529,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */

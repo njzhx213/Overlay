@@ -18,8 +18,9 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint64_t app_i_0__data;  /* BIP, 64-bit */
     uint8_t app_id_eq_0;  /* BIP, 1-bit */
+    uint8_t app_kmac_en;  /* BIP, 1-bit */
+    uint32_t hw2reg_err_code_d;  /* BIP, 32-bit */
     uint8_t kmac_st;  /* BIP, 6-bit */
-    uint8_t reg_state_valid;  /* BIP, 1-bit */
     uint16_t st;  /* BIP, 10-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
     uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
@@ -57,7 +58,6 @@ typedef struct {
     uint8_t app_i_2__last;  /* 1-bit */
     uint8_t app_i_2__strb;  /* 8-bit */
     uint8_t app_i_2__valid;  /* 1-bit */
-    uint8_t app_kmac_en;  /* 1-bit */
     uint64_t app_o_0__digest_share0[6];  /* 384-bit (wide-array) */
     uint64_t app_o_0__digest_share1[6];  /* 384-bit (wide-array) */
     uint8_t app_o_0__done;  /* 1-bit */
@@ -389,7 +389,6 @@ typedef struct {
     uint8_t hw2reg_cfg_regwen_d;  /* 1-bit */
     uint16_t hw2reg_entropy_refresh_hash_cnt_d;  /* 10-bit */
     uint8_t hw2reg_entropy_refresh_hash_cnt_de;  /* 1-bit */
-    uint32_t hw2reg_err_code_d;  /* 32-bit */
     uint8_t hw2reg_err_code_de;  /* 1-bit */
     uint8_t hw2reg_intr_state_fifo_empty_d;  /* 1-bit */
     uint8_t hw2reg_intr_state_fifo_empty_de;  /* 1-bit */
@@ -600,6 +599,7 @@ typedef struct {
     uint64_t reg_ns_prefix[6];  /* 352-bit (wide-array) */
     uint64_t reg_state_0_[25];  /* 1600-bit (wide-array) */
     uint64_t reg_state_tl_0_[25];  /* 1600-bit (wide-array) */
+    uint8_t reg_state_valid;  /* 1-bit */
     uint8_t rst_edn_ni;  /* 1-bit */
     uint8_t rst_ni;  /* 1-bit */
     uint8_t rst_shadowed_ni;  /* 1-bit */

@@ -18,11 +18,11 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint16_t cmd_dp_sel;  /* BIP, 10-bit */
     uint8_t cmd_read_pipeline_sel;  /* BIP, 1-bit */
-    uint32_t hw2reg_upload_addrfifo_d;  /* BIP, 32-bit */
     uint8_t rst_ni;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
     uint32_t tl_sram_d2h_0__d_data;  /* BIP, 32-bit */
     uint32_t unnamed_rdata_0;  /* BIP, 32-bit */
+    __uint128_t unnamed_wdata_0;  /* BIP, 66-bit */
 
     /* ---- Internal state registers ---- */
     uint8_t _unknown_arg0;  /* 1-bit */
@@ -606,6 +606,7 @@ typedef struct {
     uint8_t hw2reg_tpm_status_cmdaddr_notempty_d;  /* 1-bit */
     uint8_t hw2reg_tpm_status_rdfifo_aborted_d;  /* 1-bit */
     uint8_t hw2reg_tpm_status_wrfifo_pending_d;  /* 1-bit */
+    uint32_t hw2reg_upload_addrfifo_d;  /* 32-bit */
     uint8_t hw2reg_upload_cmdfifo_addr4b_mode_d;  /* 1-bit */
     uint8_t hw2reg_upload_cmdfifo_busy_d;  /* 1-bit */
     uint8_t hw2reg_upload_cmdfifo_data_d;  /* 8-bit */

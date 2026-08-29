@@ -1872,12 +1872,6 @@ void aon_timer_advance_tick(aon_timer_state *s)
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
         while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
-            /* settle hook: let the machine co-step the OTHER ring
-             * members (this model is _qp_busy and is skipped there)
-             * so a cross-model dependency arising INSIDE this settle
-             * is serviced instead of deadlocking the blind spot. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -1885,6 +1879,26 @@ void aon_timer_advance_tick(aon_timer_state *s)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
+            /* settle hook AFTER tick+update: the machine co-steps
+             * the OTHER ring members (this model is _qp_busy and is
+             * skipped there) against this model's FRESH post-tick
+             * outputs — the same phase as a pump costep, so a
+             * one-clock request pulse is seen exactly once (the
+             * before-tick placement let a pulse live two partner
+             * ticks: a boot INS was delivered twice).  Nonzero
+             * return = cross-model transaction in flight: keeps the
+             * loop alive past a local fixed point. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            /* re-mirror after the hook wired fresh partner outputs
+             * onto this model's inputs: without this, the next tick
+             * still sees pre-hook mirrors and a one-clock handshake
+             * (req/ready) takes one beat too long — the boot INS
+             * was pushed twice.  Costs only while cross-model
+             * traffic is live. */
+            if (_qp_ext) {
+                update_state(s);
+            }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;
@@ -1921,12 +1935,6 @@ void aon_timer_settle(aon_timer_state *s)
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
         while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
-            /* settle hook: let the machine co-step the OTHER ring
-             * members (this model is _qp_busy and is skipped there)
-             * so a cross-model dependency arising INSIDE this settle
-             * is serviced instead of deadlocking the blind spot. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -1934,6 +1942,26 @@ void aon_timer_settle(aon_timer_state *s)
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
+            /* settle hook AFTER tick+update: the machine co-steps
+             * the OTHER ring members (this model is _qp_busy and is
+             * skipped there) against this model's FRESH post-tick
+             * outputs — the same phase as a pump costep, so a
+             * one-clock request pulse is seen exactly once (the
+             * before-tick placement let a pulse live two partner
+             * ticks: a boot INS was delivered twice).  Nonzero
+             * return = cross-model transaction in flight: keeps the
+             * loop alive past a local fixed point. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            /* re-mirror after the hook wired fresh partner outputs
+             * onto this model's inputs: without this, the next tick
+             * still sees pre-hook mirrors and a one-clock handshake
+             * (req/ready) takes one beat too long — the boot INS
+             * was pushed twice.  Costs only while cross-model
+             * traffic is live. */
+            if (_qp_ext) {
+                update_state(s);
+            }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;
@@ -2057,12 +2085,6 @@ uint64_t aon_timer_read(void *opaque, hwaddr addr, unsigned size)
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
         while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
-            /* settle hook: let the machine co-step the OTHER ring
-             * members (this model is _qp_busy and is skipped there)
-             * so a cross-model dependency arising INSIDE this settle
-             * is serviced instead of deadlocking the blind spot. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -2071,6 +2093,27 @@ uint64_t aon_timer_read(void *opaque, hwaddr addr, unsigned size)
             ++_qp_ticks;
             update_state(s);
             if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
+            /* settle hook AFTER tick+update: the machine co-steps
+             * the OTHER ring members (this model is _qp_busy and is
+             * skipped there) against this model's FRESH post-tick
+             * outputs — the same phase as a pump costep, so a
+             * one-clock request pulse is seen exactly once (the
+             * before-tick placement let a pulse live two partner
+             * ticks: a boot INS was delivered twice).  Nonzero
+             * return = cross-model transaction in flight: keeps the
+             * loop alive past a local fixed point. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            /* re-mirror after the hook wired fresh partner outputs
+             * onto this model's inputs: without this, the next tick
+             * still sees pre-hook mirrors and a one-clock handshake
+             * (req/ready) takes one beat too long — the boot INS
+             * was pushed twice.  Costs only while cross-model
+             * traffic is live. */
+            if (_qp_ext) {
+                update_state(s);
+            if (!s->_qp_rd_cap && s->u_reg_tl_o_d_valid) { s->_qp_rd_cap = 1; s->_qp_rd_capv = s->u_reg_tl_o_d_data; }
+            }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;
@@ -2165,12 +2208,6 @@ void aon_timer_write(void *opaque, hwaddr addr,
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
         while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
-            /* settle hook: let the machine co-step the OTHER ring
-             * members (this model is _qp_busy and is skipped there)
-             * so a cross-model dependency arising INSIDE this settle
-             * is serviced instead of deadlocking the blind spot. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -2178,6 +2215,26 @@ void aon_timer_write(void *opaque, hwaddr addr,
                 break;  /* sequential fixed point reached */
             ++_qp_ticks;
             update_state(s);
+            /* settle hook AFTER tick+update: the machine co-steps
+             * the OTHER ring members (this model is _qp_busy and is
+             * skipped there) against this model's FRESH post-tick
+             * outputs — the same phase as a pump costep, so a
+             * one-clock request pulse is seen exactly once (the
+             * before-tick placement let a pulse live two partner
+             * ticks: a boot INS was delivered twice).  Nonzero
+             * return = cross-model transaction in flight: keeps the
+             * loop alive past a local fixed point. */
+            _qp_ext = s->_qp_settle_hook &&
+                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            /* re-mirror after the hook wired fresh partner outputs
+             * onto this model's inputs: without this, the next tick
+             * still sees pre-hook mirrors and a one-clock handshake
+             * (req/ready) takes one beat too long — the boot INS
+             * was pushed twice.  Costs only while cross-model
+             * traffic is live. */
+            if (_qp_ext) {
+                update_state(s);
+            }
             QPSettleFingerprint _qp_now = qp_settle_fingerprint(s);
             if (_qp_rw) {  /* deliberate repeat: move the camera here */
                 _qp_base = _qp_now; _qp_lam = 0; _qp_pow = 1;

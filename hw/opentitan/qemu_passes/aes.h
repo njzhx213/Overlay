@@ -18,7 +18,7 @@ typedef struct {
     /* These signals bridge QEMU MMIO and internal logic. */
     uint8_t iv_sel;  /* BIP, 6-bit */
     uint8_t key_init_sel_ceq_24;  /* BIP, 1-bit */
-    uint32_t key_sideload_0__0_;  /* BIP, 32-bit */
+    uint32_t key_sideload_1__2_;  /* BIP, 32-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
     uint32_t unused_data_out_q_0_;  /* BIP, 32-bit */
 
