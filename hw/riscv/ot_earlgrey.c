@@ -2394,21 +2394,24 @@ static int ot_eg_ring_settle_hook(void *opaque)
     aes_state *ae = ot_eg_ring_ae;
     (void)opaque;
 
-    /* v1 scope: fire ONLY for the aes blind-spot (a PRNG demand that
-     * arises inside an aes/any settle).  The other ring flows (csrng
-     * SW lane, es noise collection) are pump-paced under the frozen-
-     * settle semantics their KATs were proven in — migrating them to
-     * the live-settle world is a per-flow follow-up with its own
-     * re-verification, not a side effect. */
-    (void)es; (void)ed;
-    if (cs->u_csrng_core_u_csrng_main_sm_state_q == 0x37u /* Idle */ &&
-        ot_eg_ring_aes_cool == 0u &&
-        !(ae && ae->edn_o_edn_req)) {
-        return 0;
-    }
-    if (!(ae && (ae->edn_o_edn_req ||
-                 ae->u_aes_core_u_aes_prng_clearing_reseed_req_i ||
-                 ot_eg_ring_aes_cool))) {
+    /* v2 scope: live world while the csrng is mid-command (the SW
+     * lane — host-proven byte-exact under this schedule) or ring
+     * lines are in flight, plus the v1 aes blind-spot demands.  es
+     * noise collection stays pump-paced (v3). */
+    (void)es;
+    /* fire on ACTUAL cross-model traffic, not on "cs is busy": a
+     * flag0 SW command is pure-local csrng work — co-stepping the
+     * partners through it just taxes every settle tick with ed+es
+     * updates (measured 3x wall on the ring gate).  These are the
+     * pump's own in-flight terms: semantic parity, zero overlap. */
+    bool cs_active = ed->csrng_cmd_o_csrng_req_valid ||
+                     cs->csrng_cmd_o_0__csrng_rsp_ack ||
+                     cs->csrng_cmd_o_0__genbits_valid ||
+                     cs->entropy_src_hw_if_o_es_req;
+    bool aes_demand = ae && (ae->edn_o_edn_req ||
+                             ae->u_aes_core_u_aes_prng_clearing_reseed_req_i ||
+                             ot_eg_ring_aes_cool != 0u);
+    if (!cs_active && !aes_demand) {
         return 0;
     }
     ot_eg_ring_costep();
