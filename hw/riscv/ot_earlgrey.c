@@ -2270,6 +2270,48 @@ static void ot_eg_ring_freeze(void)
 }
 
 static uint32_t ot_eg_noise_lfsr = 0x5EEDBA5Eu;
+static bool ot_eg_organ_pending;
+static uint8_t ot_eg_organ_nib;
+
+/* THE unified noise feeder — one pending-nibble handshake shared by
+ * every schedule (pump costep AND settle light tick).  The nibble is
+ * held (re-parked across freezes) until its acceptance is IMMINENT
+ * (comb wvalid & wready high: the very next tick consumes it) — a
+ * landed-based release is one tick late under the settle schedule and
+ * the stale comb re-accepts the same nibble (double-feed, host-proven
+ * at accepted-index 1). */
+static void ot_eg_organ_feed(entropy_src_state *es)
+{
+    if (ot_eg_organ_pending) {
+        if (es->u_entropy_src_core_u_prim_fifo_sync_esrng_wvalid_i &&
+            es->u_entropy_src_core_u_prim_fifo_sync_esrng_wready_o) {
+            ot_eg_organ_pending = false;
+            es->entropy_src_rng_valid_i = 0;
+        } else {
+            es->entropy_src_rng_valid_i = 1;
+            es->entropy_src_rng_bits_i = ot_eg_organ_nib;
+        }
+        return;
+    }
+    if (es->entropy_src_rng_enable_o &&
+        ((es->u_entropy_src_core_es_enable_fo >> 5) & 1u) &&
+        es->u_entropy_src_core_es_delayed_enable &&
+        es->u_entropy_src_core_u_prim_fifo_sync_esrng_wready_o &&
+        !es->u_entropy_src_core_sfifo_esrng_not_empty &&
+        !es->u_entropy_src_core_pfifo_esbit_not_empty &&
+        !es->u_entropy_src_core_u_prim_packer_fifo_postht_rvalid_o &&
+        !es->u_entropy_src_core_sfifo_distr_not_empty &&
+        !es->u_entropy_src_core_u_enable_delay_sha3_block_busy_i &&
+        !es->u_entropy_src_core_fw_ov_mode_entropy_insert) {
+        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 13;
+        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr >> 17;
+        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 5;
+        ot_eg_organ_nib = ot_eg_noise_lfsr & 0xFu;
+        ot_eg_organ_pending = true;
+        es->entropy_src_rng_valid_i = 1;
+        es->entropy_src_rng_bits_i = ot_eg_organ_nib;
+    }
+}
 
 static void ot_eg_ring_costep(void)
 {
@@ -2294,35 +2336,7 @@ static void ot_eg_ring_costep(void)
     }
     cs->entropy_src_hw_if_i_es_fips = es->entropy_src_hw_if_o_es_fips;
 
-    /* noise-pump organ: when the generated entropy_src is collecting
-     * from its REAL rng port (module wants noise, fw_ov insert not
-     * active), feed one deterministic xorshift32 nibble per costep —
-     * the same stream the host KAT and the firmware expect header are
-     * derived from.  rng_valid is a wire input: it is cleared by
-     * ot_eg_ring_freeze before any MMIO settle can run. */
-    if (es->entropy_src_rng_enable_o &&
-        ((es->u_entropy_src_core_es_enable_fo >> 5) & 1u) &&
-        es->u_entropy_src_core_es_delayed_enable &&
-        es->u_entropy_src_core_u_prim_fifo_sync_esrng_wready_o &&
-        /* whole-pipeline-idle throttle: a nibble is fed only when the
-         * previous one has fully drained into the conditioner — the
-         * esbit/postht/distr packers DROP data when they stall against
-         * a busy SHA3, and a dropped-but-counted nibble desyncs the
-         * stream from the python reference */
-        !es->u_entropy_src_core_sfifo_esrng_not_empty &&
-        !es->u_entropy_src_core_pfifo_esbit_not_empty &&
-        !es->u_entropy_src_core_u_prim_packer_fifo_postht_rvalid_o &&
-        !es->u_entropy_src_core_sfifo_distr_not_empty &&
-        !es->u_entropy_src_core_u_enable_delay_sha3_block_busy_i &&
-        !es->u_entropy_src_core_fw_ov_mode_entropy_insert) {
-        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 13;
-        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr >> 17;
-        ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 5;
-        es->entropy_src_rng_valid_i = 1;
-        es->entropy_src_rng_bits_i = ot_eg_noise_lfsr & 0xFu;
-    } else {
-        es->entropy_src_rng_valid_i = 0;
-    }
+    ot_eg_organ_feed(es);
 
     /* aes leg (endpoint 0): the generated aes rides the ring for REAL
      * EDN entropy — its shim tie (always-ack) is overridden at wire
@@ -2411,10 +2425,22 @@ static int ot_eg_ring_settle_hook(void *opaque)
     bool aes_demand = ae && (ae->edn_o_edn_req ||
                              ae->u_aes_core_u_aes_prng_clearing_reseed_req_i ||
                              ot_eg_ring_aes_cool != 0u);
-    if (!cs_active && !aes_demand) {
+    bool collecting = es->entropy_src_rng_enable_o &&
+        !es->u_entropy_src_core_fw_ov_mode_entropy_insert &&
+        !es->u_reg_u_intr_state_es_entropy_valid_q;
+    if (!cs_active && !aes_demand && !collecting) {
+        /* quiet path re-freezes: stale organ/handshake wires must never
+         * replay into a settle */
+        ot_eg_ring_freeze();
         return 0;
     }
-    ot_eg_ring_costep();
+    if (cs_active || aes_demand) {
+        ot_eg_ring_costep();
+        return 1;
+    }
+    /* collecting-only: pure-local es flow — the organ light tick, no
+     * partner tax (the v2 predicate law, applied to es) */
+    ot_eg_organ_feed(es);
     return 1;
 }
 
