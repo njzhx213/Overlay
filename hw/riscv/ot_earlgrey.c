@@ -70,6 +70,7 @@
 #include "hw/opentitan/ot_sensor_eg.h"
 #include "hw/opentitan/aes_qp_shim.h"
 #include "hw/opentitan/qemu_passes/aes.h"
+#include "hw/opentitan/ot_qp_ring.h"
 #include "hw/opentitan/kmac_qp_shim.h"
 #include "hw/opentitan/rom_ctrl_qp_shim.h"
 #include "hw/opentitan/rom_ctrl_qp_boot.h"
@@ -2128,6 +2129,172 @@ static void ot_eg_lc_ctrl_qp_wire(DeviceState *lc_dev)
     lc_ctrl_step_many(l, 200);
 }
 
+/* ---- ring engine plumbing (device-agnostic once soc_glue emits it) ---- */
+#define QPW_UPDTICK(dev, type)                                            \
+    static void qpm_##dev##_update(void *s) { dev##_update((type *)s); }  \
+    static void qpm_##dev##_tick(void *s)   { dev##_tick((type *)s); }
+QPW_UPDTICK(entropy_src, entropy_src_state)
+QPW_UPDTICK(csrng, csrng_state)
+QPW_UPDTICK(edn, edn_state)
+QPW_UPDTICK(aes, aes_state)
+QPW_UPDTICK(keymgr, keymgr_state)
+QPW_UPDTICK(kmac, kmac_state)
+
+enum { L_CMD = 0, L_ES = 1, L_AES = 2 };
+static qp_wire ot_eg_entropy_rows[24];
+static qp_ring ot_eg_entropy_ring;
+enum { L_KM = 0 };
+static qp_wire ot_eg_km_rows[12];
+static qp_ring ot_eg_km_ring;
+
+#define QP_ROW(TBL, I, LEG, SRC, DST, BYTES, N, ROLE, FLAGS)              \
+    do {                                                                  \
+        TBL[I].leg = (LEG);   TBL[I].src = (SRC); TBL[I].dst = (DST);     \
+        TBL[I].bytes = (BYTES); TBL[I].n = (N);                           \
+        TBL[I].role = (ROLE); TBL[I].flags = (FLAGS); TBL[I].idle = 0;    \
+        (I)++;                                                            \
+    } while (0)
+
+/* THE ENTROPY RING TABLE.  One row per assignment the machine already
+ * performs; role and flags are DECLARED, never derived (a ready line idles
+ * high and a qualifier leaf can hold a value forever, so neither can be
+ * told from traffic by observation). */
+static void ot_eg_entropy_ring_build(entropy_src_state *es, csrng_state *cs,
+                                     edn_state *ed, aes_state *ae)
+{
+    unsigned i = 0;
+
+    /* edn -> csrng command port */
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &ed->csrng_cmd_o_csrng_req_valid,
+           &cs->csrng_cmd_i_0__csrng_req_valid, 1, 1, QP_ROLE_REQ,
+           QP_W_OPENS | QP_W_FREEZE);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &ed->csrng_cmd_o_csrng_req_bus,
+           &cs->csrng_cmd_i_0__csrng_req_bus, 4, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &ed->csrng_cmd_o_genbits_ready,
+           &cs->csrng_cmd_i_0__genbits_ready, 1, 1, QP_ROLE_READY, QP_W_FREEZE);
+    /* csrng -> edn */
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &cs->csrng_cmd_o_0__csrng_req_ready,
+           &ed->csrng_cmd_i_csrng_req_ready, 1, 1, QP_ROLE_READY, QP_W_FREEZE);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &cs->csrng_cmd_o_0__csrng_rsp_ack,
+           &ed->csrng_cmd_i_csrng_rsp_ack, 1, 1, QP_ROLE_REQ,
+           QP_W_CLOSES | QP_W_FREEZE);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &cs->csrng_cmd_o_0__csrng_rsp_sts,
+           &ed->csrng_cmd_i_csrng_rsp_sts, 1, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &cs->csrng_cmd_o_0__genbits_valid,
+           &ed->csrng_cmd_i_genbits_valid, 1, 1, QP_ROLE_REQ, QP_W_FREEZE);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &cs->csrng_cmd_o_0__genbits_fips,
+           &ed->csrng_cmd_i_genbits_fips, 1, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_entropy_rows, i, L_CMD, &cs->csrng_cmd_o_0__genbits_bus,
+           &ed->csrng_cmd_i_genbits_bus, 16, 1, QP_ROLE_DATA, 0);
+    /* csrng <-> entropy_src hw interface */
+    QP_ROW(ot_eg_entropy_rows, i, L_ES, &cs->entropy_src_hw_if_o_es_req,
+           &es->entropy_src_hw_if_i_es_req, 1, 1, QP_ROLE_REQ,
+           QP_W_OPENS | QP_W_FREEZE);
+    QP_ROW(ot_eg_entropy_rows, i, L_ES, &es->entropy_src_hw_if_o_es_ack,
+           &cs->entropy_src_hw_if_i_es_ack, 1, 1, QP_ROLE_REQ,
+           QP_W_CLOSES | QP_W_FREEZE);
+    QP_ROW(ot_eg_entropy_rows, i, L_ES, es->entropy_src_hw_if_o_es_bits,
+           cs->entropy_src_hw_if_i_es_bits, 8, 6, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_entropy_rows, i, L_ES, &es->entropy_src_hw_if_o_es_fips,
+           &cs->entropy_src_hw_if_i_es_fips, 1, 1, QP_ROLE_DATA, 0);
+    /* the machine organ's own wire into the rng port: freeze-only */
+    QP_ROW(ot_eg_entropy_rows, i, L_ES, NULL, &es->entropy_src_rng_valid_i,
+           1, 1, QP_ROLE_DATA, QP_W_FREEZE);
+    /* aes leg: endpoint 0 */
+    if (ae) {
+        QP_ROW(ot_eg_entropy_rows, i, L_AES, &ae->edn_o_edn_req,
+               &ed->edn_i_0__edn_req, 1, 1, QP_ROLE_REQ,
+               QP_W_OPENS | QP_W_FREEZE);
+        QP_ROW(ot_eg_entropy_rows, i, L_AES, &ed->edn_o_0__edn_ack,
+               &ae->edn_i_edn_ack, 1, 1, QP_ROLE_REQ,
+               QP_W_CLOSES | QP_W_FREEZE);
+        QP_ROW(ot_eg_entropy_rows, i, L_AES, &ed->edn_o_0__edn_bus,
+               &ae->edn_i_edn_bus, 4, 1, QP_ROLE_DATA, 0);
+        QP_ROW(ot_eg_entropy_rows, i, L_AES, &ed->edn_o_0__edn_fips,
+               &ae->edn_i_edn_fips, 1, 1, QP_ROLE_DATA, 0);
+    }
+
+    ot_eg_entropy_ring.name = "entropy";
+    ot_eg_entropy_ring.rows = ot_eg_entropy_rows;
+    ot_eg_entropy_ring.n_rows = i;
+    ot_eg_entropy_ring.n_legs = 3;
+    /* legs are TRANSACTION DOMAINS: the command port and the entropy pull
+     * open/close independently, so they must not share one outstanding bit */
+    ot_eg_entropy_ring.leg[L_CMD] = (qp_leg){ .name = "cmd",
+        .warm_reload = 0, .present = true };
+    ot_eg_entropy_ring.leg[L_ES] = (qp_leg){ .name = "es",
+        .warm_reload = 0, .present = true };
+    ot_eg_entropy_ring.leg[L_AES] = (qp_leg){ .name = "aes",
+        .warm_reload = 16, .present = ae != NULL };
+    ot_eg_entropy_ring.n_members = 4;
+    ot_eg_entropy_ring.member[0] = (qp_member){ .name = "entropy_src",
+        .st = es, .busy = &es->_qp_busy, .active = &es->_qp_active,
+        .update = qpm_entropy_src_update, .tick = qpm_entropy_src_tick,
+        .present = true, .gate_leg = -1 };
+    ot_eg_entropy_ring.member[1] = (qp_member){ .name = "csrng",
+        .st = cs, .busy = &cs->_qp_busy, .active = &cs->_qp_active,
+        .update = qpm_csrng_update, .tick = qpm_csrng_tick, .present = true,
+        .gate_leg = -1 };
+    ot_eg_entropy_ring.member[2] = (qp_member){ .name = "edn",
+        .st = ed, .busy = &ed->_qp_busy, .active = &ed->_qp_active,
+        .update = qpm_edn_update, .tick = qpm_edn_tick, .present = true,
+        .gate_leg = -1 };
+    ot_eg_entropy_ring.member[3] = (qp_member){ .name = "aes",
+        .st = ae, .busy = ae ? &ae->_qp_busy : NULL,
+        .active = ae ? &ae->_qp_active : NULL,
+        .update = qpm_aes_update, .tick = qpm_aes_tick, .present = ae != NULL,
+        .gate_leg = L_AES };
+}
+
+/* THE KEYMGR<->KMAC RING TABLE. */
+static void ot_eg_km_ring_build(keymgr_state *g, kmac_state *k)
+{
+    unsigned i = 0;
+
+    QP_ROW(ot_eg_km_rows, i, L_KM, &g->kmac_data_o_valid, &k->app_i_0__valid,
+           1, 1, QP_ROLE_REQ, QP_W_OPENS | QP_W_FREEZE);
+    QP_ROW(ot_eg_km_rows, i, L_KM, &g->kmac_data_o_data, &k->app_i_0__data,
+           8, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, &g->kmac_data_o_strb, &k->app_i_0__strb,
+           1, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, &g->kmac_data_o_last, &k->app_i_0__last,
+           1, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, &g->kmac_key_o_valid, &k->keymgr_key_i_valid,
+           1, 1, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, g->kmac_key_o_key_0_, k->keymgr_key_i_key_0_,
+           8, 4, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, g->kmac_key_o_key_1_, k->keymgr_key_i_key_1_,
+           8, 4, QP_ROLE_DATA, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, &k->app_o_0__ready, &g->kmac_data_i_ready,
+           1, 1, QP_ROLE_READY, 0);
+    QP_ROW(ot_eg_km_rows, i, L_KM, &k->app_o_0__error, &g->kmac_data_i_error,
+           1, 1, QP_ROLE_DATA, 0);
+    /* sample-only: closes the transaction; the digest capture stays in the
+     * bridge (it latches shares, which no wire copy can express) */
+    QP_ROW(ot_eg_km_rows, i, L_KM, &k->app_o_0__done, NULL,
+           1, 1, QP_ROLE_REQ, QP_W_CLOSES);
+    /* freeze-only: the bridge-presented done line */
+    QP_ROW(ot_eg_km_rows, i, L_KM, NULL, &g->kmac_data_i_done,
+           1, 1, QP_ROLE_DATA, QP_W_FREEZE);
+
+    ot_eg_km_ring.name = "keymgr-kmac";
+    ot_eg_km_ring.rows = ot_eg_km_rows;
+    ot_eg_km_ring.n_rows = i;
+    ot_eg_km_ring.n_legs = 1;
+    ot_eg_km_ring.leg[L_KM] = (qp_leg){ .name = "km", .warm_reload = 16,
+        .present = true };
+    ot_eg_km_ring.n_members = 2;
+    ot_eg_km_ring.member[0] = (qp_member){ .name = "keymgr", .st = g,
+        .busy = &g->_qp_busy, .active = &g->_qp_active,
+        .update = qpm_keymgr_update, .tick = qpm_keymgr_tick, .present = true,
+        .gate_leg = -1 };
+    ot_eg_km_ring.member[1] = (qp_member){ .name = "kmac", .st = k,
+        .busy = &k->_qp_busy, .active = &k->_qp_active,
+        .update = qpm_kmac_update, .tick = qpm_kmac_tick, .present = true,
+        .gate_leg = -1 };
+}
+
+
 static kmac_state *ot_eg_keymgr_qp_kmac;
 static keymgr_state *ot_eg_keymgr_qp_g;
 static QEMUTimer *ot_eg_keymgr_qp_timer;
@@ -2137,10 +2304,11 @@ static int ot_eg_keymgr_have_dig;
 
 static bool ot_eg_km_inflight(void)
 {
-    keymgr_state *g = ot_eg_keymgr_qp_g;
-
-    return g && (g->u_reg_op_status_qs == 1u ||
-                 g->u_kmac_if_state_q != 930u || g->kmac_data_o_valid);
+    if (!ot_eg_keymgr_qp_g) {
+        return false;
+    }
+    qp_ring_sample(&ot_eg_km_ring);
+    return qp_ring_hot(&ot_eg_km_ring);
 }
 
 /* one keymgr<->kmac co-step: app-channel wire + the bridge-owned
@@ -2153,17 +2321,7 @@ static void ot_eg_km_costep(void)
     keymgr_state *g = ot_eg_keymgr_qp_g;
     kmac_state *k = ot_eg_keymgr_qp_kmac;
 
-    k->app_i_0__valid = g->kmac_data_o_valid;
-    k->app_i_0__data = g->kmac_data_o_data;
-    k->app_i_0__strb = g->kmac_data_o_strb;
-    k->app_i_0__last = g->kmac_data_o_last;
-    k->keymgr_key_i_valid = g->kmac_key_o_valid;
-    for (unsigned w = 0; w < 4u; w++) {
-        k->keymgr_key_i_key_0_[w] = g->kmac_key_o_key_0_[w];
-        k->keymgr_key_i_key_1_[w] = g->kmac_key_o_key_1_[w];
-    }
-    g->kmac_data_i_ready = k->app_o_0__ready;
-    g->kmac_data_i_error = k->app_o_0__error;
+    qp_ring_wire(&ot_eg_km_ring);
     if (k->app_o_0__done) {
         for (unsigned w = 0; w < 6u; w++) {
             ot_eg_keymgr_dig0[w] = k->app_o_0__digest_share0[w];
@@ -2180,12 +2338,7 @@ static void ot_eg_km_costep(void)
     } else {
         g->kmac_data_i_done = 0;
     }
-    if (!g->_qp_busy) keymgr_update(g);
-    if (!k->_qp_busy) kmac_update(k);
-    if (!g->_qp_busy) keymgr_tick(g);
-    if (!k->_qp_busy) kmac_tick(k);
-    if (!g->_qp_busy) keymgr_update(g);
-    if (!k->_qp_busy) kmac_update(k);
+    qp_ring_step(&ot_eg_km_ring);
     if (!ot_eg_km_inflight()) {
         ot_eg_keymgr_have_dig = 0;
     }
@@ -2231,13 +2384,9 @@ static void ot_eg_arm_ring_hooks(DeviceState **devices)
 
 static int ot_eg_km_settle_hook(void *opaque)
 {
-    keymgr_state *g = ot_eg_keymgr_qp_g;
-    kmac_state *k = ot_eg_keymgr_qp_kmac;
-
     (void)opaque;
     if (!ot_eg_km_inflight()) {
-        k->app_i_0__valid = 0;
-        g->kmac_data_i_done = 0;
+        qp_ring_freeze(&ot_eg_km_ring);   /* same two leaves, declared rows */
         return 0;
     }
     ot_eg_km_costep();
@@ -2291,6 +2440,7 @@ static void ot_eg_keymgr_qp_wire(DeviceState *km_dev, DeviceState *kmac_dev,
     }
     ot_eg_keymgr_qp_kmac = ot_kmac_qp_core(kmac_dev);
     ot_eg_keymgr_qp_g = g;
+    ot_eg_km_ring_build(g, ot_eg_keymgr_qp_kmac);
     if (!ot_eg_keymgr_qp_timer) {
         ot_eg_keymgr_qp_timer = timer_new_us(QEMU_CLOCK_VIRTUAL,
                                              ot_eg_keymgr_qp_pump, NULL);
@@ -2306,37 +2456,32 @@ static void ot_eg_keymgr_qp_wire(DeviceState *km_dev, DeviceState *kmac_dev,
  * (the beat would evaporate with the partner not stepping). */
 static entropy_src_state *ot_eg_ring_es;
 static aes_state *ot_eg_ring_ae;
-static unsigned ot_eg_ring_aes_cool;
 static csrng_state *ot_eg_ring_cs;
 static edn_state *ot_eg_ring_ed;
 static QEMUTimer *ot_eg_ring_timer;
 
 static void ot_eg_ring_freeze(void)
 {
-    csrng_state *cs = ot_eg_ring_cs;
-    edn_state *ed = ot_eg_ring_ed;
-    entropy_src_state *es = ot_eg_ring_es;
+    qp_ring_freeze(&ot_eg_entropy_ring);
 
-    cs->csrng_cmd_i_0__csrng_req_valid = 0;
-    cs->csrng_cmd_i_0__genbits_ready = 0;
-    cs->entropy_src_hw_if_i_es_ack = 0;
-    ed->csrng_cmd_i_csrng_req_ready = 0;
-    ed->csrng_cmd_i_csrng_rsp_ack = 0;
-    ed->csrng_cmd_i_genbits_valid = 0;
-    es->entropy_src_hw_if_i_es_req = 0;
-    es->entropy_src_rng_valid_i = 0;
-    ed->edn_i_0__edn_req = 0;
-    if (ot_eg_ring_ae) {
-        /* every aes entropy demand — the firmware-paced reseed AND the
-         * clearing PRNG's intra-settle requests — is served over the
-         * REAL ring: the settle hook co-steps the partners while aes
-         * settles, so the old blind spot (and the larder that papered
-         * over it) is gone. */
-        ot_eg_ring_ae->edn_i_edn_ack = 0;
-    }
 }
 
 static uint32_t ot_eg_noise_lfsr = 0x5EEDBA5Eu;
+#define QP_ORGAN_WARM 256u
+static unsigned ot_eg_organ_warm;
+
+/* DEFERRED DEBT (binding role layer, see README): whether the model still
+ * WANTS noise cannot be expressed at the port surface — the OpenTitan RNG
+ * interface has no ready/done line, only enable/valid/bits — so this is the
+ * one predicate in the ring path that still reads model internals.  It is
+ * quarantined here, called from exactly one place, and retires when the
+ * rng_source blueprint declares the roles. */
+static bool ot_eg_organ_engaged(const entropy_src_state *es)
+{
+    return es->entropy_src_rng_enable_o &&
+           !es->u_entropy_src_core_fw_ov_mode_entropy_insert &&
+           !es->u_reg_u_intr_state_es_entropy_valid_q;
+}
 static bool ot_eg_organ_pending;
 static uint8_t ot_eg_organ_nib;
 
@@ -2347,7 +2492,12 @@ static uint8_t ot_eg_organ_nib;
  * landed-based release is one tick late under the settle schedule and
  * the stale comb re-accepts the same nibble (double-feed, host-proven
  * at accepted-index 1). */
-static void ot_eg_organ_feed(entropy_src_state *es)
+/* Returns true while the organ is SERVING this model (a sample parked and
+ * not yet accepted, or one just presented).  The admission gates inside are
+ * the last device knowledge in the ring path: the OpenTitan RNG interface
+ * has no ready port, so no wire row can express "can absorb now".  They are
+ * quarantined here for the binding role layer (deferred, see README). */
+static bool ot_eg_organ_feed(entropy_src_state *es)
 {
     if (ot_eg_organ_pending) {
         if (es->u_entropy_src_core_u_prim_fifo_sync_esrng_wvalid_i &&
@@ -2358,7 +2508,7 @@ static void ot_eg_organ_feed(entropy_src_state *es)
             es->entropy_src_rng_valid_i = 1;
             es->entropy_src_rng_bits_i = ot_eg_organ_nib;
         }
-        return;
+        return true;
     }
     if (es->entropy_src_rng_enable_o &&
         ((es->u_entropy_src_core_es_enable_fo >> 5) & 1u) &&
@@ -2377,86 +2527,23 @@ static void ot_eg_organ_feed(entropy_src_state *es)
         ot_eg_organ_pending = true;
         es->entropy_src_rng_valid_i = 1;
         es->entropy_src_rng_bits_i = ot_eg_organ_nib;
+        return true;
     }
+    return false;
 }
 
 static void ot_eg_ring_costep(void)
 {
-    csrng_state *cs = ot_eg_ring_cs;
-    edn_state *ed = ot_eg_ring_ed;
     entropy_src_state *es = ot_eg_ring_es;
 
-    cs->csrng_cmd_i_0__csrng_req_valid = ed->csrng_cmd_o_csrng_req_valid;
-    cs->csrng_cmd_i_0__csrng_req_bus = ed->csrng_cmd_o_csrng_req_bus;
-    cs->csrng_cmd_i_0__genbits_ready = ed->csrng_cmd_o_genbits_ready;
-    ed->csrng_cmd_i_csrng_req_ready = cs->csrng_cmd_o_0__csrng_req_ready;
-    ed->csrng_cmd_i_csrng_rsp_ack = cs->csrng_cmd_o_0__csrng_rsp_ack;
-    ed->csrng_cmd_i_csrng_rsp_sts = cs->csrng_cmd_o_0__csrng_rsp_sts;
-    ed->csrng_cmd_i_genbits_valid = cs->csrng_cmd_o_0__genbits_valid;
-    ed->csrng_cmd_i_genbits_fips = cs->csrng_cmd_o_0__genbits_fips;
-    ed->csrng_cmd_i_genbits_bus = cs->csrng_cmd_o_0__genbits_bus;
-    es->entropy_src_hw_if_i_es_req = cs->entropy_src_hw_if_o_es_req;
-    cs->entropy_src_hw_if_i_es_ack = es->entropy_src_hw_if_o_es_ack;
-    for (unsigned w = 0; w < 6u; w++) {
-        cs->entropy_src_hw_if_i_es_bits[w] =
-            es->entropy_src_hw_if_o_es_bits[w];
-    }
-    cs->entropy_src_hw_if_i_es_fips = es->entropy_src_hw_if_o_es_fips;
+    qp_ring_wire(&ot_eg_entropy_ring);
+    (void)ot_eg_organ_feed(es);
 
-    ot_eg_organ_feed(es);
+    /* leg wiring and stepping are the engine's: the aes leg is gated by
+     * leg[L_AES].hot (its own req/ack rows + warm), so an idle aes is never
+     * ticked, and every member is _qp_busy-skipped (phase triad rule i/ii). */
+    qp_ring_step(&ot_eg_entropy_ring);
 
-    /* aes leg (endpoint 0): the generated aes rides the ring for REAL
-     * EDN entropy — its shim tie (always-ack) is overridden at wire
-     * time.  The leg only steps while aes wants entropy, an ack is in
-     * flight, or within a short cooldown (the multi-word request
-     * sequence needs a few ticks between words); an idle aes is never
-     * touched, so MMIO-driven aes targets are unaffected. */
-    {
-        aes_state *ae = ot_eg_ring_ae;
-        int aes_leg = 0;
-        if (ae) {
-                    ed->edn_i_0__edn_req = ae->edn_o_edn_req;
-            ae->edn_i_edn_ack = ed->edn_o_0__edn_ack;
-            ae->edn_i_edn_bus = ed->edn_o_0__edn_bus;
-            ae->edn_i_edn_fips = ed->edn_o_0__edn_fips;
-            /* the leg runs for the WHOLE prng-reseed transaction
-             * (reseed_req_i spans the multi-word burst including the
-             * inter-word gaps where edn_req is momentarily low) plus a
-             * short tail so the transaction retires; an aes running
-             * ordinary cipher ops is never ticked. */
-            {
-                static int prev_rr;
-                int rr = ae->u_aes_core_u_aes_prng_clearing_reseed_req_i;
-                if (prev_rr && !rr) {
-                    ot_eg_ring_aes_cool = 16u;   /* transaction tail */
-                }
-                prev_rr = rr;
-                if (rr || ed->edn_o_0__edn_ack) {
-                    ot_eg_ring_aes_cool =
-                        ot_eg_ring_aes_cool > 1u ? ot_eg_ring_aes_cool : 1u;
-                }
-            }
-            aes_leg = ot_eg_ring_aes_cool > 0u;
-            if (ot_eg_ring_aes_cool) {
-                ot_eg_ring_aes_cool--;
-            }
-        }
-        /* _qp_busy skip: when this costep runs from inside a member's
-         * settle (the settle hook), that member's ticks come from its
-         * own settle loop — stepping it here would double-tick it. */
-        if (!ed->_qp_busy) edn_update(ed);
-        if (!cs->_qp_busy) csrng_update(cs);
-        if (!es->_qp_busy) entropy_src_update(es);
-        if (aes_leg && !ae->_qp_busy) aes_update(ae);
-        if (!ed->_qp_busy) edn_tick(ed);
-        if (!cs->_qp_busy) csrng_tick(cs);
-        if (!es->_qp_busy) entropy_src_tick(es);
-        if (aes_leg && !ae->_qp_busy) aes_tick(ae);
-        if (!ed->_qp_busy) edn_update(ed);
-        if (!cs->_qp_busy) csrng_update(cs);
-        if (!es->_qp_busy) entropy_src_update(es);
-        if (aes_leg && !ae->_qp_busy) aes_update(ae);
-    }
 }
 
 /* THE SETTLE HOOK — the generic cure for the settle blind spot: while
@@ -2469,87 +2556,70 @@ static void ot_eg_ring_costep(void)
  * quiescence short-circuit keeps idle-ring MMIO at old-world cost. */
 static int ot_eg_ring_settle_hook(void *opaque)
 {
-    csrng_state *cs = ot_eg_ring_cs;
-    edn_state *ed = ot_eg_ring_ed;
     entropy_src_state *es = ot_eg_ring_es;
-    aes_state *ae = ot_eg_ring_ae;
-    (void)opaque;
 
-    /* v2 scope: live world while the csrng is mid-command (the SW
-     * lane — host-proven byte-exact under this schedule) or ring
-     * lines are in flight, plus the v1 aes blind-spot demands.  es
-     * noise collection stays pump-paced (v3). */
-    (void)es;
-    /* fire on ACTUAL cross-model traffic, not on "cs is busy": a
-     * flag0 SW command is pure-local csrng work — co-stepping the
-     * partners through it just taxes every settle tick with ed+es
-     * updates (measured 3x wall on the ring gate).  These are the
-     * pump's own in-flight terms: semantic parity, zero overlap. */
-    bool cs_active = ed->csrng_cmd_o_csrng_req_valid ||
-                     cs->csrng_cmd_o_0__csrng_rsp_ack ||
-                     cs->csrng_cmd_o_0__genbits_valid ||
-                     cs->entropy_src_hw_if_o_es_req;
-    bool aes_demand = ae && (ae->edn_o_edn_req ||
-                             ae->u_aes_core_u_aes_prng_clearing_reseed_req_i ||
-                             ot_eg_ring_aes_cool != 0u);
-    bool collecting = es->entropy_src_rng_enable_o &&
-        !es->u_entropy_src_core_fw_ov_mode_entropy_insert &&
-        !es->u_reg_u_intr_state_es_entropy_valid_q;
-    if (!cs_active && !aes_demand && !collecting) {
-        /* quiet path re-freezes: stale organ/handshake wires must never
-         * replay into a settle */
-        ot_eg_ring_freeze();
-        return 0;
-    }
-    if (cs_active || aes_demand) {
+    (void)opaque;
+    qp_ring_sample(&ot_eg_entropy_ring);
+    if (qp_ring_hot(&ot_eg_entropy_ring)) {
         ot_eg_ring_costep();
         return 1;
     }
-    /* collecting-only: pure-local es flow — the organ light tick, no
-     * partner tax (the v2 predicate law, applied to es) */
-    ot_eg_organ_feed(es);
-    return 1;
+    /* No cross-model traffic.  Re-establish the frozen-world invariant, then
+     * ask the machine-side noise organ — the one ring partner that has no
+     * port to sample — whether it is mid-service. */
+    qp_ring_freeze(&ot_eg_entropy_ring);
+    /* The organ is a machine-side partner with no port to sample, so it gets
+     * the same treatment as a wire leg: its own engagement reloads a warm
+     * window that spans the gaps where the model cannot admit a sample yet
+     * (a pipeline draining into a busy conditioner).  Machine state only —
+     * no device signal appears here. */
+    if (ot_eg_organ_engaged(es) || ot_eg_organ_pending) {
+        ot_eg_organ_warm = QP_ORGAN_WARM;
+    } else if (ot_eg_organ_warm) {
+        ot_eg_organ_warm--;
+    }
+    if (ot_eg_organ_warm) {
+        /* ORGAN LIGHT TICK (the v2 predicate law applied to es): the noise
+         * flow is pure-local, so feed only — co-stepping the partners here
+         * would tax every settle iteration with csrng+edn updates for a
+         * transaction that has no cross-model traffic at all. */
+        (void)ot_eg_organ_feed(es);
+        return 1;
+    }
+    return 0;
+
 }
 
 static void ot_eg_ring_pump(void *opaque)
 {
-    csrng_state *cs = ot_eg_ring_cs;
-    edn_state *ed = ot_eg_ring_ed;
-    entropy_src_state *es = ot_eg_ring_ed ? ot_eg_ring_es : NULL;
+    qp_ring *r = &ot_eg_entropy_ring;
+    entropy_src_state *es = ot_eg_ring_es;
     bool quiesced = false;
+    bool organ = false;
+
     (void)opaque;
-    cs->_qp_pump = 1;
-    ed->_qp_pump = 1;
+    ot_eg_ring_cs->_qp_pump = 1;
+    ot_eg_ring_ed->_qp_pump = 1;
     es->_qp_pump = 1;
 
     for (unsigned t = 0; t < 4096u; t++) {
         ot_eg_ring_costep();
-
-        /* quiescent: nothing in flight anywhere on the ring, and the
-         * noise organ is not mid-collection toward an unread SW seed
-         * (es wants rng noise, insert off, es_entropy_valid intr not
-         * yet pending -> keep the fast cadence until the seed lands) */
-        if (!ed->csrng_cmd_o_csrng_req_valid &&
-            !cs->csrng_cmd_o_0__genbits_valid &&
-            !cs->entropy_src_hw_if_o_es_req &&
-            !(es->entropy_src_rng_enable_o &&
-              !es->u_entropy_src_core_fw_ov_mode_entropy_insert &&
-              !es->u_reg_u_intr_state_es_entropy_valid_q) &&
-            ot_eg_ring_aes_cool == 0u &&
-            cs->u_csrng_core_u_csrng_main_sm_state_q == 0x37u /* Idle */) {
+        organ = ot_eg_organ_pending;
+        qp_ring_sample(r);
+        /* Outside every settle, so the models' own activity bit is legal
+         * here: it is what finishes a crunch that outran its settle.  A
+         * member that never quiesces excludes itself (ever_quiet). */
+        if (!qp_ring_busy(r, organ) ||
+            qp_ring_act_valve(r, qp_ring_hot(r) || organ)) {
             quiesced = true;
             break;
         }
     }
-    /* pump-exit freeze retired: every hooked member's settle re-freezes
-     * on its quiet path, so the frozen-world invariant is re-established
-     * at the door of every MMIO access that could care. */
-    /* adaptive cadence: tight while beats are in flight (a wire beat
-     * costs one fire), relaxed when the ring is quiet — csrng's
-     * update_state is enormous and an always-hot 1us pump starves the
-     * vCPU. */
+    ot_eg_ring_freeze();
+    r->pump_beats++;
     timer_mod(ot_eg_ring_timer,
               qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + (quiesced ? 200 : 2));
+
 }
 
 static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
@@ -2567,6 +2637,7 @@ static void ot_eg_entropy_ring_wire(DeviceState *es_dev, DeviceState *cs_dev,
     ae->edn_i_edn_bus = 0;
     ae->edn_i_edn_fips = 0;
     ot_eg_ring_ae = getenv("OT_NO_AES_LEG") ? NULL : ae;
+    ot_eg_entropy_ring_build(es, cs, ed, ot_eg_ring_ae);
 
     /* the host-harness tie set: alert receivers idle, OTP mubi8 gates
      * True, lc debug Off, rng raw inputs silent, pumps held high so

@@ -96,12 +96,26 @@ static inline bool qp_tick(lc_ctrl_state *s)
     }
     bool _qp_ch = tick(s);
     if (s->_qp_on_tick) s->_qp_on_tick(s->_qp_on_tick_ctx);
+    /* Activity bit.  Written AFTER the observer so an organ's
+     * whole-core snapshot restore (spi_host byte replay) cannot
+     * revert it, and a rewind counts as activity.
+     * CONTRACT: consumed ONLY by a ring PUMP, outside every settle.
+     * A settle hook must NEVER read it: a model with no fixed point
+     * would pin it at 1 and hold every MMIO settle open to its cap. */
+    s->_qp_active = (_qp_ch || s->_qp_rewound) ? 1 : 0;
     return _qp_ch;
 }
 
 /* Single settle bound per MMIO access — responsiveness only, not
  * correctness: leftover work continues on the next access/poll. */
 #define QP_SETTLE_BUDGET 65536u
+/* Cross-model tier: a hook-extended settle's continuation is the ring
+ * PUMP, which runs outside the settle — the same argument the 256 tier
+ * carries for firmware polling.  65536 survives only for an organ
+ * holding an atomic protocol unit, where the MODEL owns the
+ * continuation. */
+#define QP_EXT_BUDGET     4096u
+#define QP_EXT_STRIKES       3u
 
 static QPSettleFingerprint qp_settle_fingerprint(const lc_ctrl_state *s)
 {
@@ -5414,7 +5428,8 @@ uint64_t lc_ctrl_regs_tl_read(void *opaque, hwaddr addr, unsigned size)
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
-        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+        unsigned _qp_cap = 256u;
+        while (_qp_ticks < _qp_cap) {
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -5432,8 +5447,11 @@ uint64_t lc_ctrl_regs_tl_read(void *opaque, hwaddr addr, unsigned size)
              * ticks: a boot INS was delivered twice).  Nonzero
              * return = cross-model transaction in flight: keeps the
              * loop alive past a local fixed point. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            int _qp_hk = s->_qp_settle_hook ?
+                         s->_qp_settle_hook(s->_qp_settle_hook_ctx) : 0;
+            /* muzzled: the machine still co-steps (the ring must not
+             * stall), but its verdict can no longer widen the budget. */
+            _qp_ext = _qp_hk && !s->_qp_hook_muzzle;
             /* re-mirror after the hook wired fresh partner outputs
              * onto this model's inputs: without this, the next tick
              * still sees pre-hook mirrors and a one-clock handshake
@@ -5458,9 +5476,26 @@ uint64_t lc_ctrl_regs_tl_read(void *opaque, hwaddr addr, unsigned size)
                 _qp_base = _qp_now; _qp_lam = 0;
                 if (_qp_pow < (1u << 30)) _qp_pow <<= 1;
             }
+            _qp_cap = s->_qp_hold_settle ? QP_SETTLE_BUDGET
+                    : (_qp_ext ? QP_EXT_BUDGET : 256u);
         }
-        if (_qp_ticks >= QP_SETTLE_BUDGET)
-            qemu_log_mask(LOG_UNIMP, "qp settle: budget exhausted, state still changing (continues on next access)\n");
+        s->_qp_last_ticks = (uint16_t)(_qp_ticks > 0xFFFFu ? 0xFFFFu : _qp_ticks);
+        if (_qp_ticks >= _qp_cap) {
+            s->_qp_budget_hit = 1;
+            if (_qp_cap == QP_EXT_BUDGET) {
+                if (s->_qp_ext_strikes < 255u) s->_qp_ext_strikes++;
+                if (s->_qp_ext_strikes >= QP_EXT_STRIKES && !s->_qp_hook_muzzle) {
+                    s->_qp_hook_muzzle = 1;
+                    qemu_log_mask(LOG_GUEST_ERROR,
+                        "qp settle: hook MUZZLED after %u capped extended settles; "
+                        "co-stepping continues, budget reverts to the 256 tier\n",
+                        (unsigned)QP_EXT_STRIKES);
+                }
+            }
+            qemu_log_mask(LOG_UNIMP, "qp settle: budget %u exhausted, state still changing\n", _qp_cap);
+        } else if (_qp_cap == QP_EXT_BUDGET) {
+            s->_qp_ext_strikes = 0;  /* an extended settle that CONVERGED */
+        }
         s->_qp_busy = 0;
     }
     }
@@ -5497,7 +5532,8 @@ void lc_ctrl_regs_tl_write(void *opaque, hwaddr addr, uint64_t value, unsigned s
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
-        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+        unsigned _qp_cap = 256u;
+        while (_qp_ticks < _qp_cap) {
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -5514,8 +5550,11 @@ void lc_ctrl_regs_tl_write(void *opaque, hwaddr addr, uint64_t value, unsigned s
              * ticks: a boot INS was delivered twice).  Nonzero
              * return = cross-model transaction in flight: keeps the
              * loop alive past a local fixed point. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            int _qp_hk = s->_qp_settle_hook ?
+                         s->_qp_settle_hook(s->_qp_settle_hook_ctx) : 0;
+            /* muzzled: the machine still co-steps (the ring must not
+             * stall), but its verdict can no longer widen the budget. */
+            _qp_ext = _qp_hk && !s->_qp_hook_muzzle;
             /* re-mirror after the hook wired fresh partner outputs
              * onto this model's inputs: without this, the next tick
              * still sees pre-hook mirrors and a one-clock handshake
@@ -5539,9 +5578,26 @@ void lc_ctrl_regs_tl_write(void *opaque, hwaddr addr, uint64_t value, unsigned s
                 _qp_base = _qp_now; _qp_lam = 0;
                 if (_qp_pow < (1u << 30)) _qp_pow <<= 1;
             }
+            _qp_cap = s->_qp_hold_settle ? QP_SETTLE_BUDGET
+                    : (_qp_ext ? QP_EXT_BUDGET : 256u);
         }
-        if (_qp_ticks >= QP_SETTLE_BUDGET)
-            qemu_log_mask(LOG_UNIMP, "qp settle: budget exhausted, state still changing (continues on next access)\n");
+        s->_qp_last_ticks = (uint16_t)(_qp_ticks > 0xFFFFu ? 0xFFFFu : _qp_ticks);
+        if (_qp_ticks >= _qp_cap) {
+            s->_qp_budget_hit = 1;
+            if (_qp_cap == QP_EXT_BUDGET) {
+                if (s->_qp_ext_strikes < 255u) s->_qp_ext_strikes++;
+                if (s->_qp_ext_strikes >= QP_EXT_STRIKES && !s->_qp_hook_muzzle) {
+                    s->_qp_hook_muzzle = 1;
+                    qemu_log_mask(LOG_GUEST_ERROR,
+                        "qp settle: hook MUZZLED after %u capped extended settles; "
+                        "co-stepping continues, budget reverts to the 256 tier\n",
+                        (unsigned)QP_EXT_STRIKES);
+                }
+            }
+            qemu_log_mask(LOG_UNIMP, "qp settle: budget %u exhausted, state still changing\n", _qp_cap);
+        } else if (_qp_cap == QP_EXT_BUDGET) {
+            s->_qp_ext_strikes = 0;  /* an extended settle that CONVERGED */
+        }
         s->_qp_busy = 0;
     }
     }
@@ -5560,7 +5616,8 @@ void lc_ctrl_settle(lc_ctrl_state *s)
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
-        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+        unsigned _qp_cap = 256u;
+        while (_qp_ticks < _qp_cap) {
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -5577,8 +5634,11 @@ void lc_ctrl_settle(lc_ctrl_state *s)
              * ticks: a boot INS was delivered twice).  Nonzero
              * return = cross-model transaction in flight: keeps the
              * loop alive past a local fixed point. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            int _qp_hk = s->_qp_settle_hook ?
+                         s->_qp_settle_hook(s->_qp_settle_hook_ctx) : 0;
+            /* muzzled: the machine still co-steps (the ring must not
+             * stall), but its verdict can no longer widen the budget. */
+            _qp_ext = _qp_hk && !s->_qp_hook_muzzle;
             /* re-mirror after the hook wired fresh partner outputs
              * onto this model's inputs: without this, the next tick
              * still sees pre-hook mirrors and a one-clock handshake
@@ -5602,9 +5662,26 @@ void lc_ctrl_settle(lc_ctrl_state *s)
                 _qp_base = _qp_now; _qp_lam = 0;
                 if (_qp_pow < (1u << 30)) _qp_pow <<= 1;
             }
+            _qp_cap = s->_qp_hold_settle ? QP_SETTLE_BUDGET
+                    : (_qp_ext ? QP_EXT_BUDGET : 256u);
         }
-        if (_qp_ticks >= QP_SETTLE_BUDGET)
-            qemu_log_mask(LOG_UNIMP, "qp settle: budget exhausted, state still changing (continues on next access)\n");
+        s->_qp_last_ticks = (uint16_t)(_qp_ticks > 0xFFFFu ? 0xFFFFu : _qp_ticks);
+        if (_qp_ticks >= _qp_cap) {
+            s->_qp_budget_hit = 1;
+            if (_qp_cap == QP_EXT_BUDGET) {
+                if (s->_qp_ext_strikes < 255u) s->_qp_ext_strikes++;
+                if (s->_qp_ext_strikes >= QP_EXT_STRIKES && !s->_qp_hook_muzzle) {
+                    s->_qp_hook_muzzle = 1;
+                    qemu_log_mask(LOG_GUEST_ERROR,
+                        "qp settle: hook MUZZLED after %u capped extended settles; "
+                        "co-stepping continues, budget reverts to the 256 tier\n",
+                        (unsigned)QP_EXT_STRIKES);
+                }
+            }
+            qemu_log_mask(LOG_UNIMP, "qp settle: budget %u exhausted, state still changing\n", _qp_cap);
+        } else if (_qp_cap == QP_EXT_BUDGET) {
+            s->_qp_ext_strikes = 0;  /* an extended settle that CONVERGED */
+        }
         s->_qp_busy = 0;
     }
     }
@@ -5709,7 +5786,8 @@ uint64_t lc_ctrl_read(void *opaque, hwaddr addr, unsigned size)
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
-        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+        unsigned _qp_cap = 256u;
+        while (_qp_ticks < _qp_cap) {
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -5727,8 +5805,11 @@ uint64_t lc_ctrl_read(void *opaque, hwaddr addr, unsigned size)
              * ticks: a boot INS was delivered twice).  Nonzero
              * return = cross-model transaction in flight: keeps the
              * loop alive past a local fixed point. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            int _qp_hk = s->_qp_settle_hook ?
+                         s->_qp_settle_hook(s->_qp_settle_hook_ctx) : 0;
+            /* muzzled: the machine still co-steps (the ring must not
+             * stall), but its verdict can no longer widen the budget. */
+            _qp_ext = _qp_hk && !s->_qp_hook_muzzle;
             /* re-mirror after the hook wired fresh partner outputs
              * onto this model's inputs: without this, the next tick
              * still sees pre-hook mirrors and a one-clock handshake
@@ -5753,9 +5834,26 @@ uint64_t lc_ctrl_read(void *opaque, hwaddr addr, unsigned size)
                 _qp_base = _qp_now; _qp_lam = 0;
                 if (_qp_pow < (1u << 30)) _qp_pow <<= 1;
             }
+            _qp_cap = s->_qp_hold_settle ? QP_SETTLE_BUDGET
+                    : (_qp_ext ? QP_EXT_BUDGET : 256u);
         }
-        if (_qp_ticks >= QP_SETTLE_BUDGET)
-            qemu_log_mask(LOG_UNIMP, "qp settle: budget exhausted, state still changing (continues on next access)\n");
+        s->_qp_last_ticks = (uint16_t)(_qp_ticks > 0xFFFFu ? 0xFFFFu : _qp_ticks);
+        if (_qp_ticks >= _qp_cap) {
+            s->_qp_budget_hit = 1;
+            if (_qp_cap == QP_EXT_BUDGET) {
+                if (s->_qp_ext_strikes < 255u) s->_qp_ext_strikes++;
+                if (s->_qp_ext_strikes >= QP_EXT_STRIKES && !s->_qp_hook_muzzle) {
+                    s->_qp_hook_muzzle = 1;
+                    qemu_log_mask(LOG_GUEST_ERROR,
+                        "qp settle: hook MUZZLED after %u capped extended settles; "
+                        "co-stepping continues, budget reverts to the 256 tier\n",
+                        (unsigned)QP_EXT_STRIKES);
+                }
+            }
+            qemu_log_mask(LOG_UNIMP, "qp settle: budget %u exhausted, state still changing\n", _qp_cap);
+        } else if (_qp_cap == QP_EXT_BUDGET) {
+            s->_qp_ext_strikes = 0;  /* an extended settle that CONVERGED */
+        }
         s->_qp_busy = 0;
     }
     }
@@ -5832,7 +5930,8 @@ void lc_ctrl_write(void *opaque, hwaddr addr,
         QPSettleFingerprint _qp_base = qp_settle_fingerprint(s);
         unsigned _qp_lam = 0, _qp_pow = 1;
         bool _qp_ext = false;
-        while (_qp_ticks < ((s->_qp_hold_settle || _qp_ext) ? QP_SETTLE_BUDGET : 256u)) {
+        unsigned _qp_cap = 256u;
+        while (_qp_ticks < _qp_cap) {
             bool _qp_ch = qp_tick(s);
             bool _qp_rw = s->_qp_rewound != 0;
             if (_qp_rw) { s->_qp_rewound = 0; _qp_ch = true; }
@@ -5849,8 +5948,11 @@ void lc_ctrl_write(void *opaque, hwaddr addr,
              * ticks: a boot INS was delivered twice).  Nonzero
              * return = cross-model transaction in flight: keeps the
              * loop alive past a local fixed point. */
-            _qp_ext = s->_qp_settle_hook &&
-                      s->_qp_settle_hook(s->_qp_settle_hook_ctx);
+            int _qp_hk = s->_qp_settle_hook ?
+                         s->_qp_settle_hook(s->_qp_settle_hook_ctx) : 0;
+            /* muzzled: the machine still co-steps (the ring must not
+             * stall), but its verdict can no longer widen the budget. */
+            _qp_ext = _qp_hk && !s->_qp_hook_muzzle;
             /* re-mirror after the hook wired fresh partner outputs
              * onto this model's inputs: without this, the next tick
              * still sees pre-hook mirrors and a one-clock handshake
@@ -5874,9 +5976,26 @@ void lc_ctrl_write(void *opaque, hwaddr addr,
                 _qp_base = _qp_now; _qp_lam = 0;
                 if (_qp_pow < (1u << 30)) _qp_pow <<= 1;
             }
+            _qp_cap = s->_qp_hold_settle ? QP_SETTLE_BUDGET
+                    : (_qp_ext ? QP_EXT_BUDGET : 256u);
         }
-        if (_qp_ticks >= QP_SETTLE_BUDGET)
-            qemu_log_mask(LOG_UNIMP, "qp settle: budget exhausted, state still changing (continues on next access)\n");
+        s->_qp_last_ticks = (uint16_t)(_qp_ticks > 0xFFFFu ? 0xFFFFu : _qp_ticks);
+        if (_qp_ticks >= _qp_cap) {
+            s->_qp_budget_hit = 1;
+            if (_qp_cap == QP_EXT_BUDGET) {
+                if (s->_qp_ext_strikes < 255u) s->_qp_ext_strikes++;
+                if (s->_qp_ext_strikes >= QP_EXT_STRIKES && !s->_qp_hook_muzzle) {
+                    s->_qp_hook_muzzle = 1;
+                    qemu_log_mask(LOG_GUEST_ERROR,
+                        "qp settle: hook MUZZLED after %u capped extended settles; "
+                        "co-stepping continues, budget reverts to the 256 tier\n",
+                        (unsigned)QP_EXT_STRIKES);
+                }
+            }
+            qemu_log_mask(LOG_UNIMP, "qp settle: budget %u exhausted, state still changing\n", _qp_cap);
+        } else if (_qp_cap == QP_EXT_BUDGET) {
+            s->_qp_ext_strikes = 0;  /* an extended settle that CONVERGED */
+        }
         s->_qp_busy = 0;
     }
     }

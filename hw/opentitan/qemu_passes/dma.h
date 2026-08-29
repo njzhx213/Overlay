@@ -16,11 +16,12 @@ typedef struct {
 
     /* ---- Bus Interface Ports (BIP) ---- */
     /* These signals bridge QEMU MMIO and internal logic. */
+    uint8_t control_q_cfg_digest_swap;  /* BIP, 1-bit */
     uint8_t ctrl_state_q;  /* BIP, 8-bit */
-    uint64_t digest_i_7_;  /* BIP, 64-bit */
+    uint64_t digest_i_3_;  /* BIP, 64-bit */
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t reg2hw_intr_src_addr_4__q;  /* BIP, 32-bit */
+    uint32_t reg2hw_intr_src_addr_0__q;  /* BIP, 32-bit */
     uint32_t sys_resp_q_read_data;  /* BIP, 32-bit */
     uint8_t unnamed_enable_0;  /* BIP, 1-bit */
 
@@ -122,7 +123,6 @@ typedef struct {
     uint32_t control_d_enabled_memory_range_limit;  /* 32-bit */
     uint8_t control_d_opcode;  /* 4-bit */
     uint8_t control_d_range_valid;  /* 1-bit */
-    uint8_t control_q_cfg_digest_swap;  /* 1-bit */
     uint8_t control_q_cfg_handshake_en;  /* 1-bit */
     uint32_t control_q_enabled_memory_range_base;  /* 32-bit */
     uint32_t control_q_enabled_memory_range_limit;  /* 32-bit */
@@ -497,11 +497,11 @@ typedef struct {
     uint8_t reg2hw_intr_enable_dma_chunk_done_q;  /* 1-bit */
     uint8_t reg2hw_intr_enable_dma_done_q;  /* 1-bit */
     uint8_t reg2hw_intr_enable_dma_error_q;  /* 1-bit */
-    uint32_t reg2hw_intr_src_addr_0__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_10__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_1__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_2__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_3__q;  /* 32-bit */
+    uint32_t reg2hw_intr_src_addr_4__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_5__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_6__q;  /* 32-bit */
     uint32_t reg2hw_intr_src_addr_7__q;  /* 32-bit */
@@ -3370,6 +3370,11 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_active;       /* last clock moved seq state (PUMP-only) */
+    uint16_t _qp_last_ticks;   /* iterations of the last settle (telemetry) */
+    uint8_t  _qp_budget_hit;   /* last settle ended at its cap */
+    uint8_t  _qp_ext_strikes;  /* consecutive hook-extended settles that capped */
+    uint8_t  _qp_hook_muzzle;  /* circuit breaker: hook still called, verdict ignored */
     int (*_qp_settle_hook)(void *ctx);  /* machine co-step escape hatch:
      * called once per settle iteration; return nonzero while a
      * cross-model transaction involving this model is in flight

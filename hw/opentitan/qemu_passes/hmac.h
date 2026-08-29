@@ -20,10 +20,9 @@ typedef struct {
     uint8_t digest_mode_flag_q;  /* BIP, 4-bit */
     uint8_t digest_swap;  /* BIP, 1-bit */
     uint64_t hash_process_i;  /* BIP, 64-bit */
-    uint32_t hw2reg_key_8__d;  /* BIP, 32-bit */
+    uint32_t hw2reg_key_1__d;  /* BIP, 32-bit */
     uint8_t key_length_supplied;  /* BIP, 6-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
-    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint8_t unnamed_enable_0;  /* BIP, 1-bit */
 
     /* ---- Internal state registers ---- */
@@ -283,7 +282,6 @@ typedef struct {
     uint32_t hw2reg_key_17__d;  /* 32-bit */
     uint32_t hw2reg_key_18__d;  /* 32-bit */
     uint32_t hw2reg_key_19__d;  /* 32-bit */
-    uint32_t hw2reg_key_1__d;  /* 32-bit */
     uint32_t hw2reg_key_20__d;  /* 32-bit */
     uint32_t hw2reg_key_21__d;  /* 32-bit */
     uint32_t hw2reg_key_22__d;  /* 32-bit */
@@ -302,6 +300,7 @@ typedef struct {
     uint32_t hw2reg_key_5__d;  /* 32-bit */
     uint32_t hw2reg_key_6__d;  /* 32-bit */
     uint32_t hw2reg_key_7__d;  /* 32-bit */
+    uint32_t hw2reg_key_8__d;  /* 32-bit */
     uint32_t hw2reg_key_9__d;  /* 32-bit */
     uint32_t hw2reg_msg_length_lower_d;  /* 32-bit */
     uint32_t hw2reg_msg_length_upper_d;  /* 32-bit */
@@ -530,6 +529,7 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
+    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -3047,6 +3047,11 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_active;       /* last clock moved seq state (PUMP-only) */
+    uint16_t _qp_last_ticks;   /* iterations of the last settle (telemetry) */
+    uint8_t  _qp_budget_hit;   /* last settle ended at its cap */
+    uint8_t  _qp_ext_strikes;  /* consecutive hook-extended settles that capped */
+    uint8_t  _qp_hook_muzzle;  /* circuit breaker: hook still called, verdict ignored */
     int (*_qp_settle_hook)(void *ctx);  /* machine co-step escape hatch:
      * called once per settle iteration; return nonzero while a
      * cross-model transaction involving this model is in flight

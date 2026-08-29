@@ -20,6 +20,7 @@ typedef struct {
     uint8_t kmac_data_i_ready;  /* BIP, 1-bit */
     uint8_t reg_we;  /* BIP, 1-bit */
     uint32_t tl_i_a_address;  /* BIP, 32-bit */
+    uint8_t tl_i_a_user_instr_type;  /* BIP, 4-bit */
     uint64_t unnamed_rdata_0;  /* BIP, 64-bit */
 
     /* ---- Internal state registers ---- */
@@ -595,7 +596,6 @@ typedef struct {
     uint8_t tl_i_a_source;  /* 8-bit */
     uint8_t tl_i_a_user_cmd_intg;  /* 7-bit */
     uint8_t tl_i_a_user_data_intg;  /* 7-bit */
-    uint8_t tl_i_a_user_instr_type;  /* 4-bit */
     uint8_t tl_i_a_user_rsvd;  /* 5-bit */
     uint8_t tl_i_a_valid;  /* 1-bit */
     uint8_t tl_i_d_ready;  /* 1-bit */
@@ -4442,6 +4442,11 @@ typedef struct {
     uint8_t  _qp_rewound;      /* organ restored a state snapshot this clock */
     uint8_t  _qp_hold_settle;  /* organ mid-unit: keep settling (bounded) */
     uint8_t  _qp_busy;         /* inside settle: re-entrant inputs latch only */
+    uint8_t  _qp_active;       /* last clock moved seq state (PUMP-only) */
+    uint16_t _qp_last_ticks;   /* iterations of the last settle (telemetry) */
+    uint8_t  _qp_budget_hit;   /* last settle ended at its cap */
+    uint8_t  _qp_ext_strikes;  /* consecutive hook-extended settles that capped */
+    uint8_t  _qp_hook_muzzle;  /* circuit breaker: hook still called, verdict ignored */
     int (*_qp_settle_hook)(void *ctx);  /* machine co-step escape hatch:
      * called once per settle iteration; return nonzero while a
      * cross-model transaction involving this model is in flight
