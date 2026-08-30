@@ -18482,6 +18482,8 @@ typedef struct {
     uint8_t u_spi_tpm_u_sram_fifo_wvalid_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_clk_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_clr_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_tpm_rd_buffer_fifoptr;  /* 4-bit */
+    uint8_t u_spi_tpm_u_tpm_rd_buffer_fifoptr_inc;  /* 1-bit */
     uint16_t u_spi_tpm_u_tpm_rd_buffer_qcnt;  /* 16-bit */
     uint64_t u_spi_tpm_u_tpm_rd_buffer_qdata[8192];  /* 524288-bit (wide-array) */
     uint16_t u_spi_tpm_u_tpm_rd_buffer_qrptr;  /* 16-bit */
@@ -18501,7 +18503,10 @@ typedef struct {
     uint8_t u_spi_tpm_u_tpm_rd_buffer_wready_o;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_rd_buffer_wvalid_i;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_wr_buffer_clk_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_tpm_wr_buffer_clk_i_prev;  /* 1-bit */
     uint8_t u_spi_tpm_u_tpm_wr_buffer_clr_i;  /* 1-bit */
+    uint8_t u_spi_tpm_u_tpm_wr_buffer_fifoptr;  /* 6-bit */
+    uint8_t u_spi_tpm_u_tpm_wr_buffer_fifoptr_inc;  /* 1-bit */
     uint16_t u_spi_tpm_u_tpm_wr_buffer_qcnt;  /* 16-bit */
     uint64_t u_spi_tpm_u_tpm_wr_buffer_qdata[8192];  /* 524288-bit (wide-array) */
     uint16_t u_spi_tpm_u_tpm_wr_buffer_qrptr;  /* 16-bit */
@@ -19987,28 +19992,77 @@ typedef struct {
     uint8_t u_upload_sys_sram_write;  /* 2-bit */
     uint8_t u_upload_u_addrfifo_clk_rd_i;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_clk_wr_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_clk_wr_i_prev;  /* 1-bit */
     uint16_t u_upload_u_addrfifo_qcnt;  /* 16-bit */
     uint64_t u_upload_u_addrfifo_qdata[8192];  /* 524288-bit (wide-array) */
+    uint8_t u_upload_u_addrfifo_qpinl24_;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_qpinl24_decval_in;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_qpinl24_decval_sub;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_qpinl25_;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_qpinl25_decval_in;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_qpinl25_decval_sub;  /* 5-bit */
     uint16_t u_upload_u_addrfifo_qrptr;  /* 16-bit */
     uint16_t u_upload_u_addrfifo_qwptr;  /* 16-bit */
     uint8_t u_upload_u_addrfifo_r_full_o;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_r_notempty_o;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_r_rptr_d;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_r_rptr_gray_d;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_r_rptr_gray_q;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_r_rptr_inc;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_r_rptr_q;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_r_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_addrfifo_r_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_addrfifo_r_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_addrfifo_r_sram_rdata_i;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_r_sram_req_o;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_r_sram_rerror_i;  /* 2-bit */
+    uint8_t u_upload_u_addrfifo_r_sram_rptr;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_r_sram_rptr_inc;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_r_sram_rvalid_i;  /* 1-bit */
     uint32_t u_upload_u_addrfifo_r_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_addrfifo_r_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_r_sram_write_o;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_r_sramrptr_empty;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_r_wptr_v;  /* 4-bit */
+    uint32_t u_upload_u_addrfifo_rdata_d;  /* 32-bit */
     uint32_t u_upload_u_addrfifo_rdata_o;  /* 32-bit */
+    uint32_t u_upload_u_addrfifo_rdata_q;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_rdepth_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_rfifo_ack;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rready_i;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rst_rd_ni;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rst_wr_ni;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_rvalid_o;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_store_en;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_stored;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_d_i;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_d_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_q_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_d_i;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_q_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_1_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_d_i;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_q_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_rptr_gray_u_sync_2_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_d_i;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_d_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_q_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_d_i;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_q_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_1_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_d_i;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_q_o;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_u_sync_wptr_gray_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_upload_u_addrfifo_w_full_o;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_w_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_addrfifo_w_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_addrfifo_w_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_addrfifo_w_sram_rdata_i;  /* 32-bit */
@@ -20018,6 +20072,12 @@ typedef struct {
     uint32_t u_upload_u_addrfifo_w_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_addrfifo_w_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_w_sram_write_o;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_w_wptr_d;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_w_wptr_gray_d;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_w_wptr_gray_q;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_w_wptr_inc;  /* 1-bit */
+    uint8_t u_upload_u_addrfifo_w_wptr_q;  /* 5-bit */
+    uint8_t u_upload_u_addrfifo_w_wptr_v;  /* 4-bit */
     uint32_t u_upload_u_addrfifo_wdata_i;  /* 32-bit */
     uint8_t u_upload_u_addrfifo_wdepth_o;  /* 5-bit */
     uint8_t u_upload_u_addrfifo_wready_o;  /* 1-bit */
@@ -20135,28 +20195,77 @@ typedef struct {
     uint8_t u_upload_u_arbiter_u_req_fifo_wvalid_i;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_clk_rd_i;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_clk_wr_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_clk_wr_i_prev;  /* 1-bit */
     uint16_t u_upload_u_cmdfifo_qcnt;  /* 16-bit */
     uint64_t u_upload_u_cmdfifo_qdata[8192];  /* 524288-bit (wide-array) */
+    uint8_t u_upload_u_cmdfifo_qpinl22_;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_qpinl22_decval_in;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_qpinl22_decval_sub;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_qpinl23_;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_qpinl23_decval_in;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_qpinl23_decval_sub;  /* 5-bit */
     uint16_t u_upload_u_cmdfifo_qrptr;  /* 16-bit */
     uint16_t u_upload_u_cmdfifo_qwptr;  /* 16-bit */
     uint8_t u_upload_u_cmdfifo_r_full_o;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_r_notempty_o;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_r_rptr_d;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_r_rptr_gray_d;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_r_rptr_gray_q;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_r_rptr_inc;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_r_rptr_q;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_r_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_cmdfifo_r_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_cmdfifo_r_sram_rdata_i;  /* 32-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_req_o;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_rerror_i;  /* 2-bit */
+    uint8_t u_upload_u_cmdfifo_r_sram_rptr;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_r_sram_rptr_inc;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_rvalid_i;  /* 1-bit */
     uint32_t u_upload_u_cmdfifo_r_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_cmdfifo_r_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_cmdfifo_r_sram_write_o;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_r_sramrptr_empty;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_r_wptr_v;  /* 4-bit */
+    uint16_t u_upload_u_cmdfifo_rdata_d;  /* 16-bit */
     uint16_t u_upload_u_cmdfifo_rdata_o;  /* 16-bit */
+    uint16_t u_upload_u_cmdfifo_rdata_q;  /* 16-bit */
     uint8_t u_upload_u_cmdfifo_rdepth_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_rfifo_ack;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rready_i;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rst_rd_ni;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rst_wr_ni;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_rvalid_o;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_store_en;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_stored;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_d_i;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_d_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_q_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_d_i;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_q_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_1_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_d_i;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_q_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_rptr_gray_u_sync_2_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_d_i;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_d_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_q_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_d_i;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_q_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_1_rst_ni;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_d_i;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_q_o;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_u_sync_wptr_gray_u_sync_2_rst_ni;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_w_full_o;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_w_rptr_v;  /* 4-bit */
     uint16_t u_upload_u_cmdfifo_w_sram_addr_o;  /* 10-bit */
     uint8_t u_upload_u_cmdfifo_w_sram_gnt_i;  /* 1-bit */
     uint32_t u_upload_u_cmdfifo_w_sram_rdata_i;  /* 32-bit */
@@ -20166,12 +20275,21 @@ typedef struct {
     uint32_t u_upload_u_cmdfifo_w_sram_wdata_o;  /* 32-bit */
     uint32_t u_upload_u_cmdfifo_w_sram_wmask_o;  /* 32-bit */
     uint8_t u_upload_u_cmdfifo_w_sram_write_o;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_w_wptr_d;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_w_wptr_gray_d;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_w_wptr_gray_q;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_w_wptr_inc;  /* 1-bit */
+    uint8_t u_upload_u_cmdfifo_w_wptr_q;  /* 5-bit */
+    uint8_t u_upload_u_cmdfifo_w_wptr_v;  /* 4-bit */
     uint16_t u_upload_u_cmdfifo_wdata_i;  /* 16-bit */
     uint8_t u_upload_u_cmdfifo_wdepth_o;  /* 5-bit */
     uint8_t u_upload_u_cmdfifo_wready_o;  /* 1-bit */
     uint8_t u_upload_u_cmdfifo_wvalid_i;  /* 1-bit */
     uint8_t u_upload_u_payload_buffer_clk_i;  /* 1-bit */
+    uint8_t u_upload_u_payload_buffer_clk_i_prev;  /* 1-bit */
     uint8_t u_upload_u_payload_buffer_clr_i;  /* 1-bit */
+    uint8_t u_upload_u_payload_buffer_fifoptr;  /* 8-bit */
+    uint8_t u_upload_u_payload_buffer_fifoptr_inc;  /* 1-bit */
     uint16_t u_upload_u_payload_buffer_qcnt;  /* 16-bit */
     uint64_t u_upload_u_payload_buffer_qdata[8192];  /* 524288-bit (wide-array) */
     uint16_t u_upload_u_payload_buffer_qrptr;  /* 16-bit */
