@@ -2510,15 +2510,60 @@ static bool ot_eg_organ_feed(entropy_src_state *es)
         }
         return true;
     }
+    /* M4 ADJUDICATION (2026-08-30).  This gate used to be a ten-term
+     * conjunction requiring the WHOLE entropy_src pipeline to be idle.  Eight
+     * of those terms are gone; what they were thought to prevent does not
+     * happen.
+     *
+     * The premise was that the packers drop data when stalled against a busy
+     * SHA3, so the noise source must wait for a clear pipeline.  Adjudicated:
+     *   * The four translated prim_packer_fifo instances are FAITHFUL —
+     *     differential against a transcription of prim_packer_fifo.sv, zero
+     *     divergence over 800k clocks with the stall paths exercised.  (Note
+     *     prim_packer_fifo is TRANSLATED; the organ-replaced module is the
+     *     different one, prim_packer, which kmac uses.)
+     *   * Dropping IS real RTL behaviour, not a translation bug:
+     *     entropy_src_core.sv pushes esrng without checking not_full (:1068)
+     *     and pops it UNCONDITIONALLY (:1076) — "If the receiving FIFO is
+     *     full, the sample is dropped but the health tests are still
+     *     performed" — and the RTL raises postht_entropy_drop_alert (:2168)
+     *     to report exactly that.  The obligation is on the noise source, as
+     *     `ASSERT(RngBackpressureNotAllowed_A)` (:1087) states.
+     *   * Six of the removed terms were a CATEGORY ERROR: es_delayed_enable
+     *     plus the four *_not_empty plus sha3_block_busy are precisely the
+     *     input list of entropy_src_enable_delay, a module that exists to
+     *     sequence SHUTDOWN and provably ignores all of them while enable_i
+     *     is high.  A disable-drain predicate had been lifted into a
+     *     steady-state admission gate.
+     *
+     * WHY THE REDUCED GATE IS SAFE — margin, not coincidence.  A rate limit
+     * IS required (an unthrottled organ would offer at one sample per model
+     * tick, twice the noise-source contract rate, and then the RTL drops and
+     * the model drops with it at the same beat).  The parking protocol below
+     * already supplies one: a sample is offered, then held until the accept
+     * handshake is seen on a later call, so at most one sample per two ticks.
+     * That r = 1/2 sits below BOTH the noise-source contract rate and the
+     * postht packer's capacity of 8 beats per 9 clocks (wready_o and rvalid_o
+     * are exact complements, so it takes one bubble per output word).  The
+     * margin is the point; it is not an exact match to either bound.
+     * Measured in the machine, noise phase: 0.85-0.92 organ calls per model
+     * tick and ~0.40 samples fed per tick — the regime that would break this
+     * (two calls per tick) does not occur.
+     *
+     * Confirmed on two independent instruments before landing: a machine mask
+     * sweep (byte-exact SHA3-384 seed with the eight terms masked off) and a
+     * per-clock-edge host ledger (r = 0.5000, zero organ-side loss, zero RTL
+     * drops, zero backpressure violations over 200k clocks, with a validated
+     * negative control).
+     *
+     * KEPT: rng_enable_o is entropy_src's own OUTPUT PORT and the AST enable
+     * line — a real noise source observes exactly this, and it is the only
+     * term expressible at the port surface.  fw_ov_mode_entropy_insert is
+     * kept but is NOT an admission term: it holds the deterministic LFSR at
+     * index 0 until the noise phase begins so the reference stream lines up.
+     * A generic port-level replacement for it was proposed and deliberately
+     * NOT landed — its residual is unexplained. */
     if (es->entropy_src_rng_enable_o &&
-        ((es->u_entropy_src_core_es_enable_fo >> 5) & 1u) &&
-        es->u_entropy_src_core_es_delayed_enable &&
-        es->u_entropy_src_core_u_prim_fifo_sync_esrng_wready_o &&
-        !es->u_entropy_src_core_sfifo_esrng_not_empty &&
-        !es->u_entropy_src_core_pfifo_esbit_not_empty &&
-        !es->u_entropy_src_core_u_prim_packer_fifo_postht_rvalid_o &&
-        !es->u_entropy_src_core_sfifo_distr_not_empty &&
-        !es->u_entropy_src_core_u_enable_delay_sha3_block_busy_i &&
         !es->u_entropy_src_core_fw_ov_mode_entropy_insert) {
         ot_eg_noise_lfsr ^= ot_eg_noise_lfsr << 13;
         ot_eg_noise_lfsr ^= ot_eg_noise_lfsr >> 17;
@@ -2532,12 +2577,37 @@ static bool ot_eg_organ_feed(entropy_src_state *es)
     return false;
 }
 
+/* Overrun detector for the reduced gate above.  postht_entropy_drop_alert is
+ * the RTL's own report that a health-tested sample was thrown away because the
+ * receiving FIFO was full — i.e. that the noise source overran the pipeline.
+ * It is the specific way the reduction can fail SILENTLY, so read it rather
+ * than trust the analysis.  It also drives recov_alert_o; entropy_src's
+ * alert_tx is not consumed in this board yet, so today this is a status bit,
+ * and it becomes a live alert the moment the alert plane is wired up. */
+static unsigned long ot_eg_organ_drops;
+
+static void ot_eg_organ_watch_drops(entropy_src_state *es)
+{
+    /* `_de` is the hw2reg write-enable: it pulses on the clock the RTL decides
+     * a sample was thrown away, which is the event we want — the `_qs` status
+     * bit is sticky and would only tell us it happened at some point. */
+    if (es->u_entropy_src_core_hw2reg_recov_alert_sts_postht_entropy_drop_alert_de &&
+        es->u_entropy_src_core_hw2reg_recov_alert_sts_postht_entropy_drop_alert_d &&
+        ++ot_eg_organ_drops == 1) {
+        fprintf(stderr,
+                "ot_eg_organ: entropy_src raised postht_entropy_drop_alert - the "
+                "noise organ is overrunning the pipeline and the admission gate's "
+                "rate margin no longer holds\n");
+    }
+}
+
 static void ot_eg_ring_costep(void)
 {
     entropy_src_state *es = ot_eg_ring_es;
 
     qp_ring_wire(&ot_eg_entropy_ring);
     (void)ot_eg_organ_feed(es);
+    ot_eg_organ_watch_drops(es);
 
     /* leg wiring and stepping are the engine's: the aes leg is gated by
      * leg[L_AES].hot (its own req/ack rows + warm), so an idle aes is never
