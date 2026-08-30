@@ -2374,8 +2374,21 @@ static const struct ot_eg_ring_row {
       ot_eg_km_settle_hook },
 };
 
+/* OT_NO_SETTLE_HOOK=1 leaves every settle hook UNARMED, so the rings are
+ * driven by their pump timers alone.  This exists to make one long-standing
+ * claim testable instead of assumed: the README records a "pump-only-schedule
+ * feeder caveat" — the unified noise feeder has only ever been PROVEN with
+ * hooks armed, and the shipping config always arms them, so nothing ever
+ * exercised the other schedule.  An unproven claim that nobody can re-check
+ * is how the aes-ctr account stayed wrong for a month.  With this switch the
+ * caveat is a one-line experiment. */
 static void ot_eg_arm_ring_hooks(DeviceState **devices)
 {
+    if (getenv("OT_NO_SETTLE_HOOK")) {
+        fprintf(stderr, "ot_eg: settle hooks NOT armed (OT_NO_SETTLE_HOOK) - "
+                        "rings run on the pump timers alone\n");
+        return;
+    }
     for (unsigned i = 0; i < ARRAY_SIZE(ot_eg_ring_table); i++) {
         const struct ot_eg_ring_row *r = &ot_eg_ring_table[i];
         r->arm(devices[r->dev], r->hook, NULL);
@@ -2687,6 +2700,20 @@ static void ot_eg_ring_pump(void *opaque)
     }
     ot_eg_ring_freeze();
     r->pump_beats++;
+    /* OT_NO_PUMP=1 stops the ring pump re-arming, leaving the settle hooks as
+     * the only schedule.  The twin of OT_NO_SETTLE_HOOK: between them the two
+     * schedules can each be tested in isolation, which is what turns "the
+     * pumps should eventually demote to pure fallbacks" from an opinion into
+     * a measurement. */
+    if (getenv("OT_NO_PUMP")) {
+        static bool said;
+        if (!said) {
+            said = true;
+            fprintf(stderr, "ot_eg: ring pump NOT re-arming (OT_NO_PUMP) - "
+                            "the settle hooks are the only schedule\n");
+        }
+        return;
+    }
     timer_mod(ot_eg_ring_timer,
               qemu_clock_get_us(QEMU_CLOCK_VIRTUAL) + (quiesced ? 200 : 2));
 
