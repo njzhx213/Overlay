@@ -2398,6 +2398,8 @@ static void ot_eg_arm_ring_hooks(DeviceState **devices)
 static int ot_eg_km_settle_hook(void *opaque)
 {
     (void)opaque;
+    qp_ring_sample(&ot_eg_km_ring);
+    qp_ring_audit(&ot_eg_km_ring, qp_ring_hot(&ot_eg_km_ring));
     if (!ot_eg_km_inflight()) {
         qp_ring_freeze(&ot_eg_km_ring);   /* same two leaves, declared rows */
         return 0;
@@ -2643,6 +2645,7 @@ static int ot_eg_ring_settle_hook(void *opaque)
 
     (void)opaque;
     qp_ring_sample(&ot_eg_entropy_ring);
+    qp_ring_audit(&ot_eg_entropy_ring, qp_ring_hot(&ot_eg_entropy_ring));
     if (qp_ring_hot(&ot_eg_entropy_ring)) {
         ot_eg_ring_costep();
         return 1;

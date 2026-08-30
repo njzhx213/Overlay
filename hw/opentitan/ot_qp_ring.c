@@ -233,3 +233,107 @@ bool qp_ring_act_valve(qp_ring *r, bool hot_or_extra)
     }
     return true;  /* force quiet */
 }
+
+/* OT_RING_STATS=1 prints the audit totals at exit.  settle_traffic is the
+ * number the gate cannot produce: how often cross-model traffic arises INSIDE
+ * a settle.  Zero across a workload means the settle hook is unexercised by
+ * it — a measurement, where before there was only the observation that the
+ * gate passes with hooks disabled, which could equally have meant the hook was
+ * redundant or the workload never reached for it. */
+#define QP_MAX_TRACKED 8
+static qp_ring *qp_tracked[QP_MAX_TRACKED];
+static unsigned qp_n_tracked;
+
+static void qp_ring_report(void)
+{
+    for (unsigned i = 0; i < qp_n_tracked; i++) {
+        const qp_ring *r = qp_tracked[i];
+        fprintf(stderr,
+                "qp_ring[%s]: hook_calls=%llu fires=%llu costeps=%llu "
+                "pump_beats=%llu settle_traffic=%llu missed_beats=%llu\n",
+                r->name ? r->name : "?",
+                (unsigned long long)r->hook_calls,
+                (unsigned long long)r->hook_fires,
+                (unsigned long long)r->costeps,
+                (unsigned long long)r->pump_beats,
+                (unsigned long long)r->settle_traffic,
+                (unsigned long long)r->missed_beats);
+    }
+}
+
+void qp_ring_audit(qp_ring *r, bool hot)
+{
+    /* hook_calls / hook_fires were declared with the struct but NOTHING ever
+     * incremented them, so every reading of them was 0 and meant nothing.
+     * The audit runs once per hook invocation, which is exactly the place. */
+    r->hook_calls++;
+    if (hot) {
+        r->hook_fires++;
+    }
+
+    if (getenv("OT_RING_STATS")) {
+        bool known = false;
+        for (unsigned i = 0; i < qp_n_tracked; i++) {
+            if (qp_tracked[i] == r) { known = true; break; }
+        }
+        if (!known && qp_n_tracked < QP_MAX_TRACKED) {
+            if (qp_n_tracked == 0) {
+                atexit(qp_ring_report);
+            }
+            qp_tracked[qp_n_tracked++] = r;
+        }
+    }
+
+    uint64_t cur[4] = { 0, 0, 0, 0 };
+    bool changed = false;
+
+    for (unsigned i = 0; i < r->n_rows && i < 256u; i++) {
+        const qp_wire *w = &r->rows[i];
+        if (!r->leg[w->leg].present || w->role != QP_ROLE_REQ) {
+            continue;
+        }
+        if (qp_row_asserted(w)) {
+            cur[i >> 6] |= 1ULL << (i & 63u);
+        }
+    }
+    if (r->snap_valid) {
+        for (unsigned k = 0; k < 4; k++) {
+            /* RISING edges only.  A REQ row going 1 -> 0 is traffic ENDING,
+             * and a quiet verdict at that moment is correct, not a miss.
+             * Counting any change made the detector fire exactly twice on
+             * every workload — its first reading was its own false positive,
+             * which is what a new instrument is for. */
+            if (cur[k] & ~r->snap[k]) {
+                changed = true;
+            }
+        }
+    }
+    for (unsigned k = 0; k < 4; k++) {
+        r->snap[k] = cur[k];
+    }
+    r->snap_valid = true;
+
+    /* OT_FORCE_MISSED_BEAT=1 fires the detector on purpose.  A detector that
+     * has never been seen to fire is indistinguishable from one that cannot,
+     * and this project has shipped exactly that kind of ornament before, so
+     * the positive control is part of the mechanism rather than a one-off
+     * experiment someone has to reconstruct. */
+    if (getenv("OT_FORCE_MISSED_BEAT")) {
+        changed = true;
+        hot = false;
+    }
+    if (!changed) {
+        return;
+    }
+    r->settle_traffic++;
+    if (hot) {
+        return;                 /* traffic seen AND served — the normal case */
+    }
+    if (++r->missed_beats == 1) {
+        fprintf(stderr,
+                "qp_ring[%s]: MISSED BEAT - a declared REQ row moved inside a "
+                "settle while the hook verdict was quiet.  A leg can wedge "
+                "silently from here; check the row roles and the beat scan.\n",
+                r->name ? r->name : "?");
+    }
+}

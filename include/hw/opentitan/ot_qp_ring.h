@@ -91,6 +91,11 @@ typedef struct {
     bool        valve_fired;
     /* telemetry */
     uint64_t    hook_calls, hook_fires, costeps, pump_beats;
+    /* missed-beat self-check (see qp_ring_audit) */
+    uint64_t    snap[4];        /* per-row asserted bitmap, up to 256 rows */
+    bool        snap_valid;
+    uint64_t    settle_traffic; /* REQ-row transitions observed inside settles */
+    uint64_t    missed_beats;   /* ... of those, ones the verdict called quiet */
 } qp_ring;
 
 /* Idempotent level scan: recompute req/outstanding/hot from the rows.  Safe
@@ -117,5 +122,33 @@ bool qp_ring_busy(qp_ring *r, bool extra);
 /* PUMP ONLY safety valve: force quiet if the ring has been kept alive by
  * activity alone for QP_ACT_INVOCATIONS pump invocations. */
 bool qp_ring_act_valve(qp_ring *r, bool hot_or_extra);
+
+/* MISSED-BEAT SELF-CHECK.  Call once per settle-hook invocation, passing the
+ * verdict the hook is about to act on.
+ *
+ * The most expensive failure mode this engine has is SILENT: cross-model
+ * traffic occurs inside one model's MMIO settle, the hook's level sample does
+ * not see it, the hook reports quiet, and the leg wedges.  Diagnosing one of
+ * those cost an afternoon; a printed line costs nothing.  The signature is
+ * cheap: a row whose role is DECLARED REQ changed since the previous hook call
+ * while the verdict for this call was NOT hot — traffic happened and we did
+ * not serve it.
+ *
+ * Roles are what make this device-agnostic: a DATA leaf can hold a value
+ * forever and a READY line idles high, so neither's movement means traffic.
+ * Only REQ rows are sampled — the same declared column the engine already
+ * trusts for its own liveness.
+ *
+ * LIMIT, stated because a detector you over-trust is worse than none: a pulse
+ * that rises AND falls entirely between two samples is invisible to any
+ * sampler.  That is exactly why the engine scans on every ring BEAT rather
+ * than only when the hook fires; this check is a backstop for the sampling
+ * path, not a proof of its absence.
+ *
+ * It also answers a question the gate cannot: settle_traffic counts how often
+ * cross-model traffic arises INSIDE a settle at all.  If that stays zero
+ * across a workload, the hook is unexercised by it — which is a measurement,
+ * not an inference. */
+void qp_ring_audit(qp_ring *r, bool hot);
 
 #endif /* HW_OPENTITAN_OT_QP_RING_H */
